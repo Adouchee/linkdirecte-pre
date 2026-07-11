@@ -1,87 +1,16 @@
-# Linkdirecte
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/gradient.svg?title=Linkdirecte&amp;subtitle=Your+first-rate+SDK+for+the+EcoleDirecte+API.&amp;logo=ri%3AFiBook&amp;mode=dark" /><img alt="header" src="https://shieldcn.dev/header/gradient.svg?title=Linkdirecte&amp;subtitle=Your+first-rate+SDK+for+the+EcoleDirecte+API.&amp;logo=ri%3AFiBook&amp;mode=light" /></picture>
+</p>
 
-SDK moderne, résilient et 100% tree-shakable pour l'API privée d'EcoleDirecte.
+<p align="center">
+  <a href="https://www.npmjs.com/package/linkdirecte"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/npm/linkdirecte.svg?size=xs" /><img alt="badge" src="https://shieldcn.dev/npm/linkdirecte.svg?size=xs&amp;mode=light" /></picture></a>
+  <a href="https://github.com/Scolup/Linkdirecte"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/github/Scolup/Linkdirecte/stars.svg?size=xs" /><img alt="badge" src="https://shieldcn.dev/github/Scolup/Linkdirecte/stars.svg?size=xs&amp;mode=light" /></picture></a>
+</p>
 
-## 🚀 Installation
+<p align="center">
+  <a href="https://github.com/Scolup/Linkdirecte/graphs/contributors"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/contributors/Scolup/Linkdirecte.svg?preset=gradient&amp;names=true&amp;mode=dark" /><img alt="contributors" src="https://shieldcn.dev/contributors/Scolup/Linkdirecte.svg?preset=gradient&amp;names=true&amp;mode=light" /></picture></a>
+</p>
 
-```bash
-bun add linkdirecte
-# ou
-npm install linkdirecte
-```
-
-## 🛠️ Quick Start
-
-```typescript
-import { login, getGrades } from "linkdirecte";
-
-// Connexion
-const session = await login("mon_identifiant", "mon_mot_de_passe");
-
-if ("securityQuestion" in session && session.type === "securityQuestion") {
-  // Handle 2FA
-  const success = await session.answer(0);
-} else {
-  // session is LoginSuccess
-  console.log(session.user);
-}
-
-// Récupérer les notes
-const grades = await getGrades();
-console.log(grades);
-```
-
-## 📐 Architecture & Principes
-
-- **Zéro Classes Exportées** : Tout est basé sur des fonctions pures pour un tree-shaking optimal.
-- **Résilience** : Retries automatiques avec backoff exponentiel, gestion de la concurrence et auto-refresh de session.
-- **Transformation** : Les données sont automatiquement nettoyées et les clés traduites en anglais camelCase.
-- **Explain Mode** : Passez `{ explain: true }` à n'importe quelle fonction pour obtenir des logs détaillés et la réponse brute.
-
-## 📦 Modules
-
-### Messagerie
-```typescript
-import { getMessages, sendMessage } from "linkdirecte";
-
-// Récupérer les messages avec leur contenu
-const messages = await getMessages({ withContent: true });
-
-// Envoyer un message
-await sendMessage({
-  subject: "Question",
-  content: "Bonjour...",
-  destinataires: [...]
-});
-```
-
-## 🔐 Stockage & Sécurité
-
-Par défaut, le SDK utilise un stockage en mémoire. Pour la persistance avec chiffrement AES-256 :
-
-```typescript
-import { configure, fileStorage } from "linkdirecte";
-
-configure({
-  storage: fileStorage("./session.json"),
-  maxRetries: 5
-});
-```
-
-## 📡 Mode Offline
-
-Activez la queue offline pour rejouer les mutations quand le réseau revient :
-
-```typescript
-configure({ offlineQueue: true });
-```
-
-## 🧪 Tests
-
-```bash
-bun test
-```
-
-## 📄 Licence
-
-AGPL 3.0
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/chart/npm/linkdirecte.svg?logo=false&amp;title=npm+downloads+%28365+days%29" /><img alt="chart" src="https://shieldcn.dev/chart/npm/linkdirecte.svg?mode=light&amp;logo=false&amp;title=npm+downloads+%28365+days%29" /></picture>
+</p>
