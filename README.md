@@ -34,6 +34,16 @@ Easily log in _(Linkdirecte will handle the rest!)_ :
 
 ```typescript
 import { login } from "linkdirecte"
+
+const result = await login("youridentifiant", "yourpassword", {
+  on2faRequired: (question, choices) => {
+    // Handle 2FA challenge
+    console.log("Security question:", question)
+    console.log("Choices:", choices)
+    // Return the index of the selected choice
+    return 0 // Example: select first choice
+  }
+})
 ```
 
 Full docs are available in [the `docs` directory](docs/).
