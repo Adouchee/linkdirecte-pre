@@ -1,7 +1,3 @@
-<p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/glow.svg?title=License&amp;subtitle=Licensed+under+the+AGPL+3.0.&amp;logo=lu%3AScale&amp;mode=dark&amp;theme=blue&amp;align=left" /><img alt="License" src="https://shieldcn.dev/header/glow.svg?title=License&amp;subtitle=Licensed+under+the+AGPL+3.0.&amp;logo=lu%3AScale&amp;mode=light&amp;theme=blue&amp;align=left" /></picture>
-</p>
-
 Copyright (C) 2026 Scolup
 
 # GNU AFFERO GENERAL PUBLIC LICENSE
