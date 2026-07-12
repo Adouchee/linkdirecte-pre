@@ -44,6 +44,18 @@ const result = await login("youridentifiant", "yourpassword", {
     return 0 // Example: select first choice
   }
 })
+// Linkdirecte saves the token silently and will automatically use it for subsequent requests. You never need to handle login again!
+```
+
+Now you can call the API methods you need without worrying about authentication.
+
+```typescript
+import { getGrades } from "linkdirecte"
+
+const gradesResult = await getGrades()
+
+console.log("Grades:", gradesResult.grades)
+console.log("Subjects:", gradesResult.subjects)
 ```
 
 Full docs are available in [the `docs` directory](docs/).
@@ -55,4 +67,4 @@ Linkdirecte is licensed under the **Affero General Public License 3** (AGPL 3). 
 This project is **not affiliated** in any way with Aplim.
 
 > [!IMPORTANT]
-> This software was built in the purpose of making data handling easier for anyone working with EcoleDirecte’s data. **Please don’t use this for malicious purposes.**
+> This software was built in the goal of making data handling easier for anyone working with EcoleDirecte’s data. **Please don’t use this for malicious purposes.**
