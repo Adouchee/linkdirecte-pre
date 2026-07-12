@@ -1,5 +1,5 @@
-import { edFetch } from "../../core/fetch";
-import { requireCurrentAccount } from "../../core/request";
+import { edFetch } from '../../core/fetch';
+import { requireCurrentAccount } from '../../core/request';
 
 export interface GradeEntry {
   value: string;
@@ -47,5 +47,9 @@ export async function getGrades(
 ): Promise<GradesResult> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/notes.awp?v=7.14.3&verbe=get`;
-  return edFetch<GradesResult>(endpoint, { method: "POST", body: { anneeScolaire: options.periodId || "" }, ...options });
+  return edFetch<GradesResult>(endpoint, {
+    method: 'POST',
+    body: { anneeScolaire: options.periodId || '' },
+    ...options,
+  });
 }

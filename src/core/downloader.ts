@@ -1,8 +1,8 @@
-import { edFetch } from "./fetch";
-import { getToken } from "./store";
-import fs from "node:fs/promises";
+import { edFetch } from './fetch';
+import { getToken } from './store';
+import fs from 'node:fs/promises';
 
-export type DownloadFormat = "buffer" | "blob" | "stream";
+export type DownloadFormat = 'buffer' | 'blob' | 'stream';
 
 export interface DownloadOptions {
   as?: DownloadFormat;
@@ -17,7 +17,7 @@ export async function download(
   const token = getToken();
 
   const response = await edFetch<Response>(url, {
-    method: "POST",
+    method: 'POST',
     body: {
       ...options.params,
       token,
@@ -32,7 +32,7 @@ export async function download(
     await fs.writeFile(options.filename, buffer);
   }
 
-  return formatDownloadResponse(response, options.as ?? "buffer");
+  return formatDownloadResponse(response, options.as ?? 'buffer');
 }
 
 function formatDownloadResponse(
@@ -40,14 +40,14 @@ function formatDownloadResponse(
   format: DownloadFormat,
 ): Promise<Buffer | Blob | ReadableStream> {
   switch (format) {
-    case "blob":
+    case 'blob':
       return response.blob();
-    case "stream":
+    case 'stream':
       if (!response.body) {
-        throw new Error("Response body is null — cannot stream");
+        throw new Error('Response body is null — cannot stream');
       }
       return Promise.resolve(response.body);
-    case "buffer":
+    case 'buffer':
     default:
       return response.arrayBuffer().then((buf) => Buffer.from(buf));
   }

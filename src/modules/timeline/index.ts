@@ -1,6 +1,6 @@
-import { edFetch } from "../../core/fetch";
-import { requireCurrentAccount } from "../../core/request";
-import { decodeBase64Content } from "../../core/transform";
+import { edFetch } from '../../core/fetch';
+import { requireCurrentAccount } from '../../core/request';
+import { decodeBase64Content } from '../../core/transform';
 
 export interface TimelineEntry {
   id: number;
@@ -19,7 +19,11 @@ export async function getTimeline(
 ): Promise<TimelineEntry[]> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/timeline.awp?v=7.14.3&verbe=get`;
-  return edFetch<TimelineEntry[]>(endpoint, { method: "POST", body: {}, ...options });
+  return edFetch<TimelineEntry[]>(endpoint, {
+    method: 'POST',
+    body: {},
+    ...options,
+  });
 }
 
 export async function getCommonTimeline(
@@ -27,11 +31,15 @@ export async function getCommonTimeline(
 ): Promise<TimelineEntry[]> {
   const account = requireCurrentAccount();
   const endpoint = `/E/${account.id}/timelineAccueilCommun.awp?v=7.14.3&verbe=get`;
-  const result = await edFetch<any>(endpoint, { method: "POST", body: {}, ...options });
+  const result = await edFetch<any>(endpoint, {
+    method: 'POST',
+    body: {},
+    ...options,
+  });
 
   if (!options.raw && result?.stickyNotes) {
     for (const postit of result.stickyNotes) {
-      if (typeof postit.content === "string") {
+      if (typeof postit.content === 'string') {
         postit.content = decodeBase64Content(postit.content);
       }
     }
@@ -40,4 +48,4 @@ export async function getCommonTimeline(
   return result;
 }
 
-export * from "./correlator";
+export * from './correlator';

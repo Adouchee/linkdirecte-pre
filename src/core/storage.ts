@@ -1,7 +1,12 @@
-import { StorageAdapter } from "../types";
-import { pbkdf2Sync, randomBytes, createCipheriv, createDecipheriv } from "node:crypto";
+import { StorageAdapter } from '../types';
+import {
+  pbkdf2Sync,
+  randomBytes,
+  createCipheriv,
+  createDecipheriv,
+} from 'node:crypto';
 
-const ALGORITHM = "aes-256-gcm";
+const ALGORITHM = 'aes-256-gcm';
 const SALT_LEN = 16;
 const IV_LEN = 12;
 const KEY_LEN = 32;
@@ -9,7 +14,7 @@ const TAG_LEN = 16;
 const KDF_ITERATIONS = 100_000;
 
 function deriveKey(secret: string, salt: Buffer): Buffer {
-  return pbkdf2Sync(secret, salt, KDF_ITERATIONS, KEY_LEN, "sha256");
+  return pbkdf2Sync(secret, salt, KDF_ITERATIONS, KEY_LEN, 'sha256');
 }
 
 function encrypt(plaintext: string, secret: string): string {
@@ -17,15 +22,19 @@ function encrypt(plaintext: string, secret: string): string {
   const key = deriveKey(secret, salt);
   const iv = randomBytes(IV_LEN);
   const cipher = createCipheriv(ALGORITHM, key, iv);
-  const encrypted = Buffer.concat([cipher.update(plaintext, "utf8"), cipher.final()]);
+  const encrypted = Buffer.concat([
+    cipher.update(plaintext, 'utf8'),
+    cipher.final(),
+  ]);
   const tag = cipher.getAuthTag();
   // Format: salt(16) + iv(12) + tag(16) + ciphertext
-  return Buffer.concat([salt, iv, tag, encrypted]).toString("base64");
+  return Buffer.concat([salt, iv, tag, encrypted]).toString('base64');
 }
 
 function decrypt(data: string, secret: string): string {
-  const buf = Buffer.from(data, "base64");
-  if (buf.length < SALT_LEN + IV_LEN + TAG_LEN) throw new Error("Invalid encrypted data");
+  const buf = Buffer.from(data, 'base64');
+  if (buf.length < SALT_LEN + IV_LEN + TAG_LEN)
+    throw new Error('Invalid encrypted data');
   const salt = buf.subarray(0, SALT_LEN);
   const iv = buf.subarray(SALT_LEN, SALT_LEN + IV_LEN);
   const tag = buf.subarray(SALT_LEN + IV_LEN, SALT_LEN + IV_LEN + TAG_LEN);
@@ -33,8 +42,11 @@ function decrypt(data: string, secret: string): string {
   const key = deriveKey(secret, salt);
   const decipher = createDecipheriv(ALGORITHM, key, iv);
   decipher.setAuthTag(tag);
-  const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
-  return decrypted.toString("utf8");
+  const decrypted = Buffer.concat([
+    decipher.update(encrypted),
+    decipher.final(),
+  ]);
+  return decrypted.toString('utf8');
 }
 
 export const memoryStorage: StorageAdapter = (() => {
@@ -50,7 +62,6 @@ export const memoryStorage: StorageAdapter = (() => {
   };
 })();
 
-
 export const fileStorage = (
   filePath: string,
   secret?: string,
@@ -59,15 +70,15 @@ export const fileStorage = (
 
   if (!INTERNAL_KEY) {
     throw new Error(
-      "fileStorage requires an encryption secret. " +
-      "Pass a `secret` parameter or set the ED_STORAGE_SECRET environment variable.",
+      'fileStorage requires an encryption secret. ' +
+        'Pass a `secret` parameter or set the ED_STORAGE_SECRET environment variable.',
     );
   }
 
   const read = async () => {
-    const { default: fs } = await import("node:fs/promises");
+    const { default: fs } = await import('node:fs/promises');
     try {
-      const content = await fs.readFile(filePath, "utf-8");
+      const content = await fs.readFile(filePath, 'utf-8');
       return JSON.parse(decrypt(content, INTERNAL_KEY));
     } catch {
       return {};
@@ -75,15 +86,15 @@ export const fileStorage = (
   };
 
   const write = async (data: any) => {
-    const { default: fs } = await import("node:fs/promises");
-    const { dirname } = await import("node:path");
+    const { default: fs } = await import('node:fs/promises');
+    const { dirname } = await import('node:path');
     const content = JSON.stringify(data);
     const encrypted = encrypt(content, INTERNAL_KEY);
     const dir = dirname(filePath);
     if (dir) {
       await fs.mkdir(dir, { recursive: true });
     }
-    await fs.writeFile(filePath, encrypted, "utf-8");
+    await fs.writeFile(filePath, encrypted, 'utf-8');
   };
 
   let cache: Record<string, string> | null = null;

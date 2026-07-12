@@ -1,13 +1,13 @@
-import { getGrades } from "../grades";
-import { getAttendance } from "../attendance";
-import dayjs from "dayjs";
+import { getGrades } from '../grades';
+import { getAttendance } from '../attendance';
+import dayjs from 'dayjs';
 
 export type CorrelationType =
-  | "gradeVsPresence"
-  | "gradeVsDayOfWeek"
-  | "gradeVsTimeOfDay"
-  | "homeworkVsGrade"
-  | "gradeTrend";
+  | 'gradeVsPresence'
+  | 'gradeVsDayOfWeek'
+  | 'gradeVsTimeOfDay'
+  | 'homeworkVsGrade'
+  | 'gradeTrend';
 
 export interface Correlation {
   type: CorrelationType;
@@ -35,7 +35,7 @@ export async function correlate(): Promise<Correlation[]> {
 
     const values = gradeList.map(
       (g: any) =>
-        (parseFloat(g.value.replace(",", ".")) / parseFloat(g.outOf)) * 20,
+        (parseFloat(g.value.replace(',', '.')) / parseFloat(g.outOf)) * 20,
     );
 
     correlations.push(analyzeGradeTrend(subject, values, gradeList.length));
@@ -63,9 +63,9 @@ function analyzeGradeTrend(
   count: number,
 ): Correlation {
   return {
-    type: "gradeTrend",
+    type: 'gradeTrend',
     subject,
-    finding: "calculated_trend",
+    finding: 'calculated_trend',
     data: { average: values.reduce((a, b) => a + b, 0) / values.length },
     confidence: Math.min(count / 15, 1),
     observations: count,
@@ -80,7 +80,7 @@ function analyzeDayOfWeekPattern(
   const dowGrades: Record<string, number[]> = {};
 
   gradeList.forEach((grade, i) => {
-    const day = dayjs(grade.date).format("dddd");
+    const day = dayjs(grade.date).format('dddd');
     const list = dowGrades[day] || [];
     list.push(values[i]);
     dowGrades[day] = list;
@@ -92,9 +92,9 @@ function analyzeDayOfWeekPattern(
   });
 
   return {
-    type: "gradeVsDayOfWeek",
+    type: 'gradeVsDayOfWeek',
     subject,
-    finding: "weekly_variation",
+    finding: 'weekly_variation',
     data: dowStats,
     confidence: 0.5,
     observations: gradeList.length,

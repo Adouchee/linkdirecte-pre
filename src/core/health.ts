@@ -1,17 +1,16 @@
-import { getConfig, getToken } from "./store";
+import { getConfig, getToken } from './store';
 import {
   buildApiUrl,
   buildHeaders,
   sendRequest,
   parseJsonResponse,
-} from "./http";
+} from './http';
 
-const TOKEN_CHECK_ENDPOINT = "/rdt/sondages.awp?verbe=get&v=4.96.3";
-const TOKEN_CHECK_BODY = "data=%7B%7D";
+const TOKEN_CHECK_ENDPOINT = '/rdt/sondages.awp?verbe=get&v=4.96.3';
+const TOKEN_CHECK_BODY = 'data=%7B%7D';
 const KEEPALIVE_INTERVAL_MS = 45 * 60 * 1000;
 
 let keepaliveTimer: ReturnType<typeof setInterval> | null = null;
-
 
 export async function checkTokenHealth(): Promise<boolean> {
   const token = getToken();
@@ -22,7 +21,7 @@ export async function checkTokenHealth(): Promise<boolean> {
     const headers = buildHeaders();
     const response = await sendRequest({
       url: url.toString(),
-      method: "POST",
+      method: 'POST',
       headers,
       body: TOKEN_CHECK_BODY,
     });
@@ -33,7 +32,6 @@ export async function checkTokenHealth(): Promise<boolean> {
   }
 }
 
-
 export function startTokenKeepalive(): void {
   stopTokenKeepalive();
 
@@ -41,7 +39,7 @@ export function startTokenKeepalive(): void {
     const valid = await checkTokenHealth();
     if (!valid) {
       try {
-        const { refreshToken } = await import("../auth");
+        const { refreshToken } = await import('../auth');
         await refreshToken();
       } catch (error) {
         stopTokenKeepalive();
@@ -50,7 +48,6 @@ export function startTokenKeepalive(): void {
     }
   }, KEEPALIVE_INTERVAL_MS);
 }
-
 
 export function stopTokenKeepalive(): void {
   if (keepaliveTimer) {

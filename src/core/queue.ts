@@ -1,7 +1,7 @@
-import { randomUUID } from "node:crypto";
-import { getConfig } from "./store";
-import { edFetch } from "./fetch";
-import type { StorageAdapter } from "../types";
+import { randomUUID } from 'node:crypto';
+import { getConfig } from './store';
+import { edFetch } from './fetch';
+import type { StorageAdapter } from '../types';
 
 interface QueuedMutation {
   id: string;
@@ -23,7 +23,7 @@ export class OfflineQueue {
     if (!this.storage) return;
 
     try {
-      const saved = await this.storage.get("ed_offline_queue");
+      const saved = await this.storage.get('ed_offline_queue');
       if (saved) {
         this.queue = JSON.parse(saved);
       }
@@ -34,7 +34,7 @@ export class OfflineQueue {
 
   private async save(): Promise<void> {
     if (!this.storage) return;
-    await this.storage.set("ed_offline_queue", JSON.stringify(this.queue));
+    await this.storage.set('ed_offline_queue', JSON.stringify(this.queue));
   }
 
   async push(

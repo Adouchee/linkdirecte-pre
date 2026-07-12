@@ -1,6 +1,6 @@
-import pLimit from "p-limit";
-import pRetry from "p-retry";
-import { getConfig, setToken } from "./store";
+import pLimit from 'p-limit';
+import pRetry from 'p-retry';
+import { getConfig, setToken } from './store';
 import {
   DEFAULT_CONCURRENCY,
   DEFAULT_MAX_RETRIES,
@@ -11,25 +11,25 @@ import {
   buildApiUrl,
   appendQueryParams,
   type QueryParams,
-} from "./http";
-import { EdApiError, EdAuthError, EdNetworkError } from "./errors";
-import { transform } from "./transform";
+} from './http';
+import { EdApiError, EdAuthError, EdNetworkError } from './errors';
+import { transform } from './transform';
 import {
   buildHeaders,
   buildRequestBody,
   parseJsonResponse,
   sendRequest,
   type HttpMethod,
-} from "./http";
-import { offlineQueue } from "./queue";
+} from './http';
+import { offlineQueue } from './queue';
 import {
   resolveModule,
   getCacheTtl,
   buildCacheKey,
   getFromCache,
   setInCache,
-} from "./cache";
-import type { DebugInfo, EdResponse } from "../types";
+} from './cache';
+import type { DebugInfo, EdResponse } from '../types';
 
 export interface FetchOptions {
   method?: HttpMethod;
@@ -78,9 +78,12 @@ export async function edFetch<T>(
 
   const runRequest = async (refreshAttempts = 0): Promise<T> => {
     const cacheModule = resolveModule(endpoint);
-    const cacheKey = cacheModule ? buildCacheKey(endpoint, options.body) : undefined;
+    const cacheKey = cacheModule
+      ? buildCacheKey(endpoint, options.body)
+      : undefined;
     const ttl = cacheModule ? getCacheTtl(cacheModule) : 0;
-    const isCacheable = ttl > 0 && !options.raw && !options.isDownload && !options.returnEnvelope;
+    const isCacheable =
+      ttl > 0 && !options.raw && !options.isDownload && !options.returnEnvelope;
 
     if (isCacheable && cacheKey) {
       const cached = getFromCache<unknown>(cacheKey);
@@ -105,7 +108,7 @@ export async function edFetch<T>(
         config.offlineQueue &&
         !options.skipQueue &&
         !options.skipAuth &&
-        options.method !== "GET"
+        options.method !== 'GET'
       ) {
         offlineQueue.push(endpoint, options as Record<string, unknown>);
       }
@@ -117,7 +120,7 @@ export async function edFetch<T>(
       return response as T;
     }
 
-    const headerToken = response.headers.get("x-token");
+    const headerToken = response.headers.get('x-token');
 
     const data = await parseJsonResponse(response);
 
@@ -129,7 +132,7 @@ export async function edFetch<T>(
     if (isSessionExpired(data)) {
       if (refreshAttempts >= MAX_REFRESH_ATTEMPTS) {
         throw new EdAuthError(
-          data.message || "Session expired after refresh attempt",
+          data.message || 'Session expired after refresh attempt',
           String(data.code),
           response.status,
           data,
@@ -146,7 +149,7 @@ export async function edFetch<T>(
 
       if (!refreshed) {
         throw new EdAuthError(
-          data.message || "Session expired",
+          data.message || 'Session expired',
           String(data.code),
           response.status,
           data,
@@ -195,7 +198,7 @@ function prepareRequest(
 
   return {
     url,
-    method: options.method ?? "POST",
+    method: options.method ?? 'POST',
     headers: buildHeaders({
       skipAuth: options.skipAuth,
       useGtk: options.useGtk,
@@ -214,7 +217,7 @@ function isSessionExpired(data: EdResponse<unknown>): boolean {
 function throwIfApiError(data: EdResponse<unknown>, response: Response): void {
   if (!SUCCESS_CODES.has(data.code)) {
     throw new EdApiError(
-      data.message || "API error",
+      data.message || 'API error',
       String(data.code),
       response.status,
       data,
@@ -271,7 +274,7 @@ function isNonRetryable(error: unknown): boolean {
 
 async function refreshSession(): Promise<string | undefined> {
   try {
-    const { refreshToken } = await import("../auth");
+    const { refreshToken } = await import('../auth');
     const token = await refreshToken();
 
     setToken(token);

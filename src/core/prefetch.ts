@@ -1,18 +1,18 @@
-import { PrefetchConfig } from "../types";
-import { getConfig } from "./store";
-import { parseDuration } from "./cache";
-import { getGrades } from "../modules/grades";
-import { getMessages } from "../modules/messages";
-import { getHomework } from "../modules/homework";
-import { getTimetable } from "../modules/timetable";
-import { getTimeline } from "../modules/timeline";
+import { PrefetchConfig } from '../types';
+import { getConfig } from './store';
+import { parseDuration } from './cache';
+import { getGrades } from '../modules/grades';
+import { getMessages } from '../modules/messages';
+import { getHomework } from '../modules/homework';
+import { getTimetable } from '../modules/timetable';
+import { getTimeline } from '../modules/timeline';
 
 const DEFAULT_MODULES = [
-  "grades",
-  "messages",
-  "homework",
-  "timetable",
-  "timeline",
+  'grades',
+  'messages',
+  'homework',
+  'timetable',
+  'timeline',
 ] as const;
 
 export async function prefetchAll(config?: PrefetchConfig): Promise<void> {
@@ -30,19 +30,19 @@ function buildPrefetchTasks(modules: readonly string[]): Promise<unknown>[] {
 
   for (const module of modules) {
     switch (module) {
-      case "grades":
+      case 'grades':
         tasks.push(getGrades());
         break;
-      case "messages":
+      case 'messages':
         tasks.push(getMessages({ withContent: true }));
         break;
-      case "homework":
+      case 'homework':
         tasks.push(getHomework({ withContent: true }));
         break;
-      case "timetable":
+      case 'timetable':
         tasks.push(getTimetable());
         break;
-      case "timeline":
+      case 'timeline':
         tasks.push(getTimeline());
         break;
     }
@@ -70,5 +70,3 @@ export function stopAutoPrefetch(): void {
     prefetchInterval = null;
   }
 }
-
-

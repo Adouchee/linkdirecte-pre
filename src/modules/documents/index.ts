@@ -1,5 +1,5 @@
-import { edFetch } from "../../core/fetch";
-import { postOptions } from "../../core/request";
+import { edFetch } from '../../core/fetch';
+import { postOptions } from '../../core/request';
 
 export interface DocumentEntry {
   id: number;
@@ -28,7 +28,7 @@ export async function getDocuments(
   options: { raw?: boolean; explain?: boolean } = {},
 ): Promise<DocumentsResult> {
   const request = {
-    endpoint: "/elevesDocuments.awp?v=7.14.3&verbe=get",
+    endpoint: '/elevesDocuments.awp?v=7.14.3&verbe=get',
     options: postOptions({}, options),
   };
 

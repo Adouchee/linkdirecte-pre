@@ -1,6 +1,10 @@
-import { edFetch } from "../../core/fetch";
-import { requireCurrentAccount } from "../../core/request";
-import { assertNonEmptyString, assertNonEmptyArray, assertPositiveNumber } from "../../core/validate";
+import { edFetch } from '../../core/fetch';
+import { requireCurrentAccount } from '../../core/request';
+import {
+  assertNonEmptyString,
+  assertNonEmptyArray,
+  assertPositiveNumber,
+} from '../../core/validate';
 
 export interface GetMessagesOptions {
   folderId?: number;
@@ -43,7 +47,11 @@ export async function getMessages(
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/messages.awp?v=7.14.3&verbe=get`;
 
-  const result = await edFetch<MessagesResult>(endpoint, { method: "POST", body: { anneeMessages: "" }, ...options });
+  const result = await edFetch<MessagesResult>(endpoint, {
+    method: 'POST',
+    body: { anneeMessages: '' },
+    ...options,
+  });
 
   if (options.withContent && result.messages) {
     result.messages.received = await fetchMessageContents(
@@ -59,25 +67,29 @@ export async function getMessage(
   id: number,
   options: { raw?: boolean; explain?: boolean } = {},
 ): Promise<MessageEntry> {
-  assertPositiveNumber(id, "message id");
+  assertPositiveNumber(id, 'message id');
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/messages/${id}.awp?v=7.14.3&verbe=get&mode=destinataire`;
-  return edFetch<MessageEntry>(endpoint, { method: "POST", body: { anneeMessages: "" }, ...options });
+  return edFetch<MessageEntry>(endpoint, {
+    method: 'POST',
+    body: { anneeMessages: '' },
+    ...options,
+  });
 }
 
 export async function sendMessage(
   data: SendMessageData,
   options: { raw?: boolean; explain?: boolean } = {},
 ): Promise<{ success: boolean }> {
-  assertNonEmptyString(data.subject, "subject");
-  assertNonEmptyString(data.content, "content");
-  assertNonEmptyArray(data.destinataires, "destinataires");
+  assertNonEmptyString(data.subject, 'subject');
+  assertNonEmptyString(data.content, 'content');
+  assertNonEmptyArray(data.destinataires, 'destinataires');
 
   const account = requireCurrentAccount();
 
   const endpoint = `/eleves/${account.id}/messages.awp?v=7.14.3&verbe=post`;
   return edFetch<{ success: boolean }>(endpoint, {
-    method: "POST",
+    method: 'POST',
     body: {
       message: {
         subject: data.subject,
@@ -85,12 +97,12 @@ export async function sendMessage(
         groupesDestinataires: [
           {
             destinataires: data.destinataires,
-            selection: { type: "P" },
+            selection: { type: 'P' },
           },
         ],
         from: { role: account.accountType, id: account.id, isRead: true },
       },
-      anneeMessages: "",
+      anneeMessages: '',
     },
     ...options,
   });

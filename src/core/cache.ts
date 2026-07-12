@@ -1,5 +1,5 @@
-import { getConfig } from "./store";
-import type { CacheConfig } from "../types";
+import { getConfig } from './store';
+import type { CacheConfig } from '../types';
 
 interface CacheEntry {
   data: unknown;
@@ -50,18 +50,19 @@ export function stopCleanup(): void {
   }
 }
 
-
-const ENDPOINT_TO_MODULE: Array<{ pattern: RegExp; module: keyof CacheConfig }> = [
-  { pattern: /\/notes\.awp/, module: "grades" },
-  { pattern: /\/emploidutemps\.awp/, module: "timetable" },
-  { pattern: /\/messages\.awp/, module: "messages" },
-  { pattern: /\/cahierdetexte\.awp/, module: "homework" },
-  { pattern: /\/elevesDocuments\.awp/, module: "documents" },
-  { pattern: /\/cloud\//, module: "cloud" },
-  { pattern: /\/viescolaire\.awp/, module: "attendance" },
-  { pattern: /\/timeline\.awp/, module: "timeline" },
+const ENDPOINT_TO_MODULE: Array<{
+  pattern: RegExp;
+  module: keyof CacheConfig;
+}> = [
+  { pattern: /\/notes\.awp/, module: 'grades' },
+  { pattern: /\/emploidutemps\.awp/, module: 'timetable' },
+  { pattern: /\/messages\.awp/, module: 'messages' },
+  { pattern: /\/cahierdetexte\.awp/, module: 'homework' },
+  { pattern: /\/elevesDocuments\.awp/, module: 'documents' },
+  { pattern: /\/cloud\//, module: 'cloud' },
+  { pattern: /\/viescolaire\.awp/, module: 'attendance' },
+  { pattern: /\/timeline\.awp/, module: 'timeline' },
 ];
-
 
 export function resolveModule(endpoint: string): keyof CacheConfig | undefined {
   for (const { pattern, module } of ENDPOINT_TO_MODULE) {
@@ -70,7 +71,6 @@ export function resolveModule(endpoint: string): keyof CacheConfig | undefined {
   return undefined;
 }
 
-
 export function parseDuration(str: string | false | undefined): number {
   if (!str) return 0;
   const match = str.match(/^(\d+)([smh])$/);
@@ -78,13 +78,16 @@ export function parseDuration(str: string | false | undefined): number {
   const val = parseInt(match[1], 10);
   const unit = match[2];
   switch (unit) {
-    case "s": return val * 1000;
-    case "m": return val * 60_000;
-    case "h": return val * 3_600_000;
-    default: return 0;
+    case 's':
+      return val * 1000;
+    case 'm':
+      return val * 60_000;
+    case 'h':
+      return val * 3_600_000;
+    default:
+      return 0;
   }
 }
-
 
 export function getCacheTtl(module: keyof CacheConfig): number {
   const config = getConfig().cache;
@@ -92,20 +95,18 @@ export function getCacheTtl(module: keyof CacheConfig): number {
   return parseDuration(config[module]);
 }
 
-
 function stableStringify(value: unknown): string {
-  if (value === null || value === undefined) return "null";
-  if (typeof value !== "object") return JSON.stringify(value);
-  if (Array.isArray(value)) return `[${value.map(stableStringify).join(",")}]`;
+  if (value === null || value === undefined) return 'null';
+  if (typeof value !== 'object') return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(stableStringify).join(',')}]`;
   const keys = Object.keys(value as Record<string, unknown>).sort();
-  return `{${keys.map((k) => `${JSON.stringify(k)}:${stableStringify((value as Record<string, unknown>)[k])}`).join(",")}}`;
+  return `{${keys.map((k) => `${JSON.stringify(k)}:${stableStringify((value as Record<string, unknown>)[k])}`).join(',')}}`;
 }
 
 export function buildCacheKey(endpoint: string, body?: unknown): string {
-  const bodyHash = body ? stableStringify(body) : "";
+  const bodyHash = body ? stableStringify(body) : '';
   return `${endpoint}::${bodyHash}`;
 }
-
 
 export function getFromCache<T>(key: string): T | undefined {
   const entry = cache.get(key);
@@ -117,7 +118,6 @@ export function getFromCache<T>(key: string): T | undefined {
   return entry.data as T;
 }
 
-
 export function setInCache(key: string, data: unknown, ttlMs: number): void {
   if (ttlMs <= 0) return;
   cache.set(key, {
@@ -127,7 +127,6 @@ export function setInCache(key: string, data: unknown, ttlMs: number): void {
   ensureSizeLimit();
   startCleanup();
 }
-
 
 export function clearCache(): void {
   cache.clear();

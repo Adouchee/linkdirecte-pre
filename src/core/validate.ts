@@ -1,13 +1,13 @@
-import { EdApiError } from "./errors";
+import { EdApiError } from './errors';
 
 export function assertNonEmptyString(
   value: unknown,
   name: string,
 ): asserts value is string {
-  if (typeof value !== "string" || value.trim().length === 0) {
+  if (typeof value !== 'string' || value.trim().length === 0) {
     throw new EdApiError(
       `${name} must be a non-empty string, got ${typeof value}`,
-      "INVALID_ARGUMENT",
+      'INVALID_ARGUMENT',
     );
   }
 }
@@ -16,10 +16,10 @@ export function assertPositiveNumber(
   value: unknown,
   name: string,
 ): asserts value is number {
-  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0) {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
     throw new EdApiError(
       `${name} must be a positive number, got ${JSON.stringify(value)}`,
-      "INVALID_ARGUMENT",
+      'INVALID_ARGUMENT',
     );
   }
 }
@@ -31,7 +31,7 @@ export function assertNonEmptyArray(
   if (!Array.isArray(value) || value.length === 0) {
     throw new EdApiError(
       `${name} must be a non-empty array, got ${JSON.stringify(value)}`,
-      "INVALID_ARGUMENT",
+      'INVALID_ARGUMENT',
     );
   }
 }

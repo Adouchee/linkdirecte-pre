@@ -1,5 +1,5 @@
-import { edFetch } from "../../core/fetch";
-import { requireCurrentAccount } from "../../core/request";
+import { edFetch } from '../../core/fetch';
+import { requireCurrentAccount } from '../../core/request';
 
 export interface AttendanceEntry {
   id: number;
@@ -32,5 +32,9 @@ export async function getAttendance(
 ): Promise<AttendanceResult> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/viescolaire.awp?v=7.14.3&verbe=get`;
-  return edFetch<AttendanceResult>(endpoint, { method: "POST", body: {}, ...options });
+  return edFetch<AttendanceResult>(endpoint, {
+    method: 'POST',
+    body: {},
+    ...options,
+  });
 }

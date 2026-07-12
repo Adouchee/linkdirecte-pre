@@ -3,7 +3,7 @@ export class EdError extends Error {
     message: string,
     public code: string,
     public statusCode?: number,
-    public raw?: unknown
+    public raw?: unknown,
   ) {
     super(message);
     this.name = this.constructor.name;

@@ -1,9 +1,9 @@
-import { edFetch } from "../../core/fetch";
-import { postOptions, requireCurrentAccount } from "../../core/request";
-import { decodeBase64Content } from "../../core/transform";
-import { EdApiError } from "../../core/errors";
-import { assertNonEmptyArray } from "../../core/validate";
-import dayjs from "dayjs";
+import { edFetch } from '../../core/fetch';
+import { postOptions, requireCurrentAccount } from '../../core/request';
+import { decodeBase64Content } from '../../core/transform';
+import { EdApiError } from '../../core/errors';
+import { assertNonEmptyArray } from '../../core/validate';
+import dayjs from 'dayjs';
 
 export interface HomeworkEntry {
   id: number;
@@ -61,11 +61,11 @@ export async function getHomeworkForDate(
   options: { raw?: boolean; explain?: boolean } = {},
 ): Promise<HomeworkEntry[]> {
   const account = requireCurrentAccount();
-  const formattedDate = dayjs(date).format("YYYY-MM-DD");
-  if (formattedDate === "Invalid Date") {
+  const formattedDate = dayjs(date).format('YYYY-MM-DD');
+  if (formattedDate === 'Invalid Date') {
     throw new EdApiError(
       `Invalid date parameter: ${JSON.stringify(date)}`,
-      "INVALID_ARGUMENT",
+      'INVALID_ARGUMENT',
     );
   }
   const request = {
@@ -81,10 +81,14 @@ export async function getHomeworkForDate(
         subject.toDo.content = decodeBase64Content(subject.toDo.content);
       }
       if (subject.toDo?.sessionContent?.content) {
-        subject.toDo.sessionContent.content = decodeBase64Content(subject.toDo.sessionContent.content);
+        subject.toDo.sessionContent.content = decodeBase64Content(
+          subject.toDo.sessionContent.content,
+        );
       }
       if (subject.sessionContent?.content) {
-        subject.sessionContent.content = decodeBase64Content(subject.sessionContent.content);
+        subject.sessionContent.content = decodeBase64Content(
+          subject.sessionContent.content,
+        );
       }
     }
   }
@@ -101,7 +105,7 @@ export async function markAsDone(
   homeworkIds: number[],
   options: { raw?: boolean; explain?: boolean } = {},
 ): Promise<MarkAsDoneResult> {
-  assertNonEmptyArray(homeworkIds, "homeworkIds");
+  assertNonEmptyArray(homeworkIds, 'homeworkIds');
   const account = requireCurrentAccount();
   const request = {
     endpoint: `/Eleves/${account.id}/cahierdetexte.awp?v=7.14.3&verbe=put`,

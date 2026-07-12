@@ -1,13 +1,17 @@
-import { edFetch } from "../../core/fetch";
-import { requireCurrentAccount } from "../../core/request";
-import type { AccountSettings } from "../../types";
+import { edFetch } from '../../core/fetch';
+import { requireCurrentAccount } from '../../core/request';
+import type { AccountSettings } from '../../types';
 
 export async function getSettings(
   options: { raw?: boolean; explain?: boolean } = {},
 ): Promise<AccountSettings> {
   const account = requireCurrentAccount();
   const endpoint = `/logins/${account.loginId}.awp?v=7.14.3&verbe=get`;
-  return edFetch<AccountSettings>(endpoint, { method: "POST", body: {}, ...options });
+  return edFetch<AccountSettings>(endpoint, {
+    method: 'POST',
+    body: {},
+    ...options,
+  });
 }
 
 export async function updateSettings(
@@ -30,7 +34,11 @@ export async function updateSettings(
     payload.confirmationMotDePasse = data.nouveauMotDePasse;
   }
   const endpoint = `/logins/${account.loginId}.awp?v=7.14.3&verbe=put`;
-  return edFetch<AccountSettings>(endpoint, { method: "POST", body: payload, ...options });
+  return edFetch<AccountSettings>(endpoint, {
+    method: 'POST',
+    body: payload,
+    ...options,
+  });
 }
 
 export async function updateAccessibility(
@@ -42,10 +50,10 @@ export async function updateAccessibility(
   return edFetch<{ success: boolean }>(
     `/parametreIndividuel.awp?v=7.14.3&verbe=put`,
     {
-      method: "POST",
+      method: 'POST',
       body: {
         path: `Préférences/Elèves/accessibiliteVisuelle/${account.id}`,
-        value: enabled ? "1" : "0",
+        value: enabled ? '1' : '0',
       },
       ...options,
     },

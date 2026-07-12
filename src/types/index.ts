@@ -1,5 +1,3 @@
-
-
 export interface EdResponse<T> {
   host: string;
   code: number;
@@ -8,7 +6,7 @@ export interface EdResponse<T> {
   data: T;
 }
 
-export type AccountType = "E" | "P" | "A" | "F";
+export type AccountType = 'E' | 'P' | 'A' | 'F';
 
 export interface Account {
   loginId: number;
@@ -23,7 +21,7 @@ export interface Account {
   main: boolean;
   accessToken?: string;
   profile: {
-    sexe: "M" | "F";
+    sexe: 'M' | 'F';
     photoUrl: string;
     classe?: {
       id: number;
@@ -45,7 +43,7 @@ export interface UserProfile {
 }
 
 export interface LoginChallenge {
-  type: "securityQuestion";
+  type: 'securityQuestion';
   question: string;
   choices: string[];
   answer: (choiceIndex: number) => Promise<LoginSuccess>;
@@ -136,7 +134,7 @@ export type WithDebug<T> = T & { _debug?: DebugInfo };
 
 export interface CloudNode {
   id: string;
-  type: "file" | "folder";
+  type: 'file' | 'folder';
   label: string;
   date: string;
   size: number;
@@ -157,12 +155,12 @@ export interface CloudNode {
 }
 
 export interface CloudFolderNode extends CloudNode {
-  type: "folder";
+  type: 'folder';
   children: CloudNode[];
 }
 
 export interface CloudFileNode extends CloudNode {
-  type: "file";
+  type: 'file';
 }
 
 export type CloudEntry = CloudFolderNode | CloudFileNode;

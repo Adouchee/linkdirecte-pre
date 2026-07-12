@@ -1,8 +1,8 @@
-import { emitter } from "./emitter";
-import { getGrades } from "../grades";
-import { getMessages } from "../messages";
-import { getHomework } from "../homework";
-import { getTimeline } from "../timeline";
+import { emitter } from './emitter';
+import { getGrades } from '../grades';
+import { getMessages } from '../messages';
+import { getHomework } from '../homework';
+import { getTimeline } from '../timeline';
 
 const DEFAULT_POLL_INTERVAL_MS = 60_000;
 
@@ -40,11 +40,11 @@ async function poll(): Promise<void> {
       getTimeline(),
     ]);
 
-    checkDiff("newGrade", (grades as any).notes, "id");
-    checkDiff("newMessage", (messages as any).messages?.received, "id");
-    checkDiff("newTimelineEntry", timeline as any[], "id");
+    checkDiff('newGrade', (grades as any).notes, 'id');
+    checkDiff('newMessage', (messages as any).messages?.received, 'id');
+    checkDiff('newTimelineEntry', timeline as any[], 'id');
   } catch (error) {
-    emitter.emit("pollingError", error);
+    emitter.emit('pollingError', error);
   }
 }
 

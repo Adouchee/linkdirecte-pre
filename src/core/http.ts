@@ -1,7 +1,7 @@
-import { getConfig, getToken, getTwofaToken } from "./store";
-import { EdNetworkError, EdRateLimitError } from "./errors";
+import { getConfig, getToken, getTwofaToken } from './store';
+import { EdNetworkError, EdRateLimitError } from './errors';
 
-export const BASE_API_URL = "https://api.ecoledirecte.com/v3";
+export const BASE_API_URL = 'https://api.ecoledirecte.com/v3';
 
 export const DEFAULT_TIMEOUT_MS = 15_000;
 export const DEFAULT_MAX_RETRIES = 3;
@@ -12,8 +12,8 @@ export const SUCCESS_CODES = new Set([200, 250]);
 export const SESSION_EXPIRED_CODES = new Set([520, 521, 525]);
 
 export const DOWNLOAD_ENDPOINTS = [
-  "telechargement.awp",
-  "televersement.awp",
+  'telechargement.awp',
+  'televersement.awp',
 ] as const;
 
 export type QueryParams = Record<string, string | number>;
@@ -21,7 +21,7 @@ export type QueryParams = Record<string, string | number>;
 export function buildApiUrl(endpoint: string): URL {
   const config = getConfig();
   const baseUrl = config.proxyUrl || BASE_API_URL;
-  const fullUrl = endpoint.startsWith("http")
+  const fullUrl = endpoint.startsWith('http')
     ? endpoint
     : `${baseUrl}${endpoint}`;
 
@@ -42,7 +42,7 @@ export function isDownloadEndpoint(endpoint: string): boolean {
   );
 }
 
-export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
 export interface RequestHeaderOptions {
   skipAuth?: boolean;
@@ -65,29 +65,29 @@ export function buildHeaders(
   const config = getConfig();
 
   const headers: Record<string, string> = {
-    "User-Agent": config.userAgent || "",
-    "Content-Type": "application/x-www-form-urlencoded",
-    "X-Requested-With": "typeof.scolup.linkdirecte",
+    'User-Agent': config.userAgent || '',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'X-Requested-With': 'typeof.scolup.linkdirecte',
   };
 
   if (config.proxyUrl) {
-    headers["X-Proxy-Base-URL"] = BASE_API_URL;
+    headers['X-Proxy-Base-URL'] = BASE_API_URL;
   }
 
   if (!options.skipAuth) {
     const token = options.xToken || getToken();
     if (token) {
-      headers["X-Token"] = token;
+      headers['X-Token'] = token;
     }
     const twofaToken = options.twofaToken || getTwofaToken();
     if (twofaToken) {
-      headers["2FA-Token"] = twofaToken;
+      headers['2FA-Token'] = twofaToken;
     }
   }
 
   if (options.useGtk) {
-    headers["X-GTK"] = options.useGtk;
-    headers["Cookie"] = `GTK=${options.useGtk}`;
+    headers['X-GTK'] = options.useGtk;
+    headers['Cookie'] = `GTK=${options.useGtk}`;
   }
 
   return headers;
@@ -117,19 +117,19 @@ export async function sendRequest(
       signal: AbortSignal.timeout(options.timeoutMs || DEFAULT_TIMEOUT_MS),
     });
   } catch (error: any) {
-    throw new EdNetworkError(error.message, "NETWORK_ERROR", 0, error);
+    throw new EdNetworkError(error.message, 'NETWORK_ERROR', 0, error);
   }
 }
 
 export async function parseJsonResponse(response: Response): Promise<any> {
   if (response.status === 429) {
-    throw new EdRateLimitError("Rate limit exceeded", "RATE_LIMIT", 429);
+    throw new EdRateLimitError('Rate limit exceeded', 'RATE_LIMIT', 429);
   }
 
   if (response.status >= 500) {
     throw new EdNetworkError(
       `Server error: ${response.status}`,
-      "SERVER_ERROR",
+      'SERVER_ERROR',
       response.status,
     );
   }
@@ -137,10 +137,10 @@ export async function parseJsonResponse(response: Response): Promise<any> {
   try {
     return await response.json();
   } catch {
-    const text = await response.text().catch(() => "");
+    const text = await response.text().catch(() => '');
     throw new EdNetworkError(
       `Failed to parse response as JSON (HTTP ${response.status}): ${text.slice(0, 200)}`,
-      "PARSE_ERROR",
+      'PARSE_ERROR',
       response.status,
     );
   }
@@ -148,7 +148,7 @@ export async function parseJsonResponse(response: Response): Promise<any> {
 
 function buildFormBody(body: unknown): string | undefined {
   if (body instanceof FormData) return undefined;
-  if (typeof body === "string") return body;
+  if (typeof body === 'string') return body;
   if (isPlainObject(body)) {
     return new URLSearchParams(
       Object.entries(body).map(([key, value]) => [key, String(value)]),
@@ -164,6 +164,6 @@ function hasBody(body: unknown): body is NonNullable<unknown> {
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return (
-    typeof value === "object" && value !== null && !(value instanceof FormData)
+    typeof value === 'object' && value !== null && !(value instanceof FormData)
   );
 }

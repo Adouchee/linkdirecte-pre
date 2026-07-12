@@ -1,5 +1,5 @@
-import { edFetch } from "../../core/fetch";
-import { requireCurrentAccount } from "../../core/request";
+import { edFetch } from '../../core/fetch';
+import { requireCurrentAccount } from '../../core/request';
 
 export interface QcmEntry {
   id: number;
@@ -22,7 +22,11 @@ export async function getQcms(
 ): Promise<QcmsResult> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/qcms/0/associations.awp?v=7.14.3&verbe=get`;
-  return edFetch<QcmsResult>(endpoint, { method: "POST", body: {}, ...options });
+  return edFetch<QcmsResult>(endpoint, {
+    method: 'POST',
+    body: {},
+    ...options,
+  });
 }
 
 export interface QcmDetailResult {
@@ -42,19 +46,27 @@ export async function getQcmDetail(
 ): Promise<QcmDetailResult> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/qcms/${idQcm}/associations/${idAssociation}.awp?v=7.14.3&verbe=get`;
-  return edFetch<QcmDetailResult>(endpoint, { method: "POST", body: { anneeQCMs: "" }, ...options });
+  return edFetch<QcmDetailResult>(endpoint, {
+    method: 'POST',
+    body: { anneeQCMs: '' },
+    ...options,
+  });
 }
 
 export async function updateQcmStatus(
   idQcm: number,
   idAssociation: number,
   idParticipant: number,
-  action: "updateStartDate" | "updateEndDate",
+  action: 'updateStartDate' | 'updateEndDate',
   options: { raw?: boolean; explain?: boolean } = {},
 ): Promise<{ success: boolean }> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/qcms/${idQcm}/associations/${idAssociation}/participants/${idParticipant}.awp?v=7.14.3&verbe=patch`;
-  return edFetch<{ success: boolean }>(endpoint, { method: "POST", body: { action }, ...options });
+  return edFetch<{ success: boolean }>(endpoint, {
+    method: 'POST',
+    body: { action },
+    ...options,
+  });
 }
 
 export async function submitQcmAnswer(
@@ -71,7 +83,7 @@ export async function submitQcmAnswer(
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/qcms/${params.idQcm}/associations/${params.idAssociation}/participants/${params.idParticipant}/reponse/${params.idReponse}.awp?v=7.14.3&verbe=patch`;
   return edFetch<{ success: boolean }>(endpoint, {
-    method: "POST",
+    method: 'POST',
     body: {
       reponse: {
         id: params.idReponse,

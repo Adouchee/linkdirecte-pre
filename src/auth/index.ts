@@ -1,11 +1,28 @@
-import { randomUUID } from "node:crypto";
-import { getConfig, getAccount, getToken, getTwofaToken, setToken, setTwofaToken, setAccount, persistSession, loadSession, clearSession } from "../core/store";
-import { buildApiUrl, buildRequestBody, buildHeaders, sendRequest, parseJsonResponse } from "../core/http";
-import { EdAuthError } from "../core/errors";
-import { assertNonEmptyString } from "../core/validate";
-import { LoginResult, LoginSuccess, LoginChallenge, Account } from "../types";
-import { transform } from "../core/transform";
-import { startTokenKeepalive, stopTokenKeepalive } from "../core/health";
+import { randomUUID } from 'node:crypto';
+import {
+  getConfig,
+  getAccount,
+  getToken,
+  getTwofaToken,
+  setToken,
+  setTwofaToken,
+  setAccount,
+  persistSession,
+  loadSession,
+  clearSession,
+} from '../core/store';
+import {
+  buildApiUrl,
+  buildRequestBody,
+  buildHeaders,
+  sendRequest,
+  parseJsonResponse,
+} from '../core/http';
+import { EdAuthError } from '../core/errors';
+import { assertNonEmptyString } from '../core/validate';
+import { LoginResult, LoginSuccess, LoginChallenge, Account } from '../types';
+import { transform } from '../core/transform';
+import { startTokenKeepalive, stopTokenKeepalive } from '../core/health';
 
 export interface LoginOptions {
   rememberMe?: boolean;
@@ -20,8 +37,8 @@ export async function login(
   motdepasse: string,
   options: LoginOptions = {},
 ): Promise<LoginResult> {
-  assertNonEmptyString(identifiant, "identifiant");
-  assertNonEmptyString(motdepasse, "motdepasse");
+  assertNonEmptyString(identifiant, 'identifiant');
+  assertNonEmptyString(motdepasse, 'motdepasse');
 
   const gtk = await fetchGtkToken();
 
@@ -39,8 +56,12 @@ export async function login(
     uuid = randomUUID();
   }
 
-  const { data: initialResult, twofaToken, xToken } = await sendAuthRequest(
-    "/login.awp?v=7.14.3",
+  const {
+    data: initialResult,
+    twofaToken,
+    xToken,
+  } = await sendAuthRequest(
+    '/login.awp?v=7.14.3',
     {
       isReLogin: false,
       identifiant,
@@ -54,15 +75,25 @@ export async function login(
 
   if (initialResult.code === 250) {
     return handleTwoFactor(
-      identifiant, motdepasse, uuid, options,
-      gtk, twofaToken, xToken,
+      identifiant,
+      motdepasse,
+      uuid,
+      options,
+      gtk,
+      twofaToken,
+      xToken,
     );
   }
 
   if (xToken) setToken(xToken);
   if (twofaToken) setTwofaToken(twofaToken);
 
-  const result = await handleLoginSuccess(initialResult, identifiant, uuid, options);
+  const result = await handleLoginSuccess(
+    initialResult,
+    identifiant,
+    uuid,
+    options,
+  );
   await persistSession();
   startTokenKeepalive();
   return result;
@@ -81,12 +112,12 @@ async function sendAuthRequest(
     ...buildHeaders({ skipAuth: true, useGtk: gtk }),
   };
 
-  if (twofaToken) headers["2FA-Token"] = twofaToken;
-  if (xToken) headers["X-Token"] = xToken;
+  if (twofaToken) headers['2FA-Token'] = twofaToken;
+  if (xToken) headers['X-Token'] = xToken;
 
   const response = await sendRequest({
     url: urlObj.toString(),
-    method: "POST",
+    method: 'POST',
     headers,
     body: buildRequestBody(endpoint, body),
   });
@@ -95,23 +126,23 @@ async function sendAuthRequest(
 
   return {
     data,
-    twofaToken: response.headers.get("2fa-token") || "",
-    xToken: response.headers.get("x-token") || "",
+    twofaToken: response.headers.get('2fa-token') || '',
+    xToken: response.headers.get('x-token') || '',
   };
 }
 
 async function fetchGtkToken(): Promise<string> {
-  const urlObj = buildApiUrl("/login.awp?gtk=1&v=7.14.3");
+  const urlObj = buildApiUrl('/login.awp?gtk=1&v=7.14.3');
 
   const response = await sendRequest({
     url: urlObj.toString(),
-    method: "GET",
+    method: 'GET',
     headers: buildHeaders({ skipAuth: true }),
   });
 
-  const cookies = response.headers.get("set-cookie") || "";
+  const cookies = response.headers.get('set-cookie') || '';
   const match = cookies.match(/GTK=([^;]+)/);
-  return match ? match[1] : "";
+  return match ? match[1] : '';
 }
 
 function decodeBase64(input: string): string {
@@ -120,7 +151,7 @@ function decodeBase64(input: string): string {
   for (let i = 0; i < binary.length; i++) {
     bytes[i] = binary.charCodeAt(i);
   }
-  return new TextDecoder("utf-8").decode(bytes);
+  return new TextDecoder('utf-8').decode(bytes);
 }
 
 async function handleTwoFactor(
@@ -132,8 +163,12 @@ async function handleTwoFactor(
   twofaToken: string,
   xToken: string,
 ): Promise<LoginChallenge | LoginSuccess> {
-  const { data: challengeData, twofaToken: t3, xToken: x3 } = await sendAuthRequest(
-    "/connexion/doubleauth.awp?verbe=get&v=7.14.3",
+  const {
+    data: challengeData,
+    twofaToken: t3,
+    xToken: x3,
+  } = await sendAuthRequest(
+    '/connexion/doubleauth.awp?verbe=get&v=7.14.3',
     {},
     gtk,
     twofaToken,
@@ -146,8 +181,12 @@ async function handleTwoFactor(
   const answer = async (choiceIndex: number): Promise<LoginSuccess> => {
     const selectedChoice = challengeData.data.propositions[choiceIndex];
 
-    const { data: validationData, twofaToken: t4, xToken: x4 } = await sendAuthRequest(
-      "/connexion/doubleauth.awp?verbe=post&v=7.14.3",
+    const {
+      data: validationData,
+      twofaToken: t4,
+      xToken: x4,
+    } = await sendAuthRequest(
+      '/connexion/doubleauth.awp?verbe=post&v=7.14.3',
       { choix: selectedChoice },
       gtk,
       t3,
@@ -156,8 +195,12 @@ async function handleTwoFactor(
 
     const { cn, cv } = validationData.data;
 
-    const { data: finalResult, twofaToken: t5, xToken: x5 } = await sendAuthRequest(
-      "/login.awp?v=7.14.3",
+    const {
+      data: finalResult,
+      twofaToken: t5,
+      xToken: x5,
+    } = await sendAuthRequest(
+      '/login.awp?v=7.14.3',
       {
         isReLogin: false,
         identifiant,
@@ -176,7 +219,12 @@ async function handleTwoFactor(
     if (x5) setToken(x5);
     if (t5) setTwofaToken(t5);
 
-    const result = await handleLoginSuccess(finalResult, identifiant, uuid, options);
+    const result = await handleLoginSuccess(
+      finalResult,
+      identifiant,
+      uuid,
+      options,
+    );
     await persistSession();
     startTokenKeepalive();
     return result;
@@ -189,7 +237,7 @@ async function handleTwoFactor(
   }
 
   return {
-    type: "securityQuestion",
+    type: 'securityQuestion',
     question,
     choices,
     answer,
@@ -214,7 +262,7 @@ async function handleLoginSuccess(
 
   return {
     user: mainAccount,
-    token: result.token || getToken() || "",
+    token: result.token || getToken() || '',
     sessionId: mainAccount.uid,
   };
 }
@@ -245,7 +293,7 @@ export async function refreshToken(): Promise<string> {
     await loadSession();
     account = getAccount();
     if (!account) {
-      throw new EdAuthError("No account found for refresh", "NO_ACCOUNT");
+      throw new EdAuthError('No account found for refresh', 'NO_ACCOUNT');
     }
   }
 
@@ -261,15 +309,19 @@ export async function refreshToken(): Promise<string> {
       const storedTwofaToken = getTwofaToken();
       const storedXToken = getToken();
 
-      const { data, xToken: newXToken, twofaToken: newTwofaToken } = await sendAuthRequest(
-        "/login.awp?v=7.14.3",
+      const {
+        data,
+        xToken: newXToken,
+        twofaToken: newTwofaToken,
+      } = await sendAuthRequest(
+        '/login.awp?v=7.14.3',
         {
           identifiant: account.identifiant,
           isReLogin: true,
-          motdepasse: "???",
+          motdepasse: '???',
           accesstoken: accessToken,
           typeCompte: account.accountType,
-          uuid: uuid || "",
+          uuid: uuid || '',
         },
         gtk,
         storedTwofaToken,
@@ -280,7 +332,7 @@ export async function refreshToken(): Promise<string> {
       if (newTwofaToken) setTwofaToken(newTwofaToken);
 
       startTokenKeepalive();
-      return newXToken || data.token || "";
+      return newXToken || data.token || '';
     } catch (error) {
       config.onError?.(error, async () => {});
     }
@@ -292,10 +344,10 @@ export async function refreshToken(): Promise<string> {
       rememberMe: true,
     });
 
-    if ("token" in loginResult) {
+    if ('token' in loginResult) {
       return loginResult.token;
     }
   }
 
-  throw new EdAuthError("Refresh failed", "REFRESH_FAILED");
+  throw new EdAuthError('Refresh failed', 'REFRESH_FAILED');
 }

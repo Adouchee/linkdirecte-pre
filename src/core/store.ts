@@ -1,7 +1,7 @@
-import { EdConfig, StorageAdapter, Account } from "../types";
+import { EdConfig, StorageAdapter, Account } from '../types';
 
 export const DEFAULT_USER_AGENT =
-  "Linkdirecte/1.0 (iPhone; CPU OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5.2 Mobile/15E148 EDMOBILE v7.14.3";
+  'Linkdirecte/1.0 (iPhone; CPU OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5.2 Mobile/15E148 EDMOBILE v7.14.3';
 
 export interface EdState {
   config: EdConfig;
@@ -47,7 +47,6 @@ export function setTwofaToken(token: string): void {
   state.twofaToken = token;
 }
 
-
 export function getLastTokenRefresh(): Date | undefined {
   return state.lastTokenRefresh;
 }
@@ -61,23 +60,27 @@ export function setAccount(account: Account): void {
 }
 
 const STORAGE_KEYS = {
-  token: "ed_tk",
-  twofaToken: "ed_tft",
-  account: "ed_acc",
-  lastRefresh: "ed_lr",
+  token: 'ed_tk',
+  twofaToken: 'ed_tft',
+  account: 'ed_acc',
+  lastRefresh: 'ed_lr',
 } as const;
-
 
 export async function persistSession(): Promise<void> {
   const storage = state.config.storage;
   if (!storage) return;
 
   if (state.token) await storage.set(STORAGE_KEYS.token, state.token);
-  if (state.twofaToken) await storage.set(STORAGE_KEYS.twofaToken, state.twofaToken);
-  if (state.account) await storage.set(STORAGE_KEYS.account, JSON.stringify(state.account));
-  if (state.lastTokenRefresh) await storage.set(STORAGE_KEYS.lastRefresh, state.lastTokenRefresh.toISOString());
+  if (state.twofaToken)
+    await storage.set(STORAGE_KEYS.twofaToken, state.twofaToken);
+  if (state.account)
+    await storage.set(STORAGE_KEYS.account, JSON.stringify(state.account));
+  if (state.lastTokenRefresh)
+    await storage.set(
+      STORAGE_KEYS.lastRefresh,
+      state.lastTokenRefresh.toISOString(),
+    );
 }
-
 
 export async function clearSession(): Promise<void> {
   state.token = undefined;
@@ -128,7 +131,7 @@ export async function loadSession(): Promise<boolean> {
     }
 
     if (loaded) {
-      const { startTokenKeepalive } = await import("./health");
+      const { startTokenKeepalive } = await import('./health');
       startTokenKeepalive();
     }
 
@@ -137,5 +140,3 @@ export async function loadSession(): Promise<boolean> {
     return false;
   }
 }
-
-
