@@ -15,7 +15,7 @@
 * 💡 Output simplified
 * 🛜 Offline handled
 * 🎓 Support for most student features _(parent accounts soon!)_
-* 🌐 Compatible with Node.js, Bun and browser
+* 🌐 Compatible with Node.js 18+, Bun, Deno and browser
 * 🔒 No password stored
 
 ## 🚀 Quick start
