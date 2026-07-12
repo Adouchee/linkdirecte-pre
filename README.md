@@ -3,19 +3,20 @@
 </p>
 
 <p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/group/npm/linkdirecte+github/Scolup/Linkdirecte/stars.svg?theme=blue" /><img alt="badge group" src="https://shieldcn.dev/group/npm/linkdirecte+github/Scolup/Linkdirecte/stars.svg?theme=blue&amp;mode=light" /></picture>
+  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/group/npm/linkdirecte+github/Scolup/Linkdirecte/stars+github/Scolup/Linkdirecte/license+badge/Actively-maintained-22c55e.svg?variant=secondary&amp;theme=blue" /><img alt="badge group" src="https://shieldcn.dev/group/npm/linkdirecte+github/Scolup/Linkdirecte/stars+github/Scolup/Linkdirecte/license+badge/Actively-maintained-22c55e.svg?variant=secondary&amp;theme=blue&amp;mode=light" /></picture>
 </p>
 
 ## ⭐️ Features
 
 * 🌳 Tree-shakeable
-* 🚪 Login fully handled
+* 🚪 Login fully handled (2FA, GTK, cn/cv, session refresh…)
 * 🛣️ Built-in proxy support (for web usage)
-* 🧠 Easy manipulation
+* 🧠 Simple and type-safe data manipulation
 * 💡 Output simplified
 * 🛜 Offline handled
 * 🎓 Support for most student features _(parent accounts soon!)_
 * 🌐 Compatible with Node.js, Bun and browser
+* 🔒 No password stored
 
 ## 🚀 Quick start
 
@@ -35,9 +36,13 @@ Easily log in _(Linkdirecte will handle the rest!)_ :
 import { login } from "linkdirecte"
 ```
 
+Full docs are available in [the `docs` directory](docs/).
+
 ## ⚖️ Legal
 
 Linkdirecte is licensed under the **Affero General Public License 3** (AGPL 3). No warranty.
+
+This project is **not affiliated** in any way with Aplim.
 
 > [!IMPORTANT]
 > This software was built in the purpose of making data handling easier for anyone working with EcoleDirecte’s data. **Please don’t use this for malicious purposes.**
