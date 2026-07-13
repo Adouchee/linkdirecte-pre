@@ -24,7 +24,8 @@
     "lint": "tsc --noEmit",
     "format": "prettier --write src/",
     "format:check": "prettier --check src/",
-    "precommit": "npm run format && npm run lint"
+    "precommit": "npm run format && npm run lint",
+    "test": "bun test"
   },
   "dependencies": {
     "dayjs": "^1.11.21",

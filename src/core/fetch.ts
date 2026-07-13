@@ -171,7 +171,7 @@ export async function edFetch<T>(
   };
 
   return limiter(() =>
-    pRetry(runRequest, {
+    pRetry(() => runRequest(0), {
       retries: config.maxRetries ?? DEFAULT_MAX_RETRIES,
       minTimeout: config.retryDelay ?? DEFAULT_RETRY_DELAY_MS,
       factor: 2,
