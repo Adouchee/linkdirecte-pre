@@ -9,7 +9,7 @@ import {
   persistSession,
   loadSession,
   clearSession,
-} from '../core/store';
+} from "../core/store";
 import {
   buildApiUrl,
   buildRequestBody,
