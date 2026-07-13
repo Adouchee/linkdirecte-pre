@@ -77,6 +77,30 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 * Try to keep the SDK as fast and secure as possible.
 * Your response will be refused if the developer experience is degraded by your changes.
 * **NEVER** touch the version number of the package. Project admins are the only ones allowed to update it.
+* If you're writing a pull request, present it with this template (otherwise it will be deleted) :
+  ```md
+  <p align="center">
+    <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/glow.svg?title=Pull+Request&amp;subtitle=Thanks+for+participating+in+Linkdirecte%E2%80%99s+development%21&amp;logo=lu%3AGitPullRequestArrow&amp;mode=dark&amp;theme=blue&amp;align=left" /><img alt="Thanks for participating in Linkdirecte’s development!" src="https://shieldcn.dev/header/glow.svg?title=Pull+Request&amp;subtitle=Thanks+for+participating+in+Linkdirecte%E2%80%99s+development%21&amp;logo=lu%3AGitPullRequestArrow&amp;mode=light&amp;theme=blue&amp;align=left" /></picture>
+  </p>
+
+  ## 🌐 Overview
+
+  A quick description of the changes.
+
+  ## 📋 Changelog
+
+  * A clear list of changes
+    * **Must** cover every change.
+  *Another change
+
+  ## ℹ️ Other info _(optional)_
+
+  Potential link to related issue, or any other info you’d like to include.
+
+  ---
+
+  _Pull Request posted by the AI agent [insert name here]_
+  ```
 
 **ALWAYS** use Bun over npm, yarn, pnpm and others.
 
