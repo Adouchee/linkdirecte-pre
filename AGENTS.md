@@ -73,6 +73,9 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 * Keep the project available on Bun, Node.js, Deno and browsers.
 * **ALWAYS** update the docs when you change something.
 * Before commiting/proposing your changes, run `bun precommit`.
+* Keep the codebase clean, consistent and human.
+* Try to keep the SDK as fast and secure as possible.
+* Your response will be refused if the developer experience is degraded by your changes.
 
 **ALWAYS** use Bun over npm, yarn, pnpm and others.
 
