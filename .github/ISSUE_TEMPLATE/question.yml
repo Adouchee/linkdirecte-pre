@@ -1,6 +1,6 @@
-name: "\u2795 Question"
+name: "\u2753 Question"
 description: "Have a question about Linkdirecte? We'll answer it."
-title: "[\u2795] "
+title: "[\u2753] "
 labels: ["question"]
 assignees:
   - Adouchee
@@ -28,7 +28,7 @@ body:
     id: context
     attributes:
       label: Additional context
-      description: Code snippets, examples from other tools, related issues, links...Anything that helps us understand your question.
+      description: Code snippets, examples from other tools, related issues, links... Anything that helps us understand your question.
       placeholder: "e.g. Docsdirecte (docsdirecte.scolup.qzz.io) documents it well."
     validations:
       required: false
