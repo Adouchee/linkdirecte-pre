@@ -1,3 +1,7 @@
+<p align="left">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Security+policy&amp;subtitle=Keeping+Linkdirecte+safe+is+a+priority.&amp;logo=lu%3ALock&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Security policy | Keeping Linkdirecte safe is a priority." src="https://shieldcn.dev/header/glow.svg?title=Security+policy&amp;subtitle=Keeping+Linkdirecte+safe+is+a+priority.&amp;logo=lu%3ALock&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
+</p>
+
 # 🔒 Security Policy
 
 ## Reporting a vulnerability
