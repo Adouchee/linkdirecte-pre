@@ -1,5 +1,5 @@
-name: "\u2795 Feature request"
-description: "Have an idea to make Linkdirecte better? We'd love to hear it."
+name: "\u2795 Question"
+description: "Have a question about Linkdirecte? We'll answer it."
 title: "[\u2795] "
 labels: ["question"]
 assignees:
@@ -13,23 +13,14 @@ body:
           <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Question&amp;subtitle=Thanks+for+your+interest+in+Linkdirecte%21&amp;logo=lu%3ALightbulb&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Question | Thanks for your interest in Linkdirecte!" src="https://shieldcn.dev/header/glow.svg?title=Question&amp;subtitle=Thanks+for+your+interest+in+Linkdirecte%21&amp;logo=lu%3ALightbulb&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
         </p>
 
-        All ideas are welcome. Big or small, rough or refined. If it would make Linkdirecte better for you, it's worth sharing.
+        Any questions are welcome. Let's pretend "dumb" questions don't exist.
 
   - type: textarea
-    id: description
+    id: question
     attributes:
-      label: What would you like to see?
-      description: Describe the feature or improvement you have in mind.
-      placeholder: "e.g. Automatic caculation of current average if not sent by EcoleDirecte."
-    validations:
-      required: true
-
-  - type: textarea
-    id: use-case
-    attributes:
-      label: Why is this useful?
-      description: What problem does it solve? What's your workflow like without it?
-      placeholder: "e.g. I'm building a Discord bot that gives you your average, and I'd like to not have to manually calculate it."
+      label: What would you like to know?
+      description: Describe your question.
+      placeholder: "e.g. When will you add support for teacher accounts?"
     validations:
       required: true
 
@@ -37,8 +28,8 @@ body:
     id: context
     attributes:
       label: Additional context
-      description: Code snippets, examples from other tools, related issues...Anything that helps us understand your vision.
-      placeholder: "e.g. Similar to how Blocksnote populates the averages alone."
+      description: Code snippets, examples from other tools, related issues, links...Anything that helps us understand your question.
+      placeholder: "e.g. Docsdirecte (docsdirecte.scolup.qzz.io) documents it well."
     validations:
       required: false
 
@@ -47,5 +38,5 @@ body:
     attributes:
       label: Before submitting
       options:
-        - label: I checked that this hasn't already been requested or implemented
+        - label: I checked that this question hasn't already been asked
           required: true
