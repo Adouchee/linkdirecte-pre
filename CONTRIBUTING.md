@@ -16,6 +16,26 @@ bun install
 ```
 3. ⛏️ Start working!
 
+## 🗂️ Project structure
+
+```
+src/
+├── auth/       # Login, token management, 2FA
+├── core/       # Shared HTTP client, session handling
+├── modules/    # API endpoints (grades, absences, etc.)
+└── types/      # TypeScript type definitions
+tests/          # Bun test files
+docs/           # Documentation
+```
+
+## 🧪 Running tests
+
+```bash
+bun test
+```
+
+Tests live in `tests/` and use Bun's built-in test runner. If you're adding a new feature or fixing a bug, add or update tests where relevant.
+
 ## 📏 Rules
 
 * At every production commit (this means before a PR is merged or in a commit directly pushed to main), **run `bun precommit`**. This will run checks and format with prettier.
