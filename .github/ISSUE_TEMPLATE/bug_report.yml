@@ -1,0 +1,76 @@
+name: "\U0001F41B Bug report"
+description: "Something isn't working? Let us know so we can fix it."
+title: "[\U0001F41B] "
+labels: ["bug"]
+assignees:
+  - Adouchee
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thanks for reporting a bug! \u2764\ufe0f
+
+        Every report helps us keep Linkdirecte reliable. No detail is too small — even if you're not sure it's a bug, go ahead and file it.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear and concise description of the bug.
+      placeholder: e.g. "When I click the share button, nothing happens."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: How can we see this bug ourselves?
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen instead?
+      placeholder: "e.g. The share button should open the share dialog."
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Which runtime and version are you using? Check with `node --version`, `bun --version`, or `deno --version`.
+      placeholder: |
+        - Runtime: Bun 1.1.0
+        - OS: macOS 14.3
+        - Browser (if applicable): Chrome 122
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Anything else that might help? Screenshots, logs, links — all welcome.
+      placeholder: "e.g. Screenshot of the error, console output, related issues..."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before submitting
+      options:
+        - label: I am using a recent version of Linkdirecte
+          required: false
+        - label: I checked that this bug hasn't already been reported
+          required: false
