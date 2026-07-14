@@ -1,5 +1,5 @@
 <p align="center">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/glow.svg?title=Contribute+to+Linkdirecte&amp;subtitle=It%27s+also+thanks+to+you+if+Linkdirecte+exists+today%21&amp;logo=lu%3AHandshake&amp;mode=dark&amp;theme=blue&amp;align=left" /><img alt="Contribute to Linkdirecte | It's also thanks to you if Linkdirecte exists today!" src="https://shieldcn.dev/header/glow.svg?title=Contribute+to+Linkdirecte&amp;subtitle=It%27s+also+thanks+to+you+if+Linkdirecte+exists+today%21&amp;logo=lu%3AHandshake&amp;mode=light&amp;theme=blue&amp;align=left" /></picture>
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Contribute+to+Linkdirecte&amp;subtitle=It%27s+also+thanks+to+you+if+Linkdirecte+exists+today%21&amp;logo=lu%3AHandshake&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Contribute to Linkdirecte | It's also thanks to you if Linkdirecte exists today!" src="https://shieldcn.dev/header/glow.svg?title=Contribute+to+Linkdirecte&amp;subtitle=It%27s+also+thanks+to+you+if+Linkdirecte+exists+today%21&amp;logo=lu%3AHandshake&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
 </p>
 
 ## 🚀 Getting started
@@ -36,5 +36,5 @@ We already wrote resources specifically for agents so they understand the codeba
 ---
 
 <p align="center">
-  <a href="https://github.com/Scolup/Linkdirecte/graphs/contributors"><picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/contributors/Scolup/Linkdirecte.svg?preset=glow&amp;theme=blue&amp;size=80&amp;names=true&amp;align=left&amp;mode=dark" /><img alt="Project contributors" src="https://shieldcn.dev/contributors/Scolup/Linkdirecte.svg?preset=glow&amp;theme=blue&amp;size=80&amp;names=true&amp;align=left&amp;mode=light" /></picture></a>
+  <a href="https://github.com/Scolup/Linkdirecte/graphs/contributors"><picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/contributors/Scolup/Linkdirecte.svg?preset=glow&amp;theme=blue&amp;size=80&amp;names=true&amp;align=left&amp;mode=light" /><img alt="Project contributors" src="https://shieldcn.dev/contributors/Scolup/Linkdirecte.svg?preset=glow&amp;theme=blue&amp;size=80&amp;names=true&amp;align=left&amp;mode=dark" /></picture></a>
 </p>
