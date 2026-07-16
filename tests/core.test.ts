@@ -329,8 +329,8 @@ describe('Core Fetch Mechanism & Error Handling', () => {
       },
     };
 
-    storageMock.set('ed_access_token_98765', 'saved_access_token');
-    storageMock.set('ed_uuid_98765', 'saved_uuid');
+    storageMock.set('ed_access_token_9876', 'saved_access_token');
+    storageMock.set('ed_uuid_9876', 'saved_uuid');
 
     configure({
       storage: storageMock,
