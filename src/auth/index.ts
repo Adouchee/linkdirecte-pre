@@ -29,21 +29,55 @@ export interface LoginOptions {
   on2faRequired?: (
     question: string,
     choices: string[],
-  ) => number | Promise<number>;
+  ) => number | string | Promise<number | string>;
+}
+
+export interface LoginUnifiedOptions extends LoginOptions {
+  identifiant?: string;
+  username?: string;
+  identifier?: string;
+  motdepasse?: string;
+  password?: string;
 }
 
 export async function login(
-  identifiant: string,
-  motdepasse: string,
+  identifiantOrParams: string | LoginUnifiedOptions,
+  motdepasse?: string,
   options: LoginOptions = {},
 ): Promise<LoginResult> {
+  let identifiant = '';
+  let finalPassword = '';
+  let finalOptions = options;
+
+  if (typeof identifiantOrParams === 'object' && identifiantOrParams !== null) {
+    identifiant =
+      identifiantOrParams.identifiant ||
+      identifiantOrParams.username ||
+      identifiantOrParams.identifier ||
+      '';
+    finalPassword =
+      identifiantOrParams.motdepasse || identifiantOrParams.password || '';
+    const {
+      identifiant: _,
+      username: __,
+      identifier: ___,
+      motdepasse: ____,
+      password: _____,
+      ...rest
+    } = identifiantOrParams;
+    finalOptions = rest;
+  } else {
+    identifiant = identifiantOrParams;
+    finalPassword = motdepasse || '';
+  }
+
   assertNonEmptyString(identifiant, 'identifiant');
-  assertNonEmptyString(motdepasse, 'motdepasse');
+  assertNonEmptyString(finalPassword, 'motdepasse');
 
   const gtk = await fetchGtkToken();
 
   let uuid: string;
-  if (options.rememberMe) {
+  if (finalOptions.rememberMe) {
     const storage = getConfig().storage;
     const storedUuid = await storage?.get(`ed_uuid_${identifiant}`);
     if (storedUuid) {
@@ -65,8 +99,8 @@ export async function login(
     {
       isReLogin: false,
       identifiant,
-      motdepasse,
-      sesouvenirdemoi: options.rememberMe ?? false,
+      motdepasse: finalPassword,
+      sesouvenirdemoi: finalOptions.rememberMe ?? false,
       uuid,
       fa: [],
     },
@@ -76,9 +110,9 @@ export async function login(
   if (initialResult.code === 250) {
     return handleTwoFactor(
       identifiant,
-      motdepasse,
+      finalPassword,
       uuid,
-      options,
+      finalOptions,
       gtk,
       twofaToken,
       xToken,
@@ -92,7 +126,7 @@ export async function login(
     initialResult,
     identifiant,
     uuid,
-    options,
+    finalOptions,
   );
   await persistSession();
   startTokenKeepalive();
@@ -178,8 +212,32 @@ async function handleTwoFactor(
   const question = decodeBase64(challengeData.data.question);
   const choices = challengeData.data.propositions.map(decodeBase64);
 
-  const answer = async (choiceIndex: number): Promise<LoginSuccess> => {
-    const selectedChoice = challengeData.data.propositions[choiceIndex];
+  const answer = async (
+    choiceIndexOrText: number | string,
+  ): Promise<LoginSuccess> => {
+    let index = -1;
+    if (typeof choiceIndexOrText === 'number') {
+      index = choiceIndexOrText;
+    } else {
+      // Find case-sensitive match
+      index = choices.indexOf(choiceIndexOrText);
+      if (index === -1) {
+        // Fallback to case-insensitive match
+        const lowerChoice = choiceIndexOrText.toLowerCase();
+        index = choices.findIndex(
+          (c: string) => c.toLowerCase() === lowerChoice,
+        );
+      }
+    }
+
+    if (index === -1 || index >= challengeData.data.propositions.length) {
+      throw new EdAuthError(
+        `Invalid 2FA choice: "${choiceIndexOrText}". Must be a valid index (0 to ${choices.length - 1}) or one of the valid options: [${choices.join(', ')}].`,
+        'INVALID_2FA_CHOICE',
+      );
+    }
+
+    const selectedChoice = challengeData.data.propositions[index];
 
     const {
       data: validationData,

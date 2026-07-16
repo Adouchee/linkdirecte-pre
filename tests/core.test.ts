@@ -412,4 +412,10 @@ describe('Core Fetch Mechanism & Error Handling', () => {
     const result = await getGrades();
     expect(result.grades.length).toBe(1);
   });
+
+  it('verifies that errors construct clean, descriptive, formatted messages', async () => {
+    const error = new EdRateLimitError('Too many requests', 'RATE_LIMIT', 429);
+    expect(error.message).toBe('[RATE_LIMIT] Too many requests (HTTP 429)');
+    expect(error.name).toBe('EdRateLimitError');
+  });
 });

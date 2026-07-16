@@ -277,14 +277,7 @@ export function transform(data: any): any {
     for (const key in data) {
       let value = data[key];
 
-      if (
-        value === null ||
-        value === undefined ||
-        (Array.isArray(value) && value.length === 0) ||
-        (typeof value === 'object' &&
-          !(value instanceof Date) &&
-          Object.keys(value).length === 0)
-      ) {
+      if (value === null || value === undefined) {
         if (key === 'moyenne' || key === 'valeur' || key === 'val') {
         } else {
           continue;
