@@ -46,7 +46,7 @@ export interface LoginChallenge {
   type: 'securityQuestion';
   question: string;
   choices: string[];
-  answer: (choiceIndex: number) => Promise<LoginSuccess>;
+  answer: (choiceIndexOrText: number | string) => Promise<LoginSuccess>;
 }
 
 export interface LoginSuccess {
@@ -82,7 +82,7 @@ export interface EdConfig {
   on2faRequired?: (
     question: string,
     choices: string[],
-  ) => number | Promise<number>;
+  ) => number | string | Promise<number | string>;
   onCredentialsRequired?: () =>
     | { identifiant: string; motdepasse: string }
     | Promise<{ identifiant: string; motdepasse: string }>;

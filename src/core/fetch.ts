@@ -1,6 +1,75 @@
-import pLimit from 'p-limit';
-import pRetry from 'p-retry';
 import { getConfig, setToken } from './store';
+
+function pLimit(concurrency: number) {
+  const queue: (() => void)[] = [];
+  let activeCount = 0;
+
+  const next = () => {
+    if (activeCount < concurrency && queue.length > 0) {
+      activeCount++;
+      const fn = queue.shift()!;
+      fn();
+    }
+  };
+
+  return <T>(fn: () => Promise<T>): Promise<T> => {
+    return new Promise<T>((resolve, reject) => {
+      queue.push(() => {
+        fn()
+          .then(resolve)
+          .catch(reject)
+          .finally(() => {
+            activeCount--;
+            next();
+          });
+      });
+      next();
+    });
+  };
+}
+
+async function pRetry<T>(
+  fn: () => Promise<T>,
+  options: {
+    retries: number;
+    minTimeout: number;
+    factor: number;
+    onFailedAttempt?: (info: {
+      error: any;
+      attemptNumber: number;
+    }) => Promise<void> | void;
+    shouldRetry?: (info: { error: any }) => Promise<boolean> | boolean;
+  },
+): Promise<T> {
+  const { retries, minTimeout, factor, onFailedAttempt, shouldRetry } = options;
+  let attempt = 0;
+  let delay = minTimeout;
+
+  while (true) {
+    try {
+      return await fn();
+    } catch (error) {
+      attempt++;
+      if (attempt > retries) {
+        throw error;
+      }
+
+      if (shouldRetry) {
+        const keepRetrying = await shouldRetry({ error });
+        if (!keepRetrying) {
+          throw error;
+        }
+      }
+
+      if (onFailedAttempt) {
+        await onFailedAttempt({ error, attemptNumber: attempt });
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      delay *= factor;
+    }
+  }
+}
 import {
   DEFAULT_CONCURRENCY,
   DEFAULT_MAX_RETRIES,

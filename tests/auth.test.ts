@@ -267,6 +267,153 @@ describe('Authentication Flow', () => {
     expect(result.user.firstName).toBe('John');
   });
 
+  it('performs login using the unified options object format', async () => {
+    mockResponses.set('/login.awp?gtk=1', () => ({
+      status: 200,
+      headers: { 'set-cookie': 'GTK=mocked_gtk_value; Path=/' },
+      body: { code: 200, token: '', message: '', data: {} },
+    }));
+
+    mockResponses.set('/login.awp?v=', (req) => {
+      expect(req.body.identifiant).toBe('testuser_opt');
+      expect(req.body.motdepasse).toBe('testpass_opt');
+      return {
+        status: 200,
+        headers: { 'X-Token': 'mocked_session_token' },
+        body: {
+          code: 200,
+          token: 'mocked_session_token',
+          message: '',
+          data: {
+            accounts: [mockRawAccount],
+          },
+        },
+      };
+    });
+
+    const result = await login({
+      username: 'testuser_opt',
+      password: 'testpass_opt',
+    });
+
+    expect(result.user.firstName).toBe('John');
+    expect(result.token).toBe('mocked_session_token');
+  });
+
+  it('handles 2FA choice selection by string option (case-insensitive)', async () => {
+    mockResponses.set('/login.awp?gtk=1', () => ({
+      status: 200,
+      headers: { 'set-cookie': 'GTK=mocked_gtk_value; Path=/' },
+      body: { code: 200, token: '', message: '', data: {} },
+    }));
+
+    mockResponses.set('/login.awp?v=', (req) => {
+      if (
+        req.body &&
+        req.body.cn === 'mocked_cn' &&
+        req.body.cv === 'mocked_cv'
+      ) {
+        return {
+          status: 200,
+          headers: { 'X-Token': 'final_session_token' },
+          body: {
+            code: 200,
+            token: 'final_session_token',
+            message: '',
+            data: {
+              accounts: [mockRawAccount],
+            },
+          },
+        };
+      }
+      return {
+        status: 200,
+        headers: { '2fa-token': 't1', 'x-token': 'x1' },
+        body: { code: 250, token: '', message: '2FA required', data: {} },
+      };
+    });
+
+    mockResponses.set('/connexion/doubleauth.awp?verbe=get', () => ({
+      status: 200,
+      headers: { '2fa-token': 't2', 'x-token': 'x2' },
+      body: {
+        code: 200,
+        token: '',
+        message: '',
+        data: {
+          question: encodeBase64('What is your favorite color?'),
+          propositions: [
+            encodeBase64('Blue'),
+            encodeBase64('Red'),
+            encodeBase64('Green'),
+          ],
+        },
+      },
+    }));
+
+    mockResponses.set('/connexion/doubleauth.awp?verbe=post', (req) => {
+      expect(req.body.choix).toBe(encodeBase64('Red'));
+      return {
+        status: 200,
+        headers: { '2fa-token': 't3', 'x-token': 'x3' },
+        body: {
+          code: 200,
+          token: '',
+          message: '',
+          data: {
+            cn: 'mocked_cn',
+            cv: 'mocked_cv',
+          },
+        },
+      };
+    });
+
+    const on2faRequired = mock((question, choices) => {
+      return 'red'; // case-insensitive selection of 'Red'
+    });
+
+    const result = await login('testuser', 'testpass', { on2faRequired });
+
+    expect(on2faRequired).toHaveBeenCalled();
+    expect(result.token).toBe('final_session_token');
+  });
+
+  it('throws an error on invalid 2FA selection option', async () => {
+    mockResponses.set('/login.awp?gtk=1', () => ({
+      status: 200,
+      headers: { 'set-cookie': 'GTK=mocked_gtk_value; Path=/' },
+      body: { code: 200, token: '', message: '', data: {} },
+    }));
+
+    mockResponses.set('/login.awp?v=', () => ({
+      status: 200,
+      headers: { '2fa-token': 't1', 'x-token': 'x1' },
+      body: { code: 250, token: '', message: '2FA required', data: {} },
+    }));
+
+    mockResponses.set('/connexion/doubleauth.awp?verbe=get', () => ({
+      status: 200,
+      headers: { '2fa-token': 't2', 'x-token': 'x2' },
+      body: {
+        code: 200,
+        token: '',
+        message: '',
+        data: {
+          question: encodeBase64('What is your favorite color?'),
+          propositions: [
+            encodeBase64('Blue'),
+            encodeBase64('Red'),
+            encodeBase64('Green'),
+          ],
+        },
+      },
+    }));
+
+    const result = (await login('testuser', 'testpass')) as any;
+    expect(result.type).toBe('securityQuestion');
+    expect(result.answer('Yellow')).rejects.toThrow();
+  });
+
   it('fails login on bad credentials', async () => {
     mockResponses.set('/login.awp?gtk=1', () => ({
       status: 200,
