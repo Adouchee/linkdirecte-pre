@@ -19,6 +19,7 @@ import {
 } from '../core/http';
 import { EdAuthError } from '../core/errors';
 import { assertNonEmptyString } from '../core/validate';
+import { randomUUID } from '../core/env';
 import { LoginResult, LoginSuccess, LoginChallenge, Account } from '../types';
 import { transform } from '../core/transform';
 import { startTokenKeepalive, stopTokenKeepalive } from '../core/health';
@@ -48,11 +49,11 @@ export async function login(
     if (storedUuid) {
       uuid = storedUuid;
     } else {
-      uuid = crypto.randomUUID();
+      uuid = randomUUID();
       await storage?.set(`ed_uuid_${identifiant}`, uuid);
     }
   } else {
-    uuid = crypto.randomUUID();
+    uuid = randomUUID();
   }
 
   const {

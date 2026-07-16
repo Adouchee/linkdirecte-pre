@@ -33,11 +33,11 @@ function configure(config: Partial<EdConfig>): void
 #### Example
 
 ```typescript
-import { configure, fileStorage } from "linkdirecte";
+import { configure } from "linkdirecte";
 
 configure({
   maxRetries: 5,
-  storage: fileStorage("./session.json")
+  // storage defaults to memoryStorage
 });
 ```
 
@@ -67,16 +67,42 @@ function getLastTokenRefresh(): Date | undefined
 
 Default volatile storage. All data is lost when the process terminates.
 
-### `fileStorage`
+### `persistentStorage`
 
-Encrypted persistent storage using AES-256. Requires `Bun` environment for file I/O.
+Persistent storage backed by the Web `localStorage` API. Works in browsers and React Native.
 
 ```typescript
-function fileStorage(path: string, secret?: string): StorageAdapter
+import { configure, persistentStorage } from "linkdirecte";
+
+configure({ storage: persistentStorage });
 ```
 
-- `path`: File path where data will be stored.
-- `secret`: (Required unless `ED_STORAGE_SECRET` env var is set) Encryption key. Throws if neither is provided.
+### `asyncStorage`
+
+Factory that wraps any async key-value store into a `StorageAdapter`. Works in every runtime.
+
+```typescript
+function asyncStorage(backend: {
+  getItem(key: string): string | null | Promise<string | null>;
+  setItem(key: string, value: string): void | Promise<void>;
+  removeItem(key: string): void | Promise<void>;
+}): StorageAdapter
+```
+
+#### React Native example
+
+```typescript
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { configure, asyncStorage } from "linkdirecte";
+
+configure({
+  storage: asyncStorage({
+    getItem: (k) => AsyncStorage.getItem(k),
+    setItem: (k, v) => AsyncStorage.setItem(k, v),
+    removeItem: (k) => AsyncStorage.removeItem(k),
+  }),
+});
+```
 
 ---
 
@@ -87,13 +113,12 @@ function fileStorage(path: string, secret?: string): StorageAdapter
 Downloads a file from EcoleDirecte (e.g., invoices, documents).
 
 ```typescript
-function download(url: string, options?: DownloadOptions): Promise<Buffer | Blob | ReadableStream>
+function download(url: string, options?: DownloadOptions): Promise<ArrayBuffer | Blob | ReadableStream>
 ```
 
 #### `DownloadOptions`
 
-- `as`: Desired format (`"buffer"`, `"blob"`, or `"stream"`). Defaults to `"buffer"`.
-- `filename`: If provided, the file will be written to disk at this path.
+- `as`: Desired format (`"buffer"`, `"blob"`, or `"stream"`). Defaults to `"buffer"` (returns `ArrayBuffer`).
 - `params`: Additional POST body parameters.
 
 #### Example
@@ -101,7 +126,8 @@ function download(url: string, options?: DownloadOptions): Promise<Buffer | Blob
 ```typescript
 import { download } from "linkdirecte";
 
-const buffer = await download("https://...", { filename: "invoice.pdf" });
+const data = await download("https://...");
+// data is an ArrayBuffer — use it however your runtime needs
 ```
 
 ---
@@ -145,6 +171,7 @@ function startTokenKeepalive(): void
 - Safe to call multiple times — subsequent calls reset the timer.
 - Called automatically after `login()`, 2FA completion, `loadSession()`, and `refreshToken()`.
 - If the refresh fails, keepalive stops and the reactive fallback in `edFetch` takes over.
+- **No-ops silently** in environments without timer support (Cloudflare Workers, Vercel Edge). In these environments, the reactive fallback in `edFetch` handles session expiry automatically.
 
 ### `stopTokenKeepalive`
 

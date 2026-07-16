@@ -5,14 +5,13 @@ export type DownloadFormat = 'buffer' | 'blob' | 'stream';
 
 export interface DownloadOptions {
   as?: DownloadFormat;
-  filename?: string;
   params?: Record<string, unknown>;
 }
 
 export async function download(
   url: string,
   options: DownloadOptions = {},
-): Promise<Buffer | Blob | ReadableStream> {
+): Promise<ArrayBuffer | Blob | ReadableStream> {
   const token = getToken();
 
   const response = await edFetch<Response>(url, {
@@ -25,20 +24,13 @@ export async function download(
     isDownload: true,
   });
 
-  if (options.filename) {
-    const blob = await response.blob();
-    const buffer = Buffer.from(await blob.arrayBuffer());
-    const { default: fs } = await import('node:fs/promises');
-    await fs.writeFile(options.filename, buffer);
-  }
-
   return formatDownloadResponse(response, options.as ?? 'buffer');
 }
 
 function formatDownloadResponse(
   response: Response,
   format: DownloadFormat,
-): Promise<Buffer | Blob | ReadableStream> {
+): Promise<ArrayBuffer | Blob | ReadableStream> {
   switch (format) {
     case 'blob':
       return response.blob();
@@ -49,6 +41,6 @@ function formatDownloadResponse(
       return Promise.resolve(response.body);
     case 'buffer':
     default:
-      return response.arrayBuffer().then((buf) => Buffer.from(buf));
+      return response.arrayBuffer();
   }
 }

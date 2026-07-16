@@ -1,5 +1,6 @@
 import { getConfig } from './store';
 import { edFetch } from './fetch';
+import { randomUUID } from './env';
 import type { StorageAdapter } from '../types';
 
 interface QueuedMutation {
@@ -41,7 +42,7 @@ export class OfflineQueue {
     options: Record<string, unknown>,
   ): Promise<void> {
     const mutation: QueuedMutation = {
-      id: crypto.randomUUID(),
+      id: randomUUID(),
       endpoint,
       options,
       timestamp: Date.now(),

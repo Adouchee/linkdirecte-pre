@@ -7,11 +7,15 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
+  "browser": "./dist/index.js",
+  "react-native": "./dist/index.js",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "browser": "./dist/index.js",
+      "react-native": "./dist/index.js"
     }
   },
   "files": [
@@ -29,6 +33,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.21",
+    "msrcrypto": "^1.5.8",
     "p-limit": "^7.3.0",
     "p-retry": "^8.0.0"
   },

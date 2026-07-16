@@ -32,7 +32,26 @@ Welcome to the exhaustive documentation for `Linkdirecte`, a modern, resilient, 
 bun add linkdirecte
 # or
 npm install linkdirecte
+# or
+yarn add linkdirecte
 ```
+
+### Compatibility
+
+| Runtime | Supported |
+| --- | --- |
+| Node.js 18+ | ✅ Full |
+| Bun | ✅ Full |
+| Deno | ✅ Full |
+| React Native / Expo (Hermes) | ✅ Full |
+| Browsers (Chrome, Safari, Firefox, Edge) | ✅ Full |
+| Browser Extensions (Manifest V3) | ✅ Full |
+| Cloudflare Workers | ✅ Full |
+| Vercel Edge Runtime | ✅ Full |
+| Capacitor / Cordova | ✅ Full |
+| Electron | ✅ Full |
+
+> **Timer-based features** (token keepalive, cache cleanup, auto-prefetch, polling) silently no-op in environments that lack `setInterval` (e.g. Cloudflare Workers, Vercel Edge). All other features work identically everywhere.
 
 ## 🛠️ Basic Usage
 

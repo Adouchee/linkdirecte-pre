@@ -15,8 +15,9 @@
 * 💡 Output simplified
 * 🛜 Offline handled
 * 🎓 Support for most student features _(parent accounts soon!)_
-* 🌐 Compatible with Node.js 18+, Bun, Deno and browser
+* 🌐 Compatible with Node.js 18+, Bun, Deno, browsers, browser extensions (MV3), Cloudflare Workers, Vercel Edge, React Native / Expo (Hermes), Capacitor / Cordova, Electron, and more
 * 🔒 No password stored
+* 🔐 Encryption helpers work everywhere (auto-polyfilled via msrcrypto on runtimes without native Web Crypto)
 
 ## 🚀 Quick start
 

@@ -1,55 +1,102 @@
 import type { StorageAdapter } from '../types';
+import { getWebCrypto } from './env';
 
-const ALGORITHM = 'aes-256-gcm';
+const ALGORITHM = 'AES-GCM';
 const SALT_LEN = 16;
 const IV_LEN = 12;
 const KEY_LEN = 32;
-const TAG_LEN = 16;
 const KDF_ITERATIONS = 100_000;
 
-async function getCrypto() {
-  return import('node:crypto');
-}
+async function deriveKey(secret: string, salt: Uint8Array): Promise<CryptoKey> {
+  const webCrypto = await getWebCrypto();
+  const encoder = new TextEncoder();
+  const keyMaterial = await webCrypto.subtle.importKey(
+    'raw',
+    encoder.encode(secret),
+    'PBKDF2',
+    false,
+    ['deriveKey'],
+  );
 
-async function deriveKey(secret: string, salt: Buffer): Promise<Buffer> {
-  const { pbkdf2Sync } = await getCrypto();
-  return pbkdf2Sync(secret, salt, KDF_ITERATIONS, KEY_LEN, 'sha256');
+  return webCrypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt,
+      iterations: KDF_ITERATIONS,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    { name: ALGORITHM, length: KEY_LEN * 8 },
+    false,
+    ['encrypt', 'decrypt'],
+  );
 }
 
 async function encrypt(plaintext: string, secret: string): Promise<string> {
-  const { randomBytes, createCipheriv } = await getCrypto();
-  const salt = randomBytes(SALT_LEN);
+  const webCrypto = await getWebCrypto();
+  const encoder = new TextEncoder();
+  const salt = webCrypto.getRandomValues(new Uint8Array(SALT_LEN));
   const key = await deriveKey(secret, salt);
-  const iv = randomBytes(IV_LEN);
-  const cipher = createCipheriv(ALGORITHM, key, iv);
-  const encrypted = Buffer.concat([
-    cipher.update(plaintext, 'utf8'),
-    cipher.final(),
-  ]);
-  const tag = cipher.getAuthTag();
-  // Format: salt(16) + iv(12) + tag(16) + ciphertext
-  return Buffer.concat([salt, iv, tag, encrypted]).toString('base64');
+  const iv = webCrypto.getRandomValues(new Uint8Array(IV_LEN));
+
+  const encrypted = await webCrypto.subtle.encrypt(
+    { name: ALGORITHM, iv },
+    key,
+    encoder.encode(plaintext),
+  );
+
+  // Format: salt(16) + iv(12) + ciphertext (auth tag is appended by Web Crypto)
+  const result = new Uint8Array(salt.length + iv.length + encrypted.byteLength);
+  result.set(salt, 0);
+  result.set(iv, salt.length);
+  result.set(new Uint8Array(encrypted), salt.length + iv.length);
+
+  return uint8ArrayToBase64(result);
 }
 
 async function decrypt(data: string, secret: string): Promise<string> {
-  const { createDecipheriv } = await getCrypto();
-  const buf = Buffer.from(data, 'base64');
-  if (buf.length < SALT_LEN + IV_LEN + TAG_LEN)
-    throw new Error('Invalid encrypted data');
+  const webCrypto = await getWebCrypto();
+  const buf = base64ToUint8Array(data);
+  if (buf.length < SALT_LEN + IV_LEN) throw new Error('Invalid encrypted data');
+
   const salt = buf.subarray(0, SALT_LEN);
   const iv = buf.subarray(SALT_LEN, SALT_LEN + IV_LEN);
-  const tag = buf.subarray(SALT_LEN + IV_LEN, SALT_LEN + IV_LEN + TAG_LEN);
-  const encrypted = buf.subarray(SALT_LEN + IV_LEN + TAG_LEN);
+  const ciphertext = buf.subarray(SALT_LEN + IV_LEN);
+
   const key = await deriveKey(secret, salt);
-  const decipher = createDecipheriv(ALGORITHM, key, iv);
-  decipher.setAuthTag(tag);
-  const decrypted = Buffer.concat([
-    decipher.update(encrypted),
-    decipher.final(),
-  ]);
-  return decrypted.toString('utf8');
+
+  const decrypted = await webCrypto.subtle.decrypt(
+    { name: ALGORITHM, iv },
+    key,
+    ciphertext,
+  );
+
+  return new TextDecoder().decode(decrypted);
 }
 
+function uint8ArrayToBase64(bytes: Uint8Array): string {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+function base64ToUint8Array(base64: string): Uint8Array {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
+// ── Storage adapters ──────────────────────────────────────────────
+
+/**
+ * Volatile in-memory storage. All data is lost when the process terminates.
+ * Works in every runtime.
+ */
 export const memoryStorage: StorageAdapter = (() => {
   const data = new Map<string, string>();
   return {
@@ -63,64 +110,78 @@ export const memoryStorage: StorageAdapter = (() => {
   };
 })();
 
-export const fileStorage = (
-  filePath: string,
-  secret?: string,
-): StorageAdapter => {
-  const INTERNAL_KEY = secret || process.env.ED_STORAGE_SECRET;
-
-  if (!INTERNAL_KEY) {
-    throw new Error(
-      'fileStorage requires an encryption secret. ' +
-        'Pass a `secret` parameter or set the ED_STORAGE_SECRET environment variable.',
-    );
+/**
+ * Persistent storage backed by the Web `localStorage` API.
+ * Works in browsers, browser extensions, Electron, and React Native (Hermes).
+ * Throws at method call time if `localStorage` is not available.
+ */
+export const persistentStorage: StorageAdapter = (() => {
+  function requireLocalStorage(): Storage {
+    if (typeof globalThis.localStorage === 'undefined') {
+      throw new Error(
+        'localStorage is not available in this environment. ' +
+          'Use `memoryStorage` or `asyncStorage` instead.',
+      );
+    }
+    return globalThis.localStorage;
   }
-
-  const read = async () => {
-    const { default: fs } = await import('node:fs/promises');
-    try {
-      const content = await fs.readFile(filePath, 'utf-8');
-      return JSON.parse(await decrypt(content, INTERNAL_KEY));
-    } catch {
-      return {};
-    }
-  };
-
-  const write = async (data: any) => {
-    const { default: fs } = await import('node:fs/promises');
-    const { dirname } = await import('node:path');
-    const content = JSON.stringify(data);
-    const encrypted = await encrypt(content, INTERNAL_KEY);
-    const dir = dirname(filePath);
-    if (dir) {
-      await fs.mkdir(dir, { recursive: true });
-    }
-    await fs.writeFile(filePath, encrypted, 'utf-8');
-  };
-
-  let cache: Record<string, string> | null = null;
-
-  const load = async (): Promise<Record<string, string>> => {
-    if (cache) return cache;
-    const loaded = await read();
-    cache = loaded;
-    return loaded;
-  };
-
   return {
-    get: async (key) => {
-      const data = await load();
-      return data[key] || null;
-    },
-    set: async (key, value) => {
-      const data = await load();
-      data[key] = value;
-      await write(data);
-    },
-    delete: async (key) => {
-      const data = await load();
-      delete data[key];
-      await write(data);
-    },
+    get: (key) => requireLocalStorage().getItem(key),
+    set: (key, value) => requireLocalStorage().setItem(key, value),
+    delete: (key) => requireLocalStorage().removeItem(key),
   };
-};
+})();
+
+/**
+ * Wraps any async key-value store into a `StorageAdapter`.
+ * Works in every runtime.
+ *
+ * @example React Native with AsyncStorage
+ * ```ts
+ * import AsyncStorage from '@react-native-async-storage/async-storage';
+ * import { configure, asyncStorage } from 'linkdirecte';
+ *
+ * configure({
+ *   storage: asyncStorage({
+ *     getItem: (k) => AsyncStorage.getItem(k),
+ *     setItem: (k, v) => AsyncStorage.setItem(k, v),
+ *     removeItem: (k) => AsyncStorage.removeItem(k),
+ *   }),
+ * });
+ * ```
+ *
+ * @example Node.js with fs
+ * ```ts
+ * import { readFile, writeFile, mkdir } from 'node:fs/promises';
+ * import { dirname } from 'node:path';
+ * import { configure, asyncStorage } from 'linkdirecte';
+ *
+ * const path = './session.json';
+ * configure({
+ *   storage: asyncStorage({
+ *     getItem: async (k) => {
+ *       try { return (await readFile(path, 'utf-8')).then(JSON.parse)[k] ?? null; }
+ *       catch { return null; }
+ *     },
+ *     setItem: async (k, v) => { },
+ *     removeItem: async (k) => { },
+ *   }),
+ * });
+ * ```
+ */
+export function asyncStorage(backend: {
+  getItem(key: string): string | null | Promise<string | null>;
+  setItem(key: string, value: string): void | Promise<void>;
+  removeItem(key: string): void | Promise<void>;
+}): StorageAdapter {
+  return {
+    get: (key) => backend.getItem(key),
+    set: (key, value) => backend.setItem(key, value),
+    delete: (key) => backend.removeItem(key),
+  };
+}
+
+/**
+ * @deprecated Renamed to `persistentStorage`. Will be removed in a future version.
+ */
+export const fileStorage = persistentStorage;

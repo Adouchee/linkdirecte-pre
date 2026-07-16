@@ -3,10 +3,11 @@ import { getGrades } from '../grades';
 import { getMessages } from '../messages';
 import { getHomework } from '../homework';
 import { getTimeline } from '../timeline';
+import { safeSetInterval, safeClearInterval } from '../../core/env';
 
 const DEFAULT_POLL_INTERVAL_MS = 60_000;
 
-let pollingInterval: ReturnType<typeof setInterval> | null = null;
+let pollingInterval: ReturnType<typeof setInterval> | undefined | null = null;
 const snapshots: Record<string, unknown[]> = {};
 
 export interface PollingConfig {
@@ -17,15 +18,13 @@ export function startPolling(config: PollingConfig = {}): void {
   if (pollingInterval) stopPolling();
 
   const interval = config.interval || DEFAULT_POLL_INTERVAL_MS;
-  pollingInterval = setInterval(poll, interval);
+  pollingInterval = safeSetInterval(poll, interval);
   poll();
 }
 
 export function stopPolling(): void {
-  if (pollingInterval) {
-    clearInterval(pollingInterval);
-    pollingInterval = null;
-  }
+  safeClearInterval(pollingInterval ?? undefined);
+  pollingInterval = null;
 }
 
 export const on = emitter.on.bind(emitter);

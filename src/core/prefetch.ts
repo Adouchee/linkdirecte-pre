@@ -1,6 +1,7 @@
 import { PrefetchConfig } from '../types';
 import { getConfig } from './store';
 import { parseDuration } from './cache';
+import { safeSetInterval, safeClearInterval } from './env';
 import { getGrades } from '../modules/grades';
 import { getMessages } from '../modules/messages';
 import { getHomework } from '../modules/homework';
@@ -51,7 +52,7 @@ function buildPrefetchTasks(modules: readonly string[]): Promise<unknown>[] {
   return tasks;
 }
 
-let prefetchInterval: ReturnType<typeof setInterval> | null = null;
+let prefetchInterval: ReturnType<typeof setInterval> | undefined | null = null;
 
 export function startAutoPrefetch(): void {
   const config = getConfig().prefetch;
@@ -60,13 +61,11 @@ export function startAutoPrefetch(): void {
   const ms = parseDuration(config.interval);
   if (ms <= 0) return;
 
-  if (prefetchInterval) clearInterval(prefetchInterval);
-  prefetchInterval = setInterval(() => prefetchAll(), ms);
+  safeClearInterval(prefetchInterval ?? undefined);
+  prefetchInterval = safeSetInterval(() => prefetchAll(), ms);
 }
 
 export function stopAutoPrefetch(): void {
-  if (prefetchInterval) {
-    clearInterval(prefetchInterval);
-    prefetchInterval = null;
-  }
+  safeClearInterval(prefetchInterval ?? undefined);
+  prefetchInterval = null;
 }

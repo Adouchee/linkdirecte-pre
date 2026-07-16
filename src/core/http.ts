@@ -1,5 +1,6 @@
 import { getConfig, getToken, getTwofaToken } from './store';
 import { EdNetworkError, EdRateLimitError } from './errors';
+import { signalWithTimeout, isFormData } from './env';
 
 export const BASE_API_URL = 'https://api.ecoledirecte.com/v3';
 
@@ -114,7 +115,7 @@ export async function sendRequest(
       method: options.method,
       headers: options.headers,
       body: options.body,
-      signal: AbortSignal.timeout(options.timeoutMs || DEFAULT_TIMEOUT_MS),
+      signal: signalWithTimeout(options.timeoutMs || DEFAULT_TIMEOUT_MS),
     });
   } catch (error: any) {
     throw new EdNetworkError(error.message, 'NETWORK_ERROR', 0, error);
@@ -147,11 +148,13 @@ export async function parseJsonResponse(response: Response): Promise<any> {
 }
 
 function buildFormBody(body: unknown): string | undefined {
-  if (body instanceof FormData) return undefined;
+  if (isFormData(body)) return undefined;
   if (typeof body === 'string') return body;
   if (isPlainObject(body)) {
     return new URLSearchParams(
-      Object.entries(body).map(([key, value]) => [key, String(value)]),
+      Object.entries(body).map(
+        ([key, value]) => [key, String(value)] as [string, string],
+      ),
     ).toString();
   }
 
@@ -163,7 +166,5 @@ function hasBody(body: unknown): body is NonNullable<unknown> {
 }
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return (
-    typeof value === 'object' && value !== null && !(value instanceof FormData)
-  );
+  return typeof value === 'object' && value !== null && !isFormData(value);
 }

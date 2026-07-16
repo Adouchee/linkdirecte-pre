@@ -5,12 +5,13 @@ import {
   sendRequest,
   parseJsonResponse,
 } from './http';
+import { safeSetInterval, safeClearInterval } from './env';
 
 const TOKEN_CHECK_ENDPOINT = '/rdt/sondages.awp?verbe=get&v=4.96.3';
 const TOKEN_CHECK_BODY = 'data=%7B%7D';
 const KEEPALIVE_INTERVAL_MS = 45 * 60 * 1000;
 
-let keepaliveTimer: ReturnType<typeof setInterval> | null = null;
+let keepaliveTimer: ReturnType<typeof setInterval> | undefined | null = null;
 
 export async function checkTokenHealth(): Promise<boolean> {
   const token = getToken();
@@ -35,7 +36,7 @@ export async function checkTokenHealth(): Promise<boolean> {
 export function startTokenKeepalive(): void {
   stopTokenKeepalive();
 
-  keepaliveTimer = setInterval(async () => {
+  keepaliveTimer = safeSetInterval(async () => {
     const valid = await checkTokenHealth();
     if (!valid) {
       try {
@@ -50,8 +51,6 @@ export function startTokenKeepalive(): void {
 }
 
 export function stopTokenKeepalive(): void {
-  if (keepaliveTimer) {
-    clearInterval(keepaliveTimer);
-    keepaliveTimer = null;
-  }
+  safeClearInterval(keepaliveTimer ?? undefined);
+  keepaliveTimer = null;
 }

@@ -1,4 +1,5 @@
 import { getConfig } from './store';
+import { safeSetInterval, safeClearInterval } from './env';
 import type { CacheConfig } from '../types';
 
 interface CacheEntry {
@@ -10,7 +11,7 @@ const DEFAULT_MAX_CACHE_ENTRIES = 256;
 const CLEANUP_INTERVAL_MS = 60_000;
 
 const cache = new Map<string, CacheEntry>();
-let cleanupTimer: ReturnType<typeof setInterval> | null = null;
+let cleanupTimer: ReturnType<typeof setInterval> | undefined | null = null;
 
 function evictExpired(): void {
   const now = Date.now();
@@ -40,14 +41,12 @@ function ensureSizeLimit(): void {
 
 function startCleanup(): void {
   if (cleanupTimer) return;
-  cleanupTimer = setInterval(evictExpired, CLEANUP_INTERVAL_MS);
+  cleanupTimer = safeSetInterval(evictExpired, CLEANUP_INTERVAL_MS);
 }
 
 export function stopCleanup(): void {
-  if (cleanupTimer) {
-    clearInterval(cleanupTimer);
-    cleanupTimer = null;
-  }
+  safeClearInterval(cleanupTimer ?? undefined);
+  cleanupTimer = null;
 }
 
 const ENDPOINT_TO_MODULE: Array<{
