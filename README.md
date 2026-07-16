@@ -9,15 +9,14 @@
 ## ⭐️ Features
 
 * 🌳 Tree-shakeable
-* 🚪 Login fully handled (2FA, GTK, cn/cv, session refresh…)
+* 🚪 Login automatically handled (2FA, GTK, cn/cv, session refresh…)
 * 🛣️ Built-in proxy support (for web usage)
 * 🧠 Simple and type-safe data manipulation
 * 💡 Output simplified
 * 🛜 Offline handled
 * 🎓 Support for most student features _(parent accounts soon!)_
-* 🌐 Compatible with Node.js 18+, Bun, Deno, browsers, browser extensions (MV3), Cloudflare Workers, Vercel Edge, React Native / Expo (Hermes), Capacitor / Cordova, Electron, and more
+* 🌐 Compatible with Node.js 18+, Bun, Deno, browsers Cloudflare Workers, React Native / Expo, Capacitor, Electron, and more
 * 🔒 No password stored
-* 🔐 Encryption helpers work everywhere (auto-polyfilled via msrcrypto on runtimes without native Web Crypto)
 
 ## 🚀 Quick start
 
@@ -64,6 +63,9 @@ Full docs are available in [the `docs` directory](docs/).
 ## ⚖️ Legal
 
 Linkdirecte is licensed under the **Affero General Public License 3** (AGPL 3). No warranty. This means if you use Linkdirecte in your project and make it publicly available by any way (executable, website, server...), you _must_ make it open-source under the same license.
+
+> [!TIP]
+> For projects under GPL 3.0, **you don't have to change your license!** GPL and AGPL are fully compatible. You are however required to use AGPL if you host Linkdirecte on a server.
 
 This project is **not affiliated** in any way with Aplim.
 
