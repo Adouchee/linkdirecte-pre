@@ -39,7 +39,7 @@ async function poll(): Promise<void> {
       getTimeline(),
     ]);
 
-    checkDiff('newGrade', (grades as any).notes, 'id');
+    checkDiff('newGrade', (grades as any).grades, 'id');
     checkDiff('newMessage', (messages as any).messages?.received, 'id');
     checkDiff('newTimelineEntry', timeline as any[], 'id');
   } catch (error) {

@@ -124,10 +124,10 @@ describe('Authentication Flow', () => {
   });
 
   const mockRawAccount = {
-    idLogin: 12345,
-    id: 98765,
+    idLogin: 1234567,
+    id: 9876,
     uid: 'session_uid',
-    identifiant: 'testuser',
+    identifiant: 'Test.user',
     typeCompte: 'E',
     prenom: 'John',
     nom: 'Doe',

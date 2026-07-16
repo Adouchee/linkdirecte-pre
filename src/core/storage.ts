@@ -180,8 +180,3 @@ export function asyncStorage(backend: {
     delete: (key) => backend.removeItem(key),
   };
 }
-
-/**
- * @deprecated Renamed to `persistentStorage`. Will be removed in a future version.
- */
-export const fileStorage = persistentStorage;

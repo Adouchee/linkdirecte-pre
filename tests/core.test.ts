@@ -136,10 +136,10 @@ describe('Core Fetch Mechanism & Error Handling', () => {
   });
 
   const mockAccount = {
-    loginId: 12345,
-    id: 98765,
+    loginId: 1234567,
+    id: 9876,
     uid: 'session_uid',
-    identifiant: 'testuser',
+    identifiant: 'Test.user',
     accountType: 'E' as const,
     firstName: 'John',
     lastName: 'Doe',

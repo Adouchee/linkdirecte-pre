@@ -12,10 +12,10 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
       "browser": "./dist/index.js",
-      "react-native": "./dist/index.js"
+      "react-native": "./dist/index.js",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
@@ -28,7 +28,7 @@
     "lint": "tsc --noEmit",
     "format": "prettier --write src/",
     "format:check": "prettier --check src/",
-    "precommit": "npm run format && npm run lint",
+    "precommit": "npm run format && npm run lint && npm run test",
     "test": "bun test"
   },
   "dependencies": {
