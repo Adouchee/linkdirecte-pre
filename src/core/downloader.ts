@@ -1,5 +1,6 @@
 import { edFetch } from './fetch';
-import { getToken } from './store';
+import { getToken, getConfig } from './store';
+import { requireCurrentAccount } from './request';
 
 export type DownloadFormat = 'buffer' | 'blob' | 'stream';
 
@@ -20,6 +21,33 @@ export async function download(
       ...options.params,
       token,
     },
+    skipAuth: true,
+    isDownload: true,
+  });
+
+  return formatDownloadResponse(response, options.as ?? 'buffer');
+}
+
+export async function downloadPhoto(
+  options: { as?: DownloadFormat } = {},
+): Promise<ArrayBuffer | Blob | ReadableStream | null> {
+  const account = requireCurrentAccount();
+  const photoUrl = account.profile?.photoUrl;
+  if (!photoUrl) {
+    return null;
+  }
+
+  let url = photoUrl;
+  if (url.startsWith('//')) {
+    url = `https:${url}`;
+  } else if (!url.startsWith('http')) {
+    const config = getConfig();
+    const baseUrl = config.proxyUrl || 'https://api.ecoledirecte.com';
+    url = `${baseUrl}${url}`;
+  }
+
+  const response = await edFetch<Response>(url, {
+    method: 'GET',
     skipAuth: true,
     isDownload: true,
   });

@@ -6,6 +6,7 @@ import {
   setToken,
   setTwofaToken,
   setAccount,
+  setAccounts,
   persistSession,
   loadSession,
   clearSession,
@@ -334,6 +335,7 @@ async function handleLoginSuccess(
   const accounts = transformed.accounts as Account[];
   const mainAccount = accounts.find((a) => a.main) || accounts[0];
   setAccount(mainAccount);
+  setAccounts(accounts);
 
   if (options.rememberMe) {
     const storage = getConfig().storage;

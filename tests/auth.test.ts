@@ -5,6 +5,8 @@ import {
   refreshToken,
   configure,
   getAccount,
+  getAccounts,
+  switchAccount,
   getLastTokenRefresh,
   clearSession,
 } from '../src/index';
@@ -139,6 +141,26 @@ describe('Authentication Flow', () => {
     profile: {
       sexe: 'M',
       photoUrl: 'https://example.com/photo.jpg',
+    },
+    modules: [{ code: 'NOTES', enable: 1, badge: 0, params: {} }],
+  };
+
+  const mockRawAccount2 = {
+    idLogin: 1234567,
+    id: 5555,
+    uid: 'session_uid2',
+    identifiant: 'Test.user2',
+    typeCompte: 'E',
+    prenom: 'Jane',
+    nom: 'Doe',
+    email: 'jane.doe@example.com',
+    nomEtablissement: 'Ecole Test',
+    main: false,
+    accesstoken: 'mocked_access_token2',
+    photo: 'https://example.com/photo2.jpg',
+    profile: {
+      sexe: 'F',
+      photoUrl: 'https://example.com/photo2.jpg',
     },
     modules: [{ code: 'NOTES', enable: 1, badge: 0, params: {} }],
   };
@@ -431,6 +453,42 @@ describe('Authentication Flow', () => {
     }));
 
     expect(login('testuser', 'badpass')).rejects.toThrow();
+  });
+
+  it('supports multiple accounts listing and switching', async () => {
+    mockResponses.set('/login.awp?gtk=1', () => ({
+      status: 200,
+      headers: { 'set-cookie': 'GTK=mocked_gtk_value; Path=/' },
+      body: { code: 200, token: '', message: '', data: {} },
+    }));
+
+    mockResponses.set('/login.awp?v=', () => ({
+      status: 200,
+      headers: { 'X-Token': 'mocked_session_token' },
+      body: {
+        code: 200,
+        token: 'mocked_session_token',
+        message: '',
+        data: {
+          accounts: [mockRawAccount, mockRawAccount2],
+        },
+      },
+    }));
+
+    await login('testuser', 'testpass');
+
+    const accounts = getAccounts();
+    expect(accounts.length).toBe(2);
+    expect(accounts[0].id).toBe(9876);
+    expect(accounts[1].id).toBe(5555);
+
+    expect(getAccount()?.id).toBe(9876);
+
+    await switchAccount(5555);
+    expect(getAccount()?.id).toBe(5555);
+    expect(getAccount()?.firstName).toBe('Jane');
+
+    expect(switchAccount(9999)).rejects.toThrow();
   });
 
   it('handles logout successfully', async () => {

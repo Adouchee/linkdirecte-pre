@@ -51,6 +51,22 @@ Returns the currently active `Account` object, or `undefined` if not logged in.
 function getAccount(): Account | undefined
 ```
 
+### `getAccounts`
+
+Returns an array of all authenticated accounts returned by the login process (e.g. multiple children for parent logins).
+
+```typescript
+function getAccounts(): Account[]
+```
+
+### `switchAccount`
+
+Seamlessly changes the active account in the SDK state. Persists the switch if a storage adapter is enabled.
+
+```typescript
+async function switchAccount(accountId: number): Promise<void>
+```
+
 ### `getLastTokenRefresh`
 
 Returns the timestamp of the last token refresh.
@@ -176,6 +192,31 @@ import { download } from "linkdirecte";
 
 const data = await download("https://...");
 // data is an ArrayBuffer — use it however your runtime needs
+```
+
+---
+
+### `downloadPhoto`
+
+Downloads the profile picture of the active account.
+
+```typescript
+function downloadPhoto(options?: { as?: DownloadFormat }): Promise<ArrayBuffer | Blob | ReadableStream | null>
+```
+
+#### Options
+
+- `as`: Desired format (`"buffer"`, `"blob"`, or `"stream"`). Defaults to `"buffer"` (returns `ArrayBuffer`).
+
+#### Example
+
+```typescript
+import { downloadPhoto } from "linkdirecte";
+
+const photoBuffer = await downloadPhoto();
+if (photoBuffer) {
+  // Use profile photo ArrayBuffer (or Blob/Stream if specified)
+}
 ```
 
 ---

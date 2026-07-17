@@ -1,10 +1,28 @@
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
-import { download, configure, clearSession } from '../src/index';
-import { setToken } from '../src/core/store';
+import { download, downloadPhoto, configure, clearSession } from '../src/index';
+import { setToken, setAccount } from '../src/core/store';
 
 describe('Downloader Module', () => {
   let originalFetch: typeof globalThis.fetch;
   let lastRequest: { url: string; method: string; body: any } | null = null;
+
+  const mockAccount = {
+    loginId: 1234567,
+    id: 9876,
+    uid: 'session_uid',
+    identifiant: 'Test.user',
+    accountType: 'E' as const,
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john.doe@example.com',
+    schoolName: 'Ecole Test',
+    main: true,
+    profile: {
+      sexe: 'M' as const,
+      photoUrl: 'https://example.com/photo.jpg',
+    },
+    modules: [],
+  };
 
   beforeEach(() => {
     originalFetch = globalThis.fetch;
@@ -78,5 +96,73 @@ describe('Downloader Module', () => {
     const result = await download('telechargement.awp', { as: 'stream' });
 
     expect(result).toBeInstanceOf(ReadableStream);
+  });
+
+  it('downloads active account photo in buffer format', async () => {
+    setAccount(mockAccount);
+    const rawBuffer = new TextEncoder().encode('photo_content').buffer;
+
+    globalThis.fetch = async (input, init) => {
+      const urlStr = input.toString();
+      const method = init?.method || 'GET';
+      lastRequest = { url: urlStr, method, body: undefined };
+
+      return new Response(rawBuffer, {
+        status: 200,
+        headers: { 'Content-Type': 'image/jpeg' },
+      });
+    };
+
+    const result = await downloadPhoto();
+
+    expect(lastRequest).toBeDefined();
+    expect(lastRequest!.url).toBe('https://example.com/photo.jpg');
+    expect(lastRequest!.method).toBe('GET');
+    expect(result).toBeInstanceOf(ArrayBuffer);
+    expect(new Uint8Array(result as ArrayBuffer)).toEqual(new Uint8Array(rawBuffer));
+  });
+
+  it('downloads active account photo with protocol-relative URL', async () => {
+    const mockAccountProtocolRelative = {
+      ...mockAccount,
+      profile: {
+        ...mockAccount.profile,
+        photoUrl: '//doc1.ecoledirecte.com/PhotoEleves/photo.jpg',
+      }
+    };
+    setAccount(mockAccountProtocolRelative);
+    const rawBuffer = new TextEncoder().encode('photo_content_pr').buffer;
+
+    globalThis.fetch = async (input, init) => {
+      const urlStr = input.toString();
+      const method = init?.method || 'GET';
+      lastRequest = { url: urlStr, method, body: undefined };
+
+      return new Response(rawBuffer, {
+        status: 200,
+        headers: { 'Content-Type': 'image/jpeg' },
+      });
+    };
+
+    const result = await downloadPhoto();
+
+    expect(lastRequest).toBeDefined();
+    expect(lastRequest!.url).toBe('https://doc1.ecoledirecte.com/PhotoEleves/photo.jpg');
+    expect(lastRequest!.method).toBe('GET');
+    expect(result).toBeInstanceOf(ArrayBuffer);
+  });
+
+  it('returns null if active account has no photoUrl', async () => {
+    const mockAccountNoPhoto = {
+      ...mockAccount,
+      profile: {
+        ...mockAccount.profile,
+        photoUrl: '',
+      }
+    };
+    setAccount(mockAccountNoPhoto);
+
+    const result = await downloadPhoto();
+    expect(result).toBeNull();
   });
 });

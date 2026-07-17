@@ -15,6 +15,7 @@ export interface EdState {
   token?: string;
   twofaToken?: string;
   account?: Account;
+  accounts?: Account[];
   lastTokenRefresh?: Date;
   rawStorage?: StorageAdapter;
   hasDetectedStorage?: boolean;
@@ -109,10 +110,31 @@ export function setAccount(account: Account): void {
   state.account = account;
 }
 
+export function getAccounts(): Account[] {
+  return state.accounts || [];
+}
+
+export function setAccounts(accounts: Account[]): void {
+  state.accounts = accounts;
+}
+
+export async function switchAccount(accountId: number): Promise<void> {
+  if (!state.accounts) {
+    throw new Error('No accounts available to switch');
+  }
+  const found = state.accounts.find((acc) => acc.id === accountId);
+  if (!found) {
+    throw new Error(`Account with ID ${accountId} not found`);
+  }
+  state.account = found;
+  await persistSession();
+}
+
 const STORAGE_KEYS = {
   token: 'ed_tk',
   twofaToken: 'ed_tft',
   account: 'ed_acc',
+  accounts: 'ed_accs',
   lastRefresh: 'ed_lr',
 } as const;
 
@@ -125,6 +147,8 @@ export async function persistSession(): Promise<void> {
     await storage.set(STORAGE_KEYS.twofaToken, state.twofaToken);
   if (state.account)
     await storage.set(STORAGE_KEYS.account, JSON.stringify(state.account));
+  if (state.accounts)
+    await storage.set(STORAGE_KEYS.accounts, JSON.stringify(state.accounts));
   if (state.lastTokenRefresh)
     await storage.set(
       STORAGE_KEYS.lastRefresh,
@@ -136,6 +160,7 @@ export async function clearSession(): Promise<void> {
   state.token = undefined;
   state.twofaToken = undefined;
   state.account = undefined;
+  state.accounts = undefined;
   state.lastTokenRefresh = undefined;
 
   const storage = getConfig().storage;
@@ -145,6 +170,7 @@ export async function clearSession(): Promise<void> {
     storage.delete(STORAGE_KEYS.token),
     storage.delete(STORAGE_KEYS.twofaToken),
     storage.delete(STORAGE_KEYS.account),
+    storage.delete(STORAGE_KEYS.accounts),
     storage.delete(STORAGE_KEYS.lastRefresh),
   ]);
 }
@@ -154,12 +180,14 @@ export async function loadSession(): Promise<boolean> {
   if (!storage) return false;
 
   try {
-    const [token, twofaToken, accountStr, lastRefreshStr] = await Promise.all([
-      storage.get(STORAGE_KEYS.token),
-      storage.get(STORAGE_KEYS.twofaToken),
-      storage.get(STORAGE_KEYS.account),
-      storage.get(STORAGE_KEYS.lastRefresh),
-    ]);
+    const [token, twofaToken, accountStr, accountsStr, lastRefreshStr] =
+      await Promise.all([
+        storage.get(STORAGE_KEYS.token),
+        storage.get(STORAGE_KEYS.twofaToken),
+        storage.get(STORAGE_KEYS.account),
+        storage.get(STORAGE_KEYS.accounts),
+        storage.get(STORAGE_KEYS.lastRefresh),
+      ]);
 
     let loaded = false;
     if (token) {
@@ -171,6 +199,11 @@ export async function loadSession(): Promise<boolean> {
       try {
         state.account = JSON.parse(accountStr);
         loaded = true;
+      } catch {}
+    }
+    if (accountsStr) {
+      try {
+        state.accounts = JSON.parse(accountsStr);
       } catch {}
     }
     if (lastRefreshStr) {

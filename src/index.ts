@@ -3,6 +3,8 @@ export {
   loadSession,
   clearSession,
   getAccount,
+  getAccounts,
+  switchAccount,
   getLastTokenRefresh,
 } from './core/store';
 export {
@@ -19,7 +21,7 @@ export {
   startTokenKeepalive,
   stopTokenKeepalive,
 } from './core/health';
-export { download } from './core/downloader';
+export { download, downloadPhoto } from './core/downloader';
 export { offlineQueue } from './core/queue';
 export {
   prefetchAll,
