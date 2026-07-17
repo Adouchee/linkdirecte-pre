@@ -1,5 +1,11 @@
 import { EdConfig, StorageAdapter, Account } from '../types';
-import { indexedDBStorage, persistentStorage } from './storage';
+import {
+  indexedDBStorage,
+  localStorageStorage,
+  nodeStorage,
+  memoryStorage,
+  encryptedStorage,
+} from './storage';
 
 export const DEFAULT_USER_AGENT =
   'Linkdirecte/1.0 (iPhone; CPU OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5.2 Mobile/15E148 EDMOBILE v7.14.3';
@@ -10,6 +16,8 @@ export interface EdState {
   twofaToken?: string;
   account?: Account;
   lastTokenRefresh?: Date;
+  rawStorage?: StorageAdapter;
+  hasDetectedStorage?: boolean;
 }
 
 const state: EdState = {
@@ -24,18 +32,52 @@ const state: EdState = {
 };
 
 export function getConfig(): EdConfig {
+  if (!state.config.storage && !state.hasDetectedStorage) {
+    setConfig({});
+  }
   return state.config;
 }
 
+// ponytail: smart auto-detection of storage & transparent passkey wrapping
 export function setConfig(config: Partial<EdConfig>): void {
-  if (!('storage' in config)) {
+  if ('storage' in config) {
+    state.rawStorage = config.storage;
+    state.hasDetectedStorage = config.storage !== undefined;
+  } else if (
+    !state.hasDetectedStorage &&
+    !state.rawStorage &&
+    !state.config.storage
+  ) {
+    state.hasDetectedStorage = true;
     if (typeof (globalThis as any).indexedDB !== 'undefined') {
-      config.storage = indexedDBStorage;
+      state.rawStorage = indexedDBStorage;
     } else if (typeof (globalThis as any).localStorage !== 'undefined') {
-      config.storage = persistentStorage;
+      state.rawStorage = localStorageStorage;
+    } else if (
+      typeof globalThis.process !== 'undefined' &&
+      globalThis.process.versions != null &&
+      (globalThis.process.versions.node != null ||
+        globalThis.process.versions.bun != null)
+    ) {
+      state.rawStorage = nodeStorage();
+    } else {
+      state.rawStorage = memoryStorage;
     }
   }
+
   state.config = { ...state.config, ...config };
+
+  const passkey = state.config.passkey;
+  const baseStorage = state.rawStorage;
+  if (baseStorage) {
+    if (passkey) {
+      state.config.storage = encryptedStorage(baseStorage, passkey);
+    } else {
+      state.config.storage = baseStorage;
+    }
+  } else {
+    state.config.storage = undefined;
+  }
 }
 
 export function getToken(): string | undefined {
@@ -75,7 +117,7 @@ const STORAGE_KEYS = {
 } as const;
 
 export async function persistSession(): Promise<void> {
-  const storage = state.config.storage;
+  const storage = getConfig().storage;
   if (!storage) return;
 
   if (state.token) await storage.set(STORAGE_KEYS.token, state.token);
@@ -96,7 +138,7 @@ export async function clearSession(): Promise<void> {
   state.account = undefined;
   state.lastTokenRefresh = undefined;
 
-  const storage = state.config.storage;
+  const storage = getConfig().storage;
   if (!storage) return;
 
   await Promise.all([
@@ -108,7 +150,7 @@ export async function clearSession(): Promise<void> {
 }
 
 export async function loadSession(): Promise<boolean> {
-  const storage = state.config.storage;
+  const storage = getConfig().storage;
   if (!storage) return false;
 
   try {

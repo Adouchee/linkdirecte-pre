@@ -7,11 +7,12 @@ export {
 } from './core/store';
 export {
   memoryStorage,
-  persistentStorage,
+  localStorageStorage,
   indexedDBStorage,
   nodeStorage,
   cloudflareKVStorage,
   asyncStorage,
+  encryptedStorage,
 } from './core/storage';
 export {
   checkTokenHealth,

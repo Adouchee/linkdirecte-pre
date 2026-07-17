@@ -76,6 +76,7 @@ export interface EdConfig {
   concurrency?: number;
   timeout?: number;
   storage?: StorageAdapter;
+  passkey?: string;
   offlineQueue?: boolean;
   prefetch?: PrefetchConfig;
   onError?: ErrorMiddleware;

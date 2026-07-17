@@ -136,7 +136,7 @@ export const memoryStorage: StorageAdapter = (() => {
  * Works in browsers, browser extensions, Electron, and React Native (Hermes).
  * Throws at method call time if `localStorage` is not available.
  */
-export const persistentStorage: StorageAdapter = (() => {
+export const localStorageStorage: StorageAdapter = (() => {
   function requireLocalStorage(): Storage {
     if (typeof globalThis.localStorage === 'undefined') {
       throw new Error(
@@ -345,4 +345,39 @@ export function asyncStorage(backend: {
     set: (key, value) => backend.setItem(key, value),
     delete: (key) => backend.removeItem(key),
   };
+}
+
+/**
+ * Wraps any storage adapter to transparently encrypt and decrypt its values
+ * using a user-provided passkey/secret (AES-GCM encryption).
+ */
+export function encryptedStorage(
+  backend: StorageAdapter,
+  secret: string,
+): StorageAdapter {
+  const adapter: StorageAdapter = {
+    get: async (key) => {
+      const val = await backend.get(key);
+      if (!val) return null;
+      try {
+        return await decrypt(val, secret);
+      } catch {
+        return null;
+      }
+    },
+    set: async (key, value) => {
+      const encrypted = await encrypt(value, secret);
+      await backend.set(key, encrypted);
+    },
+    delete: async (key) => {
+      await backend.delete(key);
+    },
+  };
+
+  Object.defineProperties(adapter, {
+    __encryptedWithSecret: { value: secret, writable: true },
+    __rawStorage: { value: backend, writable: true },
+  });
+
+  return adapter;
 }

@@ -9,6 +9,7 @@ import {
   persistSession,
   loadSession,
   clearSession,
+  setConfig,
 } from '../core/store';
 import {
   buildApiUrl,
@@ -20,7 +21,14 @@ import {
 import { EdAuthError } from '../core/errors';
 import { assertNonEmptyString } from '../core/validate';
 import { randomUUID } from '../core/env';
-import { LoginResult, LoginSuccess, LoginChallenge, Account } from '../types';
+import {
+  LoginResult,
+  LoginSuccess,
+  LoginChallenge,
+  Account,
+  StorageAdapter,
+  EdConfig,
+} from '../types';
 import { transform } from '../core/transform';
 import { startTokenKeepalive, stopTokenKeepalive } from '../core/health';
 
@@ -30,6 +38,8 @@ export interface LoginOptions {
     question: string,
     choices: string[],
   ) => number | string | Promise<number | string>;
+  storage?: StorageAdapter;
+  passkey?: string;
 }
 
 export interface LoginUnifiedOptions extends LoginOptions {
@@ -73,6 +83,18 @@ export async function login(
 
   assertNonEmptyString(identifiant, 'identifiant');
   assertNonEmptyString(finalPassword, 'motdepasse');
+
+  // Configure storage or passkey if passed directly in login options
+  const configToUpdate: Partial<EdConfig> = {};
+  if (finalOptions.storage !== undefined) {
+    configToUpdate.storage = finalOptions.storage;
+  }
+  if (finalOptions.passkey !== undefined) {
+    configToUpdate.passkey = finalOptions.passkey;
+  }
+  if (Object.keys(configToUpdate).length > 0) {
+    setConfig(configToUpdate);
+  }
 
   const gtk = await fetchGtkToken();
 

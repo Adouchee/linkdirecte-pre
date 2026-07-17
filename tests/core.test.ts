@@ -5,8 +5,11 @@ import {
   getGrades,
   clearSession,
   offlineQueue,
+  memoryStorage,
+  encryptedStorage,
+  nodeStorage,
 } from '../src/index';
-import { setAccount, setToken } from '../src/core/store';
+import { setAccount, setToken, getConfig } from '../src/core/store';
 import { EdRateLimitError, EdNetworkError } from '../src/core/errors';
 import { stopTokenKeepalive } from '../src/core/health';
 
@@ -41,6 +44,7 @@ describe('Core Fetch Mechanism & Error Handling', () => {
     // Reset store config
     configure({
       storage: undefined,
+      passkey: undefined,
       maxRetries: 2,
       retryDelay: 1,
       timeout: 1000,
@@ -417,5 +421,54 @@ describe('Core Fetch Mechanism & Error Handling', () => {
     const error = new EdRateLimitError('Too many requests', 'RATE_LIMIT', 429);
     expect(error.message).toBe('[RATE_LIMIT] Too many requests (HTTP 429)');
     expect(error.name).toBe('EdRateLimitError');
+  });
+
+  describe('Storage Enhancements & Encryption', () => {
+    it('manually wraps a storage adapter with encryptedStorage and encrypts/decrypts correctly', async () => {
+      const base = memoryStorage;
+      const encrypted = encryptedStorage(base, 'super-secret-key');
+
+      await encrypted.set('test_key', 'plain_text_value');
+
+      // The value in base storage should be encrypted
+      const encryptedValue = await base.get('test_key');
+      expect(encryptedValue).not.toBeNull();
+      expect(encryptedValue).not.toBe('plain_text_value');
+
+      // Decryption should restore the original value
+      const decryptedValue = await encrypted.get('test_key');
+      expect(decryptedValue).toBe('plain_text_value');
+
+      // If key/secret is wrong, decrypt fails and returns null gracefully
+      const wrongEncrypted = encryptedStorage(base, 'wrong-key');
+      const wrongValue = await wrongEncrypted.get('test_key');
+      expect(wrongValue).toBeNull();
+    });
+
+    it('defaults to nodeStorage in Bun/Node.js environment', () => {
+      configure({ storage: undefined });
+      const config = getConfig();
+      expect(config.storage).toBeDefined();
+      // It should be nodeStorage (which is an asyncStorage wrapper)
+      expect(config.storage!.get).toBeDefined();
+    });
+
+    it('transparently wraps with encryptedStorage when passkey is configured', async () => {
+      const base = memoryStorage;
+      configure({ storage: base, passkey: 'auto-key' });
+
+      const config = getConfig();
+      // Write some data through the wrapped config storage
+      await config.storage!.set('ed_tk', 'my-secret-token');
+
+      // The value in the base storage should be encrypted
+      const baseValue = await base.get('ed_tk');
+      expect(baseValue).not.toBeNull();
+      expect(baseValue).not.toBe('my-secret-token');
+
+      // Reading via the wrapped storage should decrypt automatically
+      const decrypted = await config.storage!.get('ed_tk');
+      expect(decrypted).toBe('my-secret-token');
+    });
   });
 });

@@ -67,7 +67,8 @@ When no `storage` option is provided, the SDK auto-detects the best available ba
 
 1. **IndexedDB** — if available (browsers, Cloudflare Workers, Deno)
 2. **localStorage** — if available (browsers, Deno)
-3. **none** — in-memory only (all data lost on restart)
+3. **Node/Bun File Storage** — if running in Node.js or Bun
+4. **none** — in-memory only (all data lost on restart)
 
 You can override this by passing an explicit adapter.
 
@@ -85,14 +86,14 @@ import { configure, indexedDBStorage } from "linkdirecte";
 configure({ storage: indexedDBStorage });
 ```
 
-### `persistentStorage`
+### `localStorageStorage`
 
 Persistent storage backed by the Web `localStorage` API. Works in browsers and React Native.
 
 ```typescript
-import { configure, persistentStorage } from "linkdirecte";
+import { configure, localStorageStorage } from "linkdirecte";
 
-configure({ storage: persistentStorage });
+configure({ storage: localStorageStorage });
 ```
 
 ### `nodeStorage`
