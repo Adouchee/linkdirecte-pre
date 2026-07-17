@@ -64,7 +64,7 @@ function getAccounts(): Account[]
 Seamlessly changes the active account in the SDK state. Persists the switch if a storage adapter is enabled.
 
 ```typescript
-function switchAccount(accountId: number): void
+async function switchAccount(accountId: number): Promise<void>
 ```
 
 ### `getLastTokenRefresh`

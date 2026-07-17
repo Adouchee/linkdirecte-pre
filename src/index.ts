@@ -41,7 +41,6 @@ export * from './modules/attendance';
 export * from './modules/cloud';
 export * from './modules/documents';
 export * from './modules/forms';
-export * from './modules/classLife';
 export { startPolling, stopPolling, on, off } from './modules/listen';
 
 export * from './types';

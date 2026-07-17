@@ -484,11 +484,11 @@ describe('Authentication Flow', () => {
 
     expect(getAccount()?.id).toBe(9876);
 
-    switchAccount(5555);
+    await switchAccount(5555);
     expect(getAccount()?.id).toBe(5555);
     expect(getAccount()?.firstName).toBe('Jane');
 
-    expect(() => switchAccount(9999)).toThrow();
+    expect(switchAccount(9999)).rejects.toThrow();
   });
 
   it('handles logout successfully', async () => {

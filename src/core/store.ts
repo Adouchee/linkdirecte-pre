@@ -118,7 +118,7 @@ export function setAccounts(accounts: Account[]): void {
   state.accounts = accounts;
 }
 
-export function switchAccount(accountId: number): void {
+export async function switchAccount(accountId: number): Promise<void> {
   if (!state.accounts) {
     throw new Error('No accounts available to switch');
   }
@@ -127,7 +127,7 @@ export function switchAccount(accountId: number): void {
     throw new Error(`Account with ID ${accountId} not found`);
   }
   state.account = found;
-  persistSession();
+  await persistSession();
 }
 
 const STORAGE_KEYS = {
