@@ -11,6 +11,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "baseUrl": ".",
+    "noEmit": true,
     "paths": {
       "linkdirecte/*": ["src/*"]
     }
