@@ -21,7 +21,7 @@ function configure(config: Partial<EdConfig>): void
 | `retryDelay` | `number` | `500` | Initial delay between retries in ms. |
 | `concurrency` | `number` | `3` | Max concurrent requests. |
 | `timeout` | `number` | `15000` | Request timeout in ms. |
-| `storage` | `StorageAdapter` | `memoryStorage` | Session and data storage strategy. |
+| `storage` | `StorageAdapter` | *auto-detected* | Session and data storage strategy. Auto-detects IndexedDB → localStorage → none. |
 | `offlineQueue` | `boolean` | `false` | Enable/disable the offline mutation queue. |
 | `prefetch` | `PrefetchConfig` | — | Background prefetching configuration. |
 | `proxyUrl` | `string` | — | Custom API proxy base URL. |
@@ -37,7 +37,7 @@ import { configure } from "linkdirecte";
 
 configure({
   maxRetries: 5,
-  // storage defaults to memoryStorage
+  // storage is auto-detected: IndexedDB > localStorage > none
 });
 ```
 
@@ -63,9 +63,27 @@ function getLastTokenRefresh(): Date | undefined
 
 ## Storage Adapters
 
+When no `storage` option is provided, the SDK auto-detects the best available backend:
+
+1. **IndexedDB** — if available (browsers, Cloudflare Workers, Deno)
+2. **localStorage** — if available (browsers, Deno)
+3. **none** — in-memory only (all data lost on restart)
+
+You can override this by passing an explicit adapter.
+
 ### `memoryStorage`
 
 Default volatile storage. All data is lost when the process terminates.
+
+### `indexedDBStorage`
+
+Persistent storage backed by IndexedDB. Uses a dedicated `linkdirecte` database with a single `data` object store. Works in browsers, Cloudflare Workers, and Deno.
+
+```typescript
+import { configure, indexedDBStorage } from "linkdirecte";
+
+configure({ storage: indexedDBStorage });
+```
 
 ### `persistentStorage`
 
@@ -75,6 +93,35 @@ Persistent storage backed by the Web `localStorage` API. Works in browsers and R
 import { configure, persistentStorage } from "linkdirecte";
 
 configure({ storage: persistentStorage });
+```
+
+### `nodeStorage`
+
+Persistent storage backed by a JSON file on disk. Uses dynamic `import('node:fs/promises')` so it's safe to import in browser bundles — the import only fires when a method is called.
+
+```typescript
+import { configure, nodeStorage } from "linkdirecte";
+
+// Default path: ./linkdirecte-session.json
+configure({ storage: nodeStorage() });
+
+// Or with a custom path
+configure({ storage: nodeStorage("~/.linkdirecte/session.json") });
+```
+
+### `cloudflareKVStorage`
+
+Persistent storage backed by a Cloudflare Workers KV namespace. Pass the KV binding from your worker's `env` object.
+
+```typescript
+import { configure, cloudflareKVStorage } from "linkdirecte";
+
+export default {
+  async fetch(request: Request, env: { SESSION_KV: KVNamespace }) {
+    configure({ storage: cloudflareKVStorage(env.SESSION_KV) });
+    // ...
+  },
+};
 ```
 
 ### `asyncStorage`

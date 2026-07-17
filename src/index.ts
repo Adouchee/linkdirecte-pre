@@ -5,7 +5,14 @@ export {
   getAccount,
   getLastTokenRefresh,
 } from './core/store';
-export { memoryStorage, persistentStorage, asyncStorage } from './core/storage';
+export {
+  memoryStorage,
+  persistentStorage,
+  indexedDBStorage,
+  nodeStorage,
+  cloudflareKVStorage,
+  asyncStorage,
+} from './core/storage';
 export {
   checkTokenHealth,
   startTokenKeepalive,

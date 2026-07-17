@@ -1,4 +1,5 @@
 import { EdConfig, StorageAdapter, Account } from '../types';
+import { indexedDBStorage, persistentStorage } from './storage';
 
 export const DEFAULT_USER_AGENT =
   'Linkdirecte/1.0 (iPhone; CPU OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5.2 Mobile/15E148 EDMOBILE v7.14.3';
@@ -27,6 +28,13 @@ export function getConfig(): EdConfig {
 }
 
 export function setConfig(config: Partial<EdConfig>): void {
+  if (!('storage' in config)) {
+    if (typeof (globalThis as any).indexedDB !== 'undefined') {
+      config.storage = indexedDBStorage;
+    } else if (typeof (globalThis as any).localStorage !== 'undefined') {
+      config.storage = persistentStorage;
+    }
+  }
   state.config = { ...state.config, ...config };
 }
 

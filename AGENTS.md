@@ -70,7 +70,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 * If you are an agent capable of making commits, follow conventional commits.
 * For every user prompt, in your answer, **ALWAYS** include a short summary of changes and design choices (if you edited the codebase).
-* Keep the project available on Bun, Node.js, Deno and browsers.
+* Keep the project available FULLY on Bun, Node.js, Deno, Hermes (React Native), edge runtimes, Capacitor, Electron and browsers (no tradeoffs accepted).
 * **ALWAYS** update the docs when you change something.
 * Before commiting/proposing your changes, run `bun precommit`.
 * Keep the codebase clean, consistent and human.

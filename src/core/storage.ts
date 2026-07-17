@@ -91,6 +91,27 @@ function base64ToUint8Array(base64: string): Uint8Array {
   return bytes;
 }
 
+// ── IndexedDB types ──────────────────────────────────────────────
+// ponytail: minimal IDB types — avoids adding DOM to tsconfig lib
+interface IDBObjectStore {
+  get(key: string): IDBRequest;
+  put(value: unknown, key?: string): IDBRequest;
+  delete(key: string): IDBRequest;
+}
+interface IDBTransaction {
+  objectStore(name: string): IDBObjectStore;
+}
+interface IDBDatabase {
+  objectStoreNames: { contains(name: string): boolean };
+  createObjectStore(name: string): IDBObjectStore;
+  transaction(storeNames: string | string[], mode: string): IDBTransaction;
+}
+interface IDBRequest {
+  result: any;
+  onsuccess: (() => void) | null;
+  onerror: (() => void) | null;
+}
+
 // ── Storage adapters ──────────────────────────────────────────────
 
 /**
@@ -132,6 +153,170 @@ export const persistentStorage: StorageAdapter = (() => {
   };
 })();
 
+// ponytail: shared IDB constants — avoids magic strings across the adapter
+const IDB_DB_NAME = 'linkdirecte';
+const IDB_STORE_NAME = 'data';
+const IDB_VERSION = 1;
+
+function openIDB(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const dbReq = (globalThis as any).indexedDB.open(IDB_DB_NAME, IDB_VERSION);
+    dbReq.onupgradeneeded = () => {
+      const db: IDBDatabase = dbReq.result;
+      if (!db.objectStoreNames.contains(IDB_STORE_NAME)) {
+        db.createObjectStore(IDB_STORE_NAME);
+      }
+    };
+    dbReq.onsuccess = () => resolve(dbReq.result);
+    dbReq.onerror = () => reject(dbReq.error);
+  });
+}
+
+/**
+ * Persistent storage backed by IndexedDB.
+ * Uses a dedicated `linkdirecte` database with a single `data` object store.
+ * Works in browsers, Cloudflare Workers, and Deno.
+ * Falls back gracefully to no-op if IndexedDB is unavailable.
+ */
+export const indexedDBStorage: StorageAdapter = (() => {
+  let dbPromise: Promise<IDBDatabase> | null = null;
+
+  function getDB(): Promise<IDBDatabase> {
+    if (!dbPromise) dbPromise = openIDB();
+    return dbPromise;
+  }
+
+  return {
+    get: async (key) => {
+      try {
+        const db = await getDB();
+        return new Promise<string | null>((resolve) => {
+          const tx = db.transaction(IDB_STORE_NAME, 'readonly');
+          const req = tx.objectStore(IDB_STORE_NAME).get(key);
+          req.onsuccess = () => resolve(req.result ?? null);
+          req.onerror = () => resolve(null);
+        });
+      } catch {
+        return null;
+      }
+    },
+    set: async (key, value) => {
+      try {
+        const db = await getDB();
+        return new Promise<void>((resolve) => {
+          const tx = db.transaction(IDB_STORE_NAME, 'readwrite');
+          const req = tx.objectStore(IDB_STORE_NAME).put(value, key);
+          req.onsuccess = () => resolve();
+          req.onerror = () => resolve();
+        });
+      } catch {
+        // swallow — storage unavailable
+      }
+    },
+    delete: async (key) => {
+      try {
+        const db = await getDB();
+        return new Promise<void>((resolve) => {
+          const tx = db.transaction(IDB_STORE_NAME, 'readwrite');
+          const req = tx.objectStore(IDB_STORE_NAME).delete(key);
+          req.onsuccess = () => resolve();
+          req.onerror = () => resolve();
+        });
+      } catch {
+        // swallow — storage unavailable
+      }
+    },
+  };
+})();
+
+/**
+ * Persistent storage backed by a JSON file on disk (Node.js / Bun).
+ * Uses dynamic `import('node:fs/promises')` so it's safe to import
+ * in browser bundles — the import only fires when a method is called.
+ *
+ * @param filePath - Path to the JSON file. Defaults to `./linkdirecte-session.json`.
+ *
+ * @example
+ * ```ts
+ * import { configure, nodeStorage } from 'linkdirecte';
+ *
+ * configure({ storage: nodeStorage() });
+ * // or with a custom path:
+ * configure({ storage: nodeStorage('~/.linkdirecte/session.json') });
+ * ```
+ */
+export function nodeStorage(
+  filePath = './linkdirecte-session.json',
+): StorageAdapter {
+  async function readAll(): Promise<Record<string, string>> {
+    const { readFile } = await import('node:fs/promises');
+    try {
+      return JSON.parse(await readFile(filePath, 'utf-8'));
+    } catch {
+      return {};
+    }
+  }
+
+  async function writeAll(data: Record<string, string>): Promise<void> {
+    const { writeFile, mkdir } = await import('node:fs/promises');
+    const { dirname } = await import('node:path');
+    await mkdir(dirname(filePath), { recursive: true });
+    await writeFile(filePath, JSON.stringify(data, null, 2));
+  }
+
+  return asyncStorage({
+    getItem: async (k) => {
+      const data = await readAll();
+      return data[k] ?? null;
+    },
+    setItem: async (k, v) => {
+      const data = await readAll();
+      data[k] = v;
+      await writeAll(data);
+    },
+    removeItem: async (k) => {
+      const data = await readAll();
+      delete data[k];
+      await writeAll(data);
+    },
+  });
+}
+
+// ponytail: minimal CF Workers KV shape — matches the real binding API
+interface CloudflareKVNamespace {
+  get(key: string): Promise<string | null>;
+  put(key: string, value: string): Promise<void>;
+  delete(key: string): Promise<void>;
+}
+
+/**
+ * Persistent storage backed by a Cloudflare Workers KV namespace.
+ * Pass the KV binding from your worker's `env` object.
+ *
+ * @param namespace - A CF Workers KV namespace binding.
+ *
+ * @example
+ * ```ts
+ * import { configure, cloudflareKVStorage } from 'linkdirecte';
+ *
+ * export default {
+ *   async fetch(request: Request, env: { SESSION_KV: KVNamespace }) {
+ *     configure({ storage: cloudflareKVStorage(env.SESSION_KV) });
+ *     // ...
+ *   },
+ * };
+ * ```
+ */
+export function cloudflareKVStorage(
+  namespace: CloudflareKVNamespace,
+): StorageAdapter {
+  return asyncStorage({
+    getItem: (k) => namespace.get(k),
+    setItem: (k, v) => namespace.put(k, v),
+    removeItem: (k) => namespace.delete(k),
+  });
+}
+
 /**
  * Wraps any async key-value store into a `StorageAdapter`.
  * Works in every runtime.
@@ -146,25 +331,6 @@ export const persistentStorage: StorageAdapter = (() => {
  *     getItem: (k) => AsyncStorage.getItem(k),
  *     setItem: (k, v) => AsyncStorage.setItem(k, v),
  *     removeItem: (k) => AsyncStorage.removeItem(k),
- *   }),
- * });
- * ```
- *
- * @example Node.js with fs
- * ```ts
- * import { readFile, writeFile, mkdir } from 'node:fs/promises';
- * import { dirname } from 'node:path';
- * import { configure, asyncStorage } from 'linkdirecte';
- *
- * const path = './session.json';
- * configure({
- *   storage: asyncStorage({
- *     getItem: async (k) => {
- *       try { return (await readFile(path, 'utf-8')).then(JSON.parse)[k] ?? null; }
- *       catch { return null; }
- *     },
- *     setItem: async (k, v) => { },
- *     removeItem: async (k) => { },
  *   }),
  * });
  * ```

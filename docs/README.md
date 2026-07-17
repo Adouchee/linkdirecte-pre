@@ -56,10 +56,10 @@ yarn add linkdirecte
 ## 🛠️ Basic Usage
 
 ```typescript
-import { login, getGrades, configure } from "linkdirecte";
+import { login, getGrades } from "linkdirecte";
 
-// Optional: Configure persistent storage
-configure({ maxRetries: 5 });
+// Storage is auto-detected — zero config in browsers.
+// Node.js: configure({ storage: nodeStorage() })
 
 // Log in
 const session = await login("username", "password");
