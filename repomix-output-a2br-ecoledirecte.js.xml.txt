@@ -1,0 +1,3918 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+The content has been processed where security check has been disabled.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Security check has been disabled - content may contain sensitive information
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+__tests__/
+  responses/
+    homeworkDate/
+      failure.json
+      success.json
+    login/
+      failure.json
+      success.json
+  family.test.ts
+  isFailure.test.ts
+  session.test.ts
+  staff.test.ts
+  student.test.ts
+  teacher.test.ts
+  util.ts
+.github/
+  workflows/
+    main.yml
+  dependabot.yml
+lib/
+  accounts/
+    Account.ts
+    Family.ts
+    index.ts
+    Staff.ts
+    Student.ts
+    Teacher.ts
+  classes/
+    Assignement.ts
+    Cloud.ts
+    Course.ts
+    Document.ts
+    ExpandedB64.ts
+    Grade.ts
+    index.ts
+    Mail.ts
+    Period.ts
+    School.ts
+    Timeline.ts
+    Wallet.ts
+  util/
+    global/
+      cloud.ts
+      timetable.ts
+    student/
+      documents.ts
+      grades.ts
+      mailbox.ts
+      textbook.ts
+      timelines.ts
+      wallets.ts
+    teacher/
+      schools.ts
+      students.ts
+    index.ts
+    login.ts
+    photo.ts
+    util.ts
+  errors.ts
+  events.d.ts
+  events.ts
+  index.ts
+  Session.ts
+.eslintignore
+.eslintrc.json
+.gitattributes
+.gitignore
+.gitpod.dockerfile
+.gitpod.yml
+.npmignore
+.prettierignore
+.prettierrc.json
+CONTRIBUTING.md
+jest.config.json
+LICENSE
+package.json
+README.md
+tsconfig.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="__tests__/responses/homeworkDate/failure.json">
+[]
+</file>
+
+<file path="__tests__/responses/homeworkDate/success.json">
+[]
+</file>
+
+<file path="__tests__/responses/login/failure.json">
+[
+	{
+		"code": 505,
+		"token": "",
+		"message": "Mot de passe invalide !",
+		"data": {
+			"accounts": []
+		}
+	}
+]
+</file>
+
+<file path="__tests__/responses/login/success.json">
+[
+	{
+		"code": 200,
+		"token": "5244513564326b7a4d45396c63566c685256427854584d79654852345445464f54556c59515656505a576f30546d4630596c4a584e6c684e53486c6d567a64564d3274695356464d61325a42576a42710d0a556b397655564234526d7731565459765a32316a57553030576e494e436b4932516b687a516b523063475257563278796347526d4d6b5176635746514e6b704e515464575a584675597a523552554e730d0a4b3073334e5752304b7a6872535735595347396c525646705a3239445645644c64446c5254573148626a6c545757465055334272537a426d445170455431467962566c774e453175556e4e545a6a64690d0a51306c725a7a4e6159576c444d444e475231466b63484a4763484e705a5652564e6d3931646a55354e43394a5579395356476c7355335a54575752775645526d4e564d33596a64336431517a59566c520d0a616a49795977304b4e3251765a6c4a3055324e3553564e6f53304572656b7450526d706c64584e724d6b394d54484654624442796544467a4f5752434e484931656b565461566c794d6e4e4759586f770d0a61314e6c5757357856555a4d4e545a31636b6473656b396e65485273565667314d58494e436c46534d7a4e59546b7076636e6c4f57546c7554307735596e567a596c4e6d62576444596c6b79523156460d0a6158466b625774554f48706c4e6a466e556b70324d47354c4e444a6a4d6c4a6b5532644264584a5056793955576d78744d566c6c4d464642576e497756454636445170476455744a643268594d6a4a550d0a4d7a517a53464232536b5a4c64306c505648684b625842484d4338775a6b6b78626d314e51553432556d6c4f4b33417a534670524d5374496445465861336474567a513161303146576d5a6e63485a7a0d0a4d455a75536e526e57466f325541304b644539325669745a65544270615373794e33704252304a71536b4a73636c52554c316835526b6c346432783464455a4f517a426a5458684f4e5664556147354c0d0a6231645152476c485658647654465a61576b35545446424d4d544657525568705930566c656b39425455594e436b5252636d3957616b6c3353314e434e6974446155357756544131516a465354586c4c0d0a55584d34557a5a4a536c68594f4535774f474a4b54464e6d616d6846567a5a586156673052555261636b5a435a453032516b467a57476830596c637761307777624339795a46425144516f7954586c760d0a62445678617939456154673153474e3455575a315969387a51315a564f45566a6357307a534549314e556c364e44453464693945595664715a3278344f4664755a545236596939514e6a4e54655755310d0a536c5a795547685863455a4654326834527a6b325151304b6130787863437432556a6472617a4a3365567050636d567353445a444e586861646d4e50574578474e6b4e7956566b335457567757445a440d0a596b6873526d646a54444e305357314d4d7a4e7359315a59624463765633426854476432527a56324e6d4e594e5764794d30594e436b31434e797449556b5a476230347762565a74546a4e5a524763330d0a4f584a59576c6c52556c4972616b5a715a6e517a536e51354d6c4a6e613235784d315a784d444a506448683052444d31633259785645646a4d48647963484a6c56476f315a30644564335234626d4e610d0a44516f325a54466863324a57536c686e63486c6c6143395a5354525a575656796132466f4c324e71574339444f584275533152305658427959585a785a455a7863456b7865575a454c33425064454a550d0a5551",
+		"message": "",
+		"data": {
+			"accounts": [
+				{
+					"idLogin": 1876668,
+					"id": 4179,
+					"uid": "f37b499204ae480baf234fd927fef2b4",
+					"identifiant": "EDELEVE",
+					"typeCompte": "E",
+					"codeOgec": "073TEST2",
+					"main": true,
+					"lastConnexion": "2020-12-25 11:43",
+					"civilite": "",
+					"prenom": "Harry",
+					"particule": "",
+					"nom": "POTTER",
+					"email": "demo@demo.fr",
+					"anneeScolaireCourante": "2020-2021",
+					"nomEtablissement": "Ensemble Scolaire POUDLARD",
+					"logoEtablissement": "\\\\FTP01\\import\\073TEST3\\logo poudlard.gif",
+					"couleurAgendaEtablissement": "#00bfff",
+					"accessToken": "",
+					"socketToken": "+csbdGb06vGZ3Hx6+6yXsjuqd+SIh+gkDce0tuW47ORjfRdCY4Q2sFQkBlkDcXgwnIo9601MmCpVqYmcyrH2PwTMQw/YKFHkcav6EsS28F0k7M/WMmq49ilLMcONiEnr",
+					"modules": [
+						{
+							"code": "CANTINE_BARCODE",
+							"enable": true,
+							"ordre": 1,
+							"badge": 0,
+							"params": {
+								"numeroBadge": "eleve||4179||237629"
+							}
+						},
+						{
+							"code": "VIE_SCOLAIRE",
+							"enable": true,
+							"ordre": 10,
+							"badge": 0,
+							"params": {}
+						},
+						{
+							"code": "VIE_DE_LA_CLASSE",
+							"enable": true,
+							"ordre": 20,
+							"badge": 0,
+							"params": {}
+						},
+						{
+							"code": "NOTES",
+							"enable": true,
+							"ordre": 30,
+							"badge": 0,
+							"params": {}
+						},
+						{
+							"code": "CLOUD",
+							"enable": true,
+							"ordre": 90,
+							"badge": 0,
+							"params": {
+								"prolexisEnable": "1",
+								"padsActif": "1"
+							}
+						},
+						{
+							"code": "MESSAGERIE",
+							"enable": true,
+							"ordre": 40,
+							"badge": 3,
+							"params": {
+								"isActif": "1",
+								"canParentsLireMessagesEnfants": "1",
+								"destAdmin": "1",
+								"destEleve": "0",
+								"destFamille": "0",
+								"destProf": "1",
+								"destEspTravail": "1",
+								"disabledNotification": "0",
+								"notificationEmailEtablissement": "1",
+								"choixMailNotification": "0",
+								"autreMailNotification": "",
+								"mailPro": "",
+								"mailPerso": "harry.potter@statim.fr",
+								"messagerieApiVersion": "v3",
+								"blackListProfActive": "0",
+								"estEnBlackList": "0",
+								"afficherToutesLesClasses": "0"
+							}
+						},
+						{
+							"code": "EDT",
+							"enable": true,
+							"ordre": 50,
+							"badge": 0,
+							"params": {}
+						},
+						{
+							"code": "DOCUMENTS_ELEVE",
+							"enable": true,
+							"ordre": 71,
+							"badge": 0,
+							"params": {
+								"DocumentsNotesActif": "1",
+								"DocumentsVSActif": "1",
+								"DocumentsAdministratifActif": "1",
+								"AnneeArchive": "2016-2017,2017-2018,2018-2019,2019-2020,2020-2021"
+							}
+						},
+						{
+							"code": "CAHIER_DE_TEXTES",
+							"enable": true,
+							"ordre": 60,
+							"badge": 0,
+							"params": {
+								"compteRenduSeance": "1",
+								"isCDTPrimaire": "0"
+							}
+						},
+						{
+							"code": "QCM",
+							"enable": true,
+							"ordre": 65,
+							"badge": 0,
+							"params": {}
+						},
+						{
+							"code": "RESERVATIONS",
+							"enable": true,
+							"ordre": 80,
+							"badge": 0,
+							"params": {
+								"regime": "Demi-Pensionnaire",
+								"repasmidi_1": "1",
+								"repassoir_1": "0",
+								"repasmidi_2": "1",
+								"repassoir_2": "0",
+								"repasmidi_3": "0",
+								"repassoir_3": "0",
+								"repasmidi_4": "1",
+								"repassoir_4": "0",
+								"repasmidi_5": "1",
+								"repassoir_5": "0",
+								"repasmidi_6": "0",
+								"repassoir_6": "0",
+								"repasmidi_7": "0",
+								"repassoir_7": "0"
+							}
+						},
+						{
+							"code": "CARNET_CORRESPONDANCE",
+							"enable": true,
+							"ordre": 70,
+							"badge": 3,
+							"params": {}
+						},
+						{
+							"code": "ESIDOC",
+							"enable": true,
+							"ordre": 110,
+							"badge": 0,
+							"params": {
+								"tabParams": [
+									{
+										"libelle": "Esidoc",
+										"url": "https://0783549J.esidoc.fr/"
+									}
+								]
+							}
+						},
+						{
+							"code": "EDUNAO",
+							"enable": true,
+							"ordre": 100,
+							"badge": 0,
+							"params": {
+								"urlEdunao": "https://stanislas-test.edunao.com/statim/sync_statim_feed.php/?k=E04179&token=03716fa509e2374547deda020af29605&t=20201225115424928"
+							}
+						},
+						{
+							"code": "CATER",
+							"enable": false,
+							"ordre": 90,
+							"badge": 0,
+							"params": {}
+						},
+						{
+							"code": "ARD",
+							"enable": true,
+							"ordre": 120,
+							"badge": 0,
+							"params": {
+								"urlARD": "https://services.ard.fr/fr/espaces-clients/etablissements/ecole_directe.html?uai=073TEST2&k=E_4179&token=3d5c3004516e86b91224c9d0c25466d7"
+							}
+						},
+						{
+							"code": "PEARLTREES",
+							"enable": true,
+							"ordre": 170,
+							"badge": 0,
+							"params": {
+								"urlPearlTrees": "https://www.pearltrees.com/s/edu/auth/0061060V&ogec=0061060V"
+							}
+						},
+						{
+							"code": "EDUMALIN",
+							"enable": true,
+							"ordre": 171,
+							"badge": 0,
+							"params": {
+								"urlEduMalin": "https://api.ecoledirecte.com/v3/cas/goToService.awp?service=https://ecole-directe.edumalin.fr/"
+							}
+						},
+						{
+							"code": "SUIVI_STAGE",
+							"enable": true,
+							"ordre": 43,
+							"badge": 0,
+							"params": {}
+						},
+						{
+							"code": "CLICKNPLAY",
+							"enable": true,
+							"ordre": 171,
+							"badge": 0,
+							"params": {
+								"urlClickNPlay": "https://api.ecoledirecte.com/v3/cas/goToService.awp?service=https://games.cliknplay.com/connector/ecoledirecte"
+							}
+						},
+						{
+							"code": "VOLTAIRE",
+							"enable": false,
+							"ordre": 175,
+							"badge": 0,
+							"params": {}
+						},
+						{
+							"code": "AVENRIA",
+							"enable": false,
+							"ordre": 173,
+							"badge": 0,
+							"params": {}
+						},
+						{
+							"code": "ONISEPSERVICES",
+							"enable": true,
+							"ordre": 172,
+							"badge": 0,
+							"params": {
+								"rneONISEPServices": "0595390N"
+							}
+						},
+						{
+							"code": "SACOCHE",
+							"enable": false,
+							"ordre": 174,
+							"badge": 0,
+							"params": {}
+						},
+						{
+							"code": "ETUDIANT",
+							"enable": false,
+							"ordre": 176,
+							"badge": 0,
+							"params": {}
+						},
+						{
+							"code": "SITUATION_FINANCIERE",
+							"enable": true,
+							"ordre": 92,
+							"badge": 0,
+							"params": {}
+						}
+					],
+					"parametresIndividuels": {
+						"lsuPoilDansLaMainBorne1": "",
+						"lsuPoilDansLaMainBorne2": "",
+						"lsuPoilDansLaMainBorne3": "",
+						"modeCalculLSU": "",
+						"isQrcode": true,
+						"modeAccessibiliteVisuelle": false,
+						"typeSaisieNotesDefaut": "",
+						"nbJoursMaxRenduDevoirCDT": "",
+						"typeViewCDTDefaut": ""
+					},
+					"profile": {
+						"sexe": "M",
+						"infoEDT": "",
+						"nomEtablissement": "Ensemble Scolaire POUDLARD",
+						"idEtablissement": "0",
+						"rneEtablissement": "0595390N",
+						"idReelEtab": "2",
+						"photo": "//doc1.ecoledirecte.com/PhotoEleves/073TEST2_714d424d764c7533325151/65766a305651.jpg",
+						"classe": {
+							"id": 14,
+							"code": "3A",
+							"libelle": "3ème A"
+						}
+					}
+				}
+			]
+		}
+	}
+]
+</file>
+
+<file path="__tests__/family.test.ts">
+import { Session } from "../lib";
+
+import { getTestAccount } from "./util";
+
+describe("Family class", () => {
+	const { username, password } = getTestAccount("family");
+	const session = new Session(username, password);
+	const account = session.login();
+
+	test("it successfully connects", async () => {
+		const acc = await account;
+		expect(acc.type).toBe("family");
+	});
+});
+</file>
+
+<file path="__tests__/isFailure.test.ts">
+import * as fs from "fs";
+import * as path from "path";
+
+import { _loginRes, isFailure } from "../lib/types";
+
+const getDirectories = (srcPath: string) =>
+	fs
+		.readdirSync(srcPath)
+		.filter(file => fs.statSync(path.join(srcPath, file)).isDirectory());
+
+const readJSONFile = (path: string) =>
+	JSON.parse(fs.readFileSync(path).toString());
+
+const responses = getDirectories("__tests__/responses").map(dirName => {
+	const path = `__tests__/responses/${dirName}`;
+
+	const map: {
+		name: string;
+		success: _loginRes[];
+		failure: _loginRes[];
+	} = {
+		name: dirName,
+		success: readJSONFile(`${path}/success.json`),
+		failure: readJSONFile(`${path}/failure.json`),
+	};
+
+	return map;
+});
+
+describe("isFailure function", () => {
+	responses.forEach(resType => {
+		test(resType.name, () => {
+			resType.success.forEach(res => expect(isFailure(res)).toBe(false));
+			resType.failure.forEach(res => expect(isFailure(res)).toBe(true));
+		});
+	});
+});
+
+// test("login", () => {
+// 	//! SUCCESS
+// 	successLogin.forEach((res) => {
+// 		const judgement = isFailure(res);
+// 		expect(judgement).toBe(false);
+// 	});
+// 	//! FAILURE
+// 	failureLogin.forEach((res) => {
+// 		const judgement = isFailure(res);
+// 		expect(judgement).toBe(true);
+// 	});
+// });
+</file>
+
+<file path="__tests__/session.test.ts">
+import { Session } from "../lib";
+
+import { getTestAccount } from "./util";
+
+describe("Session class", () => {
+	const { username, password } = getTestAccount("student");
+	const session = new Session(username, password);
+	const account = session.login();
+
+	test("it returns correct credentials", () => {
+		expect(JSON.stringify(session.credentials)).toBe(
+			JSON.stringify({
+				username: username,
+				password: password,
+			})
+		);
+	});
+
+	test("it successfully connects", async () => {
+		const acc = await account;
+		expect(acc.type).toBe("student");
+	});
+
+	test("it properly handles errors", async () => {
+		const errSession = new Session("EDELEVE", "1");
+		let didThrowError = false;
+		await errSession
+			.login()
+			.catch(() => {
+				didThrowError = true;
+			})
+			.then(() => {
+				expect(didThrowError).toBe(true);
+			});
+	});
+});
+</file>
+
+<file path="__tests__/staff.test.ts">
+import { Session } from "../lib";
+
+import { getTestAccount } from "./util";
+
+describe("Staff class", () => {
+	const { username, password } = getTestAccount("staff");
+	const session = new Session(username, password);
+	const account = session.login();
+
+	test("it successfully connects", async () => {
+		const acc = await account;
+		expect(acc.type).toBe("staff");
+	});
+});
+</file>
+
+<file path="__tests__/student.test.ts">
+import { Session } from "../lib";
+
+import { getTestAccount } from "./util";
+
+describe("Student class", () => {
+	const { username, password } = getTestAccount("student");
+	const session = new Session(username, password);
+	const account = session.login();
+
+	test("it successfully connects", async () => {
+		const acc = await account;
+		expect(acc.type).toBe("student");
+	});
+
+	test("it fetches homework from date", async () => {
+		const acc = await account;
+		if (acc.type !== "student") return;
+
+		const someHomework = await acc.getHomework({ dates: "2021-01-14" });
+		expect(Array.isArray(someHomework)).toBe(true);
+	});
+
+	test("it fetches upcoming homework", async () => {
+		const acc = await account;
+		if (acc.type !== "student") return;
+
+		const someHomework = await acc.getHomework();
+		expect(Array.isArray(someHomework)).toBe(true);
+
+		const a = someHomework.find(e => !!e.job);
+		if (!a || !a.job) return;
+		a.job.tick(true);
+	});
+
+	test("it fetches messages", async () => {
+		const acc = await account;
+		if (acc.type !== "student") return;
+
+		const messages = await acc.getMessages();
+		expect(Array.isArray(messages)).toBe(true);
+
+		const message = messages[0];
+		expect(await message.getContent()).toBeTruthy();
+
+		expect(message.to).toBeTruthy();
+	});
+
+	test("it fetches grades", async () => {
+		const acc = await account;
+		if (acc.type !== "student") return;
+
+		const grades = await acc.getGrades();
+		expect(Array.isArray(grades)).toBe(true);
+	});
+
+	test("it gets periods", async () => {
+		const acc = await account;
+		if (acc.type !== "student") return;
+
+		const periods = await acc.getPeriods();
+		expect(Array.isArray(periods)).toBe(true);
+	});
+
+	test("it fetches timeline", async () => {
+		const acc = await account;
+		if (acc.type !== "student") return;
+
+		const timeline = await acc.timeline();
+		expect(Array.isArray(timeline)).toBe(true);
+	});
+
+	test("it fetches timetable", async () => {
+		const acc = await account;
+		if (acc.type !== "student") return;
+
+		const timetable = await acc.getTimetable();
+		expect(Array.isArray(timetable)).toBe(true);
+	});
+});
+</file>
+
+<file path="__tests__/teacher.test.ts">
+import { Session } from "../lib";
+
+import { getTestAccount } from "./util";
+
+describe("Teacher class", () => {
+	const { username, password } = getTestAccount("teacher");
+	const session = new Session(username, password);
+	const account = session.login();
+
+	test("it successfully connects", async () => {
+		const acc = await account;
+		expect(acc.type).toBe("teacher");
+	});
+});
+</file>
+
+<file path="__tests__/util.ts">
+import dotenv = require("dotenv");
+dotenv.config();
+
+export function getTestAccount(
+	type: "student" | "family" | "teacher" | "staff"
+): {
+	username: string;
+	password: string;
+} {
+	switch (type) {
+		case "student":
+			return {
+				username: process.env.TEST_STUDENT_USERNAME || "EDELEVE",
+				password: process.env.TEST_STUDENT_PASSWORD || "0",
+			};
+		case "family":
+			return {
+				username: process.env.TEST_FAMILY_USERNAME || "EDFAMILLE",
+				password: process.env.TEST_FAMILY_PASSWORD || "0",
+			};
+		case "teacher":
+			return {
+				username: process.env.TEST_TEACHER_USERNAME || "EDPROF",
+				password: process.env.TEST_TEACHER_PASSWORD || "0",
+			};
+		case "staff":
+			return {
+				username: process.env.TEST_STAFF_USERNAME || "EDPERSONNEL",
+				password: process.env.TEST_STAFF_PASSWORD || "0",
+			};
+		default:
+			throw new Error("Invalid account type");
+	}
+}
+</file>
+
+<file path=".github/workflows/main.yml">
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:   
+     
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3.3.0
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+#       - name: Cache npm
+#         uses: actions/cache@v2
+#         with:
+#           path: ~/.npm
+#           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+#           restore-keys: |
+#             ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+
+#       - name: Compile TypeScipt
+#         uses: iCrawl/action-tsc@v1
+
+      - name: Build
+        run: npm build
+        
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3.3.0
+        
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Run tests
+        run: npm test
+
+#       - name: Run tests with Jest
+#         uses: stefanoeb/jest-action@1.0.4
+</file>
+
+<file path=".github/dependabot.yml">
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+</file>
+
+<file path="lib/accounts/Account.ts">
+import { Session } from "../Session";
+import { account, isFailure } from "ecoledirecte-api-types/v3";
+import { getMainAccount } from "../util";
+
+export class Account {
+	private __session: Session;
+	private __account: account;
+
+	get token(): string {
+		return this.__session.token;
+	}
+
+	set token(value: string) {
+		this.__session.token = value;
+	}
+
+	get credentials(): { username: string; password: string } {
+		return this.__session.credentials;
+	}
+
+	constructor(session: Session) {
+		this.__session = session;
+		// Necessary checks
+		if (!session.loginRes || isFailure(session.loginRes))
+			throw new Error("Account class must have valid connection");
+
+		const mainAccount = getMainAccount(session.loginRes.data.accounts);
+
+		if (!session.token) throw new Error("Account class MUST have token");
+		this.__account = mainAccount;
+	}
+
+	/**
+	 * @description EcoleDirecte unique Id
+	 */
+	get edId(): number {
+		return this.__account.id;
+	}
+
+	/**
+	 * @description Equivalent of _raw, but the type changes
+	 */
+	get __raw(): account {
+		return this.__account;
+	}
+}
+</file>
+
+<file path="lib/accounts/Family.ts">
+import { Account } from "./Account";
+import { Session } from "../Session";
+
+import {
+	loginResSuccess,
+	familyAccount,
+	isFamilyAccount,
+} from "ecoledirecte-api-types/v3";
+import { getMainAccount } from "../util";
+
+export class Family extends Account {
+	public type: "family" = "family";
+	private account: familyAccount;
+
+	constructor(private session: Session) {
+		super(session);
+
+		const mainAccount = getMainAccount(
+			(session.loginRes as loginResSuccess).data.accounts
+		);
+
+		if (!isFamilyAccount(mainAccount))
+			throw new Error("Family class's main account is wrong");
+
+		if (!session.token) throw new Error("Account class MUST have token");
+
+		this.account = mainAccount;
+		this.token = session.token;
+	}
+
+	get _raw(): familyAccount {
+		return this.account;
+	}
+}
+</file>
+
+<file path="lib/accounts/index.ts">
+export { Family } from "./Family";
+export { Staff } from "./Staff";
+export { Student } from "./Student";
+export { Teacher } from "./Teacher";
+export { Account } from "./Account";
+</file>
+
+<file path="lib/accounts/Staff.ts">
+import { Account } from "./Account";
+import { Session } from "../Session";
+
+import {
+	loginResSuccess,
+	staffAccount,
+	isStaffAccount,
+} from "ecoledirecte-api-types/v3";
+import { getMainAccount, fetchPhoto } from "../util";
+
+export class Staff extends Account {
+	public type: "staff" = "staff";
+	private account: staffAccount;
+
+	constructor(private session: Session) {
+		super(session);
+
+		const mainAccount = getMainAccount(
+			(session.loginRes as loginResSuccess).data.accounts
+		);
+
+		if (!isStaffAccount(mainAccount))
+			throw new Error("Staff class's main account is wrong");
+
+		if (!session.token) throw new Error("Account class MUST have token");
+
+		this.account = mainAccount;
+		this.token = session.token;
+	}
+
+	private _photo?: Buffer;
+	private _photoUri?: string;
+
+	async getPhoto(): Promise<Buffer | undefined> {
+		const r = await fetchPhoto(this);
+		if (!r) return;
+		const [buf, str] = r;
+		this._photo = buf;
+		this._photoUri = str;
+		return buf;
+	}
+
+	get photo(): {
+		buffer?: Buffer;
+		uri?: string;
+	} {
+		return {
+			buffer: this._photo,
+			uri: this._photoUri,
+		};
+	}
+
+	get _raw(): staffAccount {
+		return this.account;
+	}
+}
+</file>
+
+<file path="lib/accounts/Student.ts">
+import { Account } from "./Account";
+import { Session } from "../Session";
+
+import {
+	loginResSuccess,
+	studentAccount,
+	isStudentAccount,
+	gradesResSuccess,
+	studentAccountModule,
+	course as _course,
+	studentDocsResSuccess,
+} from "ecoledirecte-api-types/v3";
+import {
+	getMainAccount,
+	getMessages,
+	getTextbookPage,
+	toISODate,
+	getGrades,
+	getTimeline,
+	fetchPhoto,
+	getCloudFolder,
+	getTimetable,
+	getWallets,
+	getDocuments,
+} from "../util";
+import { Cloud, Document, TimelineElem } from "../classes";
+import { Message, Grade, Period, Assignement, Course } from "../classes";
+
+import { getUpcomingAssignementDates } from "../util/student/textbook";
+import { cleanMessages } from "../util/student/mailbox";
+import { Wallet } from "../classes/Wallet";
+
+export class Student extends Account {
+	public type: "student" = "student";
+	private account: studentAccount;
+
+	constructor(private session: Session) {
+		super(session);
+		const mainAccount = getMainAccount(
+			(session.loginRes as loginResSuccess).data.accounts
+		);
+
+		if (!isStudentAccount(mainAccount))
+			throw new Error("Family class's main account is wrong");
+
+		if (!session.token) throw new Error("Account class MUST have token");
+
+		this.account = mainAccount;
+		this.token = session.token;
+	}
+
+	/**
+	 * Fetches the homework
+	 * @param dates (Array of) variable(s) which can be converted into Date object(s). Preffered type: "YYYY-MM-DD"
+	 * @param onlyWithWork If true, will ignore all assignements objects that do not contain any homework
+	 */
+	async getHomework(
+		params: {
+			dates?: Array<Date | string | number> | (Date | string | number);
+			onlyWithWork?: boolean;
+		} = {},
+		context: Record<string, unknown> = {}
+	): Promise<Assignement[]> {
+		let { dates } = params;
+		const { onlyWithWork } = params;
+		if (!dates) {
+			const upcomingAssignementDates = await getUpcomingAssignementDates(
+				this.account.id,
+				this.token,
+				context
+			);
+			dates = upcomingAssignementDates.dates;
+			this.token = upcomingAssignementDates.token;
+		}
+
+		if (!Array.isArray(dates)) dates = [dates];
+
+		const resultsArray = (
+			await Promise.all(
+				dates.map(async date => {
+					const d = toISODate(date);
+					const textbook = await getTextbookPage(
+						this.account.id,
+						this.token,
+						d,
+						context
+					);
+					this.token = textbook.token;
+
+					const homework = textbook.data;
+					const cleaned = homework.matieres.map(
+						s => new Assignement(s, homework.date, this)
+					);
+					if (onlyWithWork) return cleaned.filter(v => !!("job" in v));
+					return cleaned;
+				})
+			)
+		)
+			.flat()
+			.sort((a, b) => a.date.getTime() - b.date.getTime());
+		return resultsArray;
+	}
+
+	/**
+	 * @returns Every sent and received message, in ascending order by id
+	 */
+	async getMessages(context: Record<string, unknown> = {}): Promise<Message[]> {
+		const received = await getMessages(
+			this.account.id,
+			this.token,
+			"received",
+			context
+		);
+		this.token = received.token;
+		const sent = await getMessages(
+			this.account.id,
+			this.token,
+			"sent",
+			context
+		);
+		this.token = sent.token;
+		const messages = received;
+		messages.data.messages.sent = sent.data.messages.sent;
+		const cleaned = cleanMessages(messages, this);
+
+		return cleaned;
+	}
+
+	/**
+	 * @returns Every grade
+	 */
+	async getGrades(context: Record<string, unknown> = {}): Promise<Grade[]> {
+		const _grades = await getGrades(this.account.id, this.token, context);
+		this.token = _grades.token;
+		const grades = _grades.data.notes.map(g => new Grade(g));
+		return grades;
+	}
+
+	/**
+	 * @returns Every periods with their subjects. Useful to get more infos about grades.
+	 * It is recommended to cache them.
+	 */
+	async getPeriods(context: Record<string, unknown> = {}): Promise<Period[]> {
+		const _grades = await getGrades(this.account.id, this.token, context);
+		this.token = _grades.token;
+		const periods = _grades.data.periodes.map(p => new Period(p));
+		return periods;
+	}
+
+	/**
+	 * @returns The equivalent of `getGrades` and `getPeriods`, with only 1 request
+	 */
+	async getGradesAndPeriods(
+		context: Record<string, unknown> = {}
+	): Promise<{ grades: Grade[]; periods: Period[]; _raw: gradesResSuccess }> {
+		const _all = await getGrades(this.account.id, this.token, context);
+		this.token = _all.token;
+		const grades = _all.data.notes.map(g => new Grade(g));
+		const periods = _all.data.periodes.map(p => new Period(p));
+		return { grades, periods, _raw: _all };
+	}
+
+	/**
+	 * @returns Every wallet available
+	 */
+	async getWallets(context: Record<string, unknown> = {}): Promise<Wallet[]> {
+		const _wallets = await getWallets(this.token, context);
+		this.token = _wallets.token;
+		const wallets = _wallets.data.comptes.map(c => new Wallet(c));
+		return wallets;
+	}
+
+	async timeline(
+		context: Record<string, unknown> = {}
+	): Promise<TimelineElem[]> {
+		const _timeline = await getTimeline(this.account.id, this.token, context);
+		this.token = _timeline.token;
+		const tlElems: TimelineElem[] = _timeline.data
+			? _timeline.data.map(e => new TimelineElem(e))
+			: [];
+		return tlElems;
+	}
+
+	private _photo?: Buffer;
+	private _photoUri?: string;
+
+	async getPhoto(): Promise<Buffer | undefined> {
+		const r = await fetchPhoto(this);
+		if (!r) return;
+		const [buf, str] = r;
+		this._photo = buf;
+		this._photoUri = str;
+		return buf;
+	}
+
+	get photo(): {
+		buffer?: Buffer;
+		uri?: string;
+	} {
+		return {
+			buffer: this._photo,
+			uri: this._photoUri,
+		};
+	}
+
+	async getCloud(): Promise<Cloud> {
+		const _cloud = await getCloudFolder(this);
+		const cloud = new Cloud(_cloud.data[0], this);
+		return cloud;
+	}
+
+	/**
+	 * @param dates (Array of) variable(s) which can be converted into Date object(s). Preffered type: "YYYY-MM-DD"
+	 * @returns The timetable as an array of courses
+	 */
+	async getTimetable(
+		dates?: Array<Date | string | number> | (Date | string | number)
+	): Promise<Course[]> {
+		const _timetable = await getTimetable(this, dates);
+		this.token = _timetable.token;
+		const timetable = _timetable.data.map((c: _course) => new Course(c));
+
+		return timetable;
+	}
+
+	async getDocuments(archiveYear?: string): Promise<{
+		admin: Document[];
+		bills: Document[];
+		grades: Document[];
+		schoolLife: Document[];
+		_raw: studentDocsResSuccess["data"];
+	}> {
+		const _documents = await getDocuments(this.token, archiveYear);
+		this.token = _documents.token;
+		const documents = {
+			admin: _documents.data.administratifs.map(
+				d => new Document(d, this, archiveYear)
+			),
+			bills: _documents.data.factures.map(
+				d => new Document(d, this, archiveYear)
+			),
+			grades: _documents.data.notes.map(
+				d => new Document(d, this, archiveYear)
+			),
+			schoolLife: _documents.data.viescolaire.map(
+				d => new Document(d, this, archiveYear)
+			),
+			_raw: _documents.data,
+		};
+		return documents;
+	}
+
+	hasModule(module: studentAccountModule["code"]): boolean {
+		return this._raw.modules.some(m => m.code === module && m.enable);
+	}
+
+	get _raw(): studentAccount {
+		return this.account;
+	}
+}
+</file>
+
+<file path="lib/accounts/Teacher.ts">
+import { Account } from "./Account";
+import { Session } from "../Session";
+
+import {
+	loginResSuccess,
+	teacherAccount,
+	isTeacherAccount,
+	schoolsResSuccess,
+	studentsResSuccess,
+} from "ecoledirecte-api-types/v3";
+import {
+	getMainAccount,
+	fetchPhoto,
+	getTeachersSchools,
+	getTeachersStudents,
+} from "../util";
+import { TeachersSchool, TeachersStudent } from "../classes";
+
+export class Teacher extends Account {
+	public type: "teacher" = "teacher";
+	private account: teacherAccount;
+
+	constructor(private session: Session) {
+		super(session);
+
+		const mainAccount = getMainAccount(
+			(session.loginRes as loginResSuccess).data.accounts
+		);
+
+		if (!isTeacherAccount(mainAccount))
+			throw new Error("Teacher class's main account is wrong");
+
+		if (!session.token) throw new Error("Account class MUST have token");
+
+		this.account = mainAccount;
+		this.token = session.token;
+	}
+	// Get schools
+	async getSchools(): Promise<
+		[schools: TeachersSchool[], _raw: schoolsResSuccess]
+	> {
+		// Get schools
+		const res = await getTeachersSchools(this.token);
+		this.token = res.token;
+		const schools = res.data.etablissements.map(e => new TeachersSchool(e));
+		return [schools, res];
+	}
+
+	// Get students (from class id)
+	async getStudents(
+		classId: number
+	): Promise<[students: TeachersStudent[], _raw: studentsResSuccess]> {
+		const res = await getTeachersStudents(this.token, classId);
+		this.token = res.token;
+		const students = res.data.eleves.map(e => new TeachersStudent(e));
+		return [students, res];
+	}
+
+	private _photo?: Buffer;
+	private _photoUri?: string;
+
+	async getPhoto(): Promise<Buffer | undefined> {
+		const r = await fetchPhoto(this);
+		if (!r) return;
+		const [buf, str] = r;
+		this._photo = buf;
+		this._photoUri = str;
+		return buf;
+	}
+
+	get photo(): {
+		buffer?: Buffer;
+		uri?: string;
+	} {
+		return {
+			buffer: this._photo,
+			uri: this._photoUri,
+		};
+	}
+
+	get _raw(): teacherAccount {
+		return this.account;
+	}
+}
+</file>
+
+<file path="lib/classes/Assignement.ts">
+import { Routes } from "ecoledirecte-api-types/v3";
+import { makeRequest } from "../util";
+import { ExpandedBase64 } from "../classes";
+import { Student } from "../accounts";
+import { textbookDateAssignement as _textbookDateAssignement } from "ecoledirecte-api-types/v3";
+
+export class Assignement {
+	/** @description Unique ID */
+	id: number;
+	/** @description Date for which the assignement is due */
+	date: Date;
+	/** @description Whether it represents a test or not */
+	test: boolean;
+	/** @description Concerned subject */
+	subject: {
+		name: string;
+		code: string;
+	};
+	/** @description Teacher who created the assignement */
+	teacher: string;
+	/** @description The homework itself */
+	job?: {
+		content: ExpandedBase64;
+		givenAt: Date;
+		/** @description Whether the homework should be returned through EcoleDirecte */
+		toReturnOnline: boolean;
+		done: boolean;
+		/** @description `contenuDeSeance` of the last course */
+		lastContenuDeSeance: {
+			content: ExpandedBase64;
+			documents: unknown[];
+		};
+		tick: (newState?: boolean) => Promise<boolean>;
+	};
+	/** @description The day's `contenuDeSeance`. May not be displayed in the EcoleDirecte UI if the date is in the future */
+	contenuDeSeance?: {
+		homeworkId: number;
+		content: ExpandedBase64;
+		documents: unknown[];
+	};
+	/** @description Raw document straight from EcoleDirecte */
+	_raw: _textbookDateAssignement;
+
+	constructor(o: _textbookDateAssignement, date: string, student: Student) {
+		this.id = o.id;
+		this.date = new Date(date);
+		this.test = o.interrogation;
+		this.subject = {
+			name: o.matiere,
+			code: o.codeMatiere,
+		};
+		this.teacher = o.nomProf.startsWith(" par ")
+			? o.nomProf.substr(5)
+			: o.nomProf;
+		this.job = o.aFaire
+			? {
+					content: new ExpandedBase64(o.aFaire.contenu),
+					givenAt: new Date(o.aFaire.donneLe),
+					toReturnOnline: o.aFaire.rendreEnLigne,
+					done: o.aFaire.effectue,
+					lastContenuDeSeance: {
+						content: new ExpandedBase64(o.aFaire.contenuDeSeance.contenu),
+						documents: o.aFaire.contenuDeSeance.documents,
+					},
+					tick: async (newState?: boolean) => {
+						if (!this.job) throw new Error("'job' should be here");
+						if (newState === undefined) newState = !this.job.done;
+						const res = await tickAssignement(
+							student._raw.id,
+							student.token,
+							o,
+							newState
+						);
+						student.token = res?.token || student.token;
+						this.job.done = newState;
+						return newState;
+					},
+			  }
+			: undefined;
+		this.contenuDeSeance = o.contenuDeSeance
+			? {
+					homeworkId: o.contenuDeSeance.idDevoir,
+					content: new ExpandedBase64(o.contenuDeSeance.contenu),
+					documents: o.contenuDeSeance.documents,
+			  }
+			: undefined;
+		this._raw = o;
+	}
+}
+
+export async function tickAssignement(
+	id: number,
+	token: string,
+	assignement: _textbookDateAssignement,
+	state?: boolean
+): Promise<{ code: 200; token: string; host: string }> {
+	if (!("aFaire" in assignement)) throw Error("No work in this assignement.");
+	if (state === undefined) state = !assignement.aFaire?.effectue;
+
+	const data: {
+		token: string;
+		idDevoirsEffectues?: number[];
+		idDevoirsNonEffectues?: number[];
+	} = {
+		token: token,
+	};
+	if (state) data.idDevoirsEffectues = [assignement.id];
+	if (!state) data.idDevoirsNonEffectues = [assignement.id];
+
+	const body: { code: 200; token: string; host: string } = await makeRequest({
+		method: "POST",
+		path: Routes.studentHomework(id, { verbe: "put" }),
+		body: data,
+		guard: true,
+	});
+
+	return body;
+}
+</file>
+
+<file path="lib/classes/Cloud.ts">
+import { cloudResFolder, cloudResFile, role } from "ecoledirecte-api-types/v3";
+import { Account } from "../accounts";
+import { fetchFile, getCloudFolder } from "../util";
+
+export class Cloud {
+	public _root: cloudResFolder;
+	public _owner: Account;
+	constructor(root: cloudResFolder, owner: Account) {
+		this._root = root;
+		this._owner = owner;
+		if (root.quota === undefined)
+			throw new Error("This doesn't seem to be the cloud's root.");
+	}
+
+	get quota(): number {
+		return this._root.quota as number;
+	}
+
+	get size(): number {
+		return this._root.taille;
+	}
+
+	root(): Folder {
+		return new Folder(this._root, this);
+	}
+
+	/**
+	 * @description Will fetch the desired path
+	 */
+	async get(path: string): Promise<Folder | File | null> {
+		const steps = parsePath(path);
+		let lastStep: Folder | File | undefined = await this.root().load();
+		for (const step of steps) {
+			if (lastStep && lastStep.type === "folder") {
+				const child: Folder | File | undefined = lastStep.children.find(
+					c => c.name === step
+				);
+				lastStep =
+					child && child.type === "folder" ? await child.load() : child;
+			} else {
+				return null;
+			}
+		}
+		return lastStep ?? null;
+	}
+}
+
+export class Folder {
+	type: "folder" = "folder";
+	name: string;
+	path: string;
+	size: number;
+	children: Array<Folder | File>;
+	_raw: cloudResFolder;
+	private _cloud: Cloud;
+	constructor(o: cloudResFolder, cloud: Cloud) {
+		const pathPrefix = cloud._root.id;
+
+		this._cloud = cloud;
+		this._raw = o;
+		this.name = o.libelle;
+		this.path = cleanPath(o.id, pathPrefix);
+		this.size = o.taille;
+		this.children = o.children.map(c => {
+			if (!["folder", "file"].includes(c.type))
+				throw new Error(`Unexpected cloud type: ${c.type}`);
+			return c.type === "folder" ? new Folder(c, cloud) : new File(c, cloud);
+		});
+	}
+
+	async load(force = false): Promise<Folder> {
+		if (!this._raw.isLoaded || force) {
+			const res = await getCloudFolder(
+				this._cloud._owner,
+				encodeURI(
+					cleanPath(this._raw.id, this._cloud._root.id).replace(/\//g, "\\")
+				)
+			);
+			this._cloud._owner.token = res.token;
+			const folder = new Folder(res.data[0], this._cloud);
+			return folder;
+		} else {
+			return this;
+		}
+	}
+
+	/**
+	 * @description Loads every children recursively. Non-destructive.
+	 * @returns New Folder instance with every children. The files aren't downloaded.
+	 */
+	async loadFullTree(): Promise<Folder> {
+		const fullTree = await getFullTree(this._raw, this._cloud);
+		return new Folder(fullTree, this._cloud);
+	}
+
+	/**
+	 * @description Returns the requested path from its children (doesn't fetch anything)
+	 */
+	get(path: string): Folder | File | null {
+		/**
+		 *  @description To assign `this` to a value
+		 */
+		function that<T>(that: T): T {
+			return that;
+		}
+		const steps = parsePath(path);
+		let lastStep: Folder | File | undefined = that(this);
+		for (const step of steps) {
+			if (lastStep && lastStep.type === "folder") {
+				const child: Folder | File | undefined = lastStep.children.find(
+					c => c.name === step
+				);
+				lastStep = child;
+			} else {
+				return null;
+			}
+		}
+		return lastStep ?? null;
+	}
+
+	// toJSON() {}
+}
+
+export class File {
+	type: "file" = "file";
+	name: string;
+	path: string;
+	extension: string;
+	date: Date;
+	owner?: {
+		id: number;
+		type: role;
+		firstName: string;
+		lastName: string;
+		particle?: string;
+	};
+	_raw: cloudResFile;
+	private _cloud: Cloud;
+	constructor(o: cloudResFile, cloud: Cloud) {
+		const pathPrefix = cloud._root.id;
+		this._cloud = cloud;
+		this._raw = o;
+		this.name = o.libelle;
+		this.path = cleanPath(o.id, pathPrefix);
+		this.date = new Date(o.date);
+		this.owner = o.proprietaire
+			? {
+					id: o.proprietaire.id,
+					type: o.proprietaire.type,
+					firstName: o.proprietaire.prenom,
+					lastName: o.proprietaire.nom,
+					particle: o.proprietaire.particule || undefined,
+			  }
+			: undefined;
+		this.extension = getExtension(o.libelle);
+	}
+
+	private _downloaded?: Buffer;
+	private _downloadedUri?: string;
+
+	async download(token?: string): Promise<Buffer> {
+		const [buf, str] = await fetchFile(
+			this._raw.id,
+			token || this._cloud._owner.token
+		);
+		this._downloaded = buf;
+		this._downloadedUri = str;
+		return buf;
+	}
+
+	get downloaded(): { buffer?: Buffer; uri?: string } {
+		return {
+			buffer: this._downloaded,
+			uri: this._downloadedUri,
+		};
+	}
+
+	// toJSON() {}
+}
+
+export function getExtension(name: string): string {
+	const dotSplit = name.split("."),
+		dotLast = dotSplit[dotSplit.length - 1],
+		extension = dotLast !== name && !!dotLast ? dotLast : "";
+	return extension;
+}
+
+export function cleanPath(dirty: string, prefix: string): string {
+	if (dirty === prefix) return "/";
+	if (dirty.indexOf(prefix) === -1) throw new Error("Prefix expected");
+	const clean =
+		"/" +
+		dirty
+			.substr(dirty.indexOf(prefix) + (prefix + "\\").length)
+			.replace(/\\/g, "/");
+	return clean;
+}
+
+function parsePath(path: string): string[] {
+	const steps = [];
+	const slashes = [];
+	if (path && !path.startsWith("/")) path = "/" + path;
+
+	for (let i = 0; i < path.length; i++) {
+		const isSlash = path[i] === "/" && path[i - 1] !== "\\";
+		if (isSlash) slashes.push(i);
+	}
+
+	for (let i = 0; i < slashes.length; i++) {
+		const start = slashes[i] + 1;
+		const end = slashes[i + 1] || path.length;
+		if (start < end) steps.push(path.substring(start, end));
+	}
+
+	return steps;
+}
+
+export async function getFullTree(
+	folder: cloudResFolder,
+	cloud: Cloud
+): Promise<cloudResFolder> {
+	let newFolder = folder;
+	// Load folder
+	if (!folder.isLoaded) {
+		const folderRes = await getCloudFolder(
+			cloud._owner,
+			encodeURI(cleanPath(folder.id, cloud._root.id).replace(/\//g, "\\"))
+		);
+		cloud._owner.token = folderRes.token;
+		newFolder = folderRes.data[0];
+	}
+	// Recursively call function
+	newFolder.children = await Promise.all(
+		newFolder.children.map(async c =>
+			c.type === "folder" ? getFullTree(c, cloud) : c
+		)
+	);
+
+	return newFolder;
+}
+</file>
+
+<file path="lib/classes/Course.ts">
+import { course as _course } from "ecoledirecte-api-types/v3";
+
+export class Course {
+	id: number;
+	text: string;
+	courseType: string;
+
+	subject: string;
+	subjectCode: string;
+
+	teacher: string;
+	room: string;
+	class: string;
+	classCode: string;
+
+	group: string;
+	groupCode: string;
+
+	startDate: Date;
+	endDate: Date;
+
+	isFlexible: boolean;
+	isModified: boolean;
+	isCancelled: boolean;
+
+	color: string;
+	icon: string;
+
+	isExemptable: boolean;
+	isExempted: number;
+
+	hasSessionContent: boolean;
+	hasHomework: boolean;
+
+	_raw: _course;
+
+	constructor(o: _course) {
+		this.id = o.id;
+		this.text = o.text;
+		this.courseType = o.typeCours;
+
+		this.subject = o.matiere;
+		this.subjectCode = o.codeMatiere;
+
+		this.teacher = o.prof;
+		this.room = o.salle;
+		this.class = o.classe;
+		this.classCode = o.classeCode;
+
+		this.group = o.groupe;
+		this.groupCode = o.groupeCode;
+
+		this.startDate = new Date(o.start_date);
+		this.endDate = new Date(o.end_date);
+
+		this.isFlexible = o.isFlexible;
+		this.isModified = o.isModifie;
+		this.isCancelled = o.isAnnule;
+
+		this.color = o.color;
+		this.icon = o.icone;
+
+		this.isExemptable = o.dispensable;
+		this.isExempted = o.dispense;
+
+		this.hasSessionContent = o.contenuDeSeance;
+		this.hasHomework = o.devoirAFaire;
+
+		this._raw = o;
+	}
+
+	toJSON(): courseJson {
+		return {
+			id: this.id,
+			text: this.text,
+			courseType: this.courseType,
+
+			subject: this.subject,
+			subjectCode: this.subjectCode,
+
+			teacher: this.teacher,
+			room: this.room,
+			class: this.class,
+			classCode: this.classCode,
+
+			group: this.group,
+			groupCode: this.groupCode,
+
+			startDate: this.startDate,
+			endDate: this.endDate,
+
+			isFlexible: this.isFlexible,
+			isModified: this.isModified,
+			isCancelled: this.isCancelled,
+
+			color: this.color,
+			icon: this.icon,
+
+			isExemptable: this.isExemptable,
+			isExempted: this.isExempted,
+
+			hasSessionContent: this.hasSessionContent,
+			hasHomework: this.hasHomework,
+
+			_raw: this._raw,
+		};
+	}
+}
+
+export interface courseJson {
+	id: number;
+	text: string;
+	courseType: string;
+	subject: string;
+	subjectCode: string;
+	teacher: string;
+	room: string;
+	class: string;
+	classCode: string;
+	group: string;
+	groupCode: string;
+	startDate: Date;
+	endDate: Date;
+	isFlexible: boolean;
+	isModified: boolean;
+	isCancelled: boolean;
+	color: string;
+	icon: string;
+	isExemptable: boolean;
+	isExempted: number;
+	hasSessionContent: boolean;
+	hasHomework: boolean;
+	_raw: _course;
+}
+</file>
+
+<file path="lib/classes/Document.ts">
+import { downloadDocument } from "../util";
+import { studentDoc as _doc } from "ecoledirecte-api-types/v3";
+import { Account } from "../accounts";
+
+export class Document {
+	date: Date;
+	id: number;
+	studentId: number;
+	name: string;
+	type?: string;
+
+	_raw: _doc;
+
+	constructor(o: _doc, private account: Account, private archiveYear?: string) {
+		this.date = new Date(o.date);
+		this.id = o.id;
+		this.studentId = o.idEleve;
+		this.name = o.libelle;
+		this.type = o.type || undefined;
+
+		this._raw = o;
+	}
+
+	async download() {
+		const doc = await downloadDocument(
+			this.account.token,
+			this.id,
+			this.type || "",
+			this.archiveYear
+		);
+		return doc;
+	}
+}
+</file>
+
+<file path="lib/classes/ExpandedB64.ts">
+import { htmlToText } from "html-to-text";
+
+export class ExpandedBase64 {
+	readonly original: string;
+	readonly html: string;
+	readonly text: string;
+	constructor(htmlBase64: string) {
+		this.original = htmlBase64;
+		this.html = Buffer.from(htmlBase64, "base64").toString();
+		this.text = htmlToText(this.html, {
+			wordwrap: false,
+		});
+	}
+	toJSON(): expandedBase64Json {
+		return {
+			original: this.original,
+			html: this.html,
+			text: this.text,
+		};
+	}
+}
+
+export interface expandedBase64Json {
+	original: string;
+	html: string;
+	text: string;
+}
+</file>
+
+<file path="lib/classes/Grade.ts">
+import { grade as _grade } from "ecoledirecte-api-types/v3";
+
+export class Grade {
+	name: string;
+	value: number | string;
+
+	classMax?: number | string;
+	classAvg?: number | string;
+	classMin?: number | string;
+
+	outOf: number;
+	weight: number;
+	unweighted: boolean;
+	isLetter: boolean;
+	date: Date;
+	dateTyped: Date;
+	periodCode: string;
+
+	subjectCode: string;
+	subjectName: string;
+	subSubjectCode?: string;
+
+	elements: Array<{
+		id: number;
+		competenceId: number;
+		name: string;
+		description: string;
+		value: string;
+	}>;
+	qcm?: {
+		id: number;
+		name: string;
+		startsAt: Date;
+	};
+	_raw: _grade;
+
+	constructor(o: _grade) {
+		this.name = o.devoir;
+		this.value = betterValue(o);
+
+		this.classMax = !(isNaN(+o.maxClasse) || !o.maxClasse)
+			? +o.maxClasse
+			: o.maxClasse || undefined;
+		this.classAvg = !(isNaN(+o.moyenneClasse) || !o.moyenneClasse)
+			? +o.moyenneClasse
+			: o.moyenneClasse || undefined;
+		this.classMin = !(isNaN(+o.minClasse) || !o.minClasse)
+			? +o.minClasse
+			: o.minClasse || undefined;
+
+		this.outOf = +o.noteSur.replace(/,/, ".");
+		this.weight = +o.coef;
+		this.unweighted = o.nonSignificatif;
+		this.isLetter = o.enLettre;
+		this.date = new Date(o.date);
+		this.dateTyped = new Date(o.dateSaisie);
+		this.periodCode = o.codePeriode;
+
+		this.subjectCode = o.codeMatiere;
+		this.subjectName = o.libelleMatiere;
+		this.subSubjectCode = o.codeSousMatiere || undefined;
+
+		this.elements = o.elementsProgramme.map(e => ({
+			id: e.idElemProg,
+			competenceId: e.idCompetence,
+			name: e.libelleCompetence,
+			description: e.descriptif,
+			value: e.valeur,
+		}));
+		this.qcm = o.qcm
+			? {
+					id: o.qcm.idQCM,
+					name: o.qcm.titre,
+					startsAt: new Date(o.qcm.debute),
+			  }
+			: undefined;
+		this._raw = o;
+	}
+
+	toJSON(): gradeJson {
+		return {
+			name: this.name,
+			value: this.value,
+			classMax: this.classMax,
+			classAvg: this.classAvg,
+			classMin: this.classMin,
+			outOf: this.outOf,
+			weight: this.weight,
+			unweighted: this.unweighted,
+			isLetter: this.isLetter,
+			date: this.date,
+			dateTyped: this.dateTyped,
+			periodCode: this.periodCode,
+			subjectCode: this.subjectCode,
+			subjectName: this.subjectName,
+			subSubjectCode: this.subSubjectCode,
+			elements: this.elements,
+			qcm: this.qcm,
+			_raw: this._raw,
+		};
+	}
+}
+
+export interface gradeJson {
+	name: string;
+	value: number | string;
+
+	classMax?: number | string;
+	classAvg?: number | string;
+	classMin?: number | string;
+
+	outOf: number;
+	weight: number;
+	unweighted: boolean;
+	isLetter: boolean;
+	date: Date;
+	dateTyped: Date;
+	periodCode: string;
+
+	subjectCode: string;
+	subjectName: string;
+	subSubjectCode?: string;
+
+	elements: Array<{
+		id: number;
+		competenceId: number;
+		name: string;
+		description: string;
+		value: string;
+	}>;
+	qcm?: {
+		id: number;
+		name: string;
+		startsAt: Date;
+	};
+	_raw: _grade;
+}
+
+function betterValue(note: _grade): number | string {
+	if (note.enLettre) return note.valeur;
+	return +note.valeur.replace(/,/, ".");
+}
+</file>
+
+<file path="lib/classes/index.ts">
+export * from "./Assignement";
+export * from "./Grade";
+export * from "./Mail";
+export * from "./Period";
+export * from "./Timeline";
+export * from "./Cloud";
+export * from "./Course";
+export * from "./School";
+export * from "./Document";
+
+export * from "./ExpandedB64";
+</file>
+
+<file path="lib/classes/Mail.ts">
+import {
+	role,
+	mailboxResMessage,
+	messageResSuccess,
+	Routes,
+} from "ecoledirecte-api-types/v3";
+import { makeRequest } from "../util";
+import { ExpandedBase64 } from "../classes";
+import { Student } from "../accounts";
+
+export class Message {
+	private _user?: Student;
+	/** @description Unique ID */
+	id: number;
+	/** @description Direction of the message */
+	type: "received" | "sent";
+	/** @description Whether it is marked as read */
+	read: boolean;
+	/** @description Has it been transferred? */
+	transferred: boolean;
+	/** @description Has it been answered? */
+	answered: boolean;
+	/**
+	 * @description Degree of implication
+	 * @enum `to`: the message is directed to the user
+	 * @enum `cc`: the message is not written for the user, but publicly adressed
+	 * @enum `cci`: the message is not written for the user and is privately sent
+	 * @enum ` `: the message isn't received
+	 */
+	to_cc_cci: "to" | "cc" | "cci" | "";
+	/** @description Subject, headline of the mail */
+	subject: string;
+	/** @description When has this message been sent? */
+	date: Date;
+	/** @description List of the addressees */
+	to: Array<{
+		id: number;
+		fullName: string;
+		lastName: string;
+		firstName: string;
+		particle: string;
+		civility: string;
+		role: role;
+		read: boolean;
+		to_cc_cci: "to" | "cc" | "cci";
+	}>;
+	/** @description Sender */
+	from: {
+		id: number;
+		fullName: string;
+		lastName: string;
+		firstName: string;
+		particle: string;
+		civility: string;
+		role: role;
+		read: boolean;
+	};
+	/** @description Raw document straight from EcoleDirecte */
+	_raw: mailboxResMessage;
+
+	constructor(o: mailboxResMessage, user?: Student) {
+		this._user = user;
+
+		this.id = o.id;
+		this.type = o.mtype;
+		this.read = o.read;
+		this.transferred = o.transferred;
+		this.answered = o.answered;
+		this.to_cc_cci = o.to_cc_cci;
+		this.subject = o.subject;
+		this.date = new Date(o.date);
+		this.to = o.to.map(r => ({
+			id: r.id,
+			fullName: r.name,
+			lastName: r.nom,
+			firstName: r.prenom,
+			particle: r.particule,
+			civility: r.civilite,
+			role: r.role,
+			read: r.read,
+			to_cc_cci: r.to_cc_cci,
+		}));
+		this.from = {
+			id: o.from.id,
+			fullName: o.from.name,
+			lastName: o.from.nom,
+			firstName: o.from.prenom,
+			particle: o.from.particule,
+			civility: o.from.civilite,
+			role: o.from.role,
+			read: o.from.read,
+		};
+		this._raw = o;
+	}
+
+	/**
+	 * @description Fetches the content of the mail
+	 * NEEDS USER
+	 */
+	async getContent(): Promise<ExpandedBase64> {
+		if (!this._user) throw new Error("User needs to be provided");
+		const details: messageResSuccess = await makeRequest({
+			method: "POST",
+			path: Routes.studentMessage(this._user._raw.id, this.id, {
+				mode: this.type === "received" ? "destinataire" : "expediteur",
+			}),
+			body: { token: this._user.token },
+			guard: true,
+		});
+		return new ExpandedBase64(details.data.content);
+	}
+}
+</file>
+
+<file path="lib/classes/Period.ts">
+import {
+	subject as _subject,
+	period as _period,
+} from "ecoledirecte-api-types/v3";
+import { ExpandedBase64, expandedBase64Json } from "../classes";
+
+export class Period {
+	code: string;
+	name: string;
+	yearly: boolean;
+	closed: boolean;
+	start: Date;
+	end: Date;
+	mockExam: boolean;
+	headcount?: number;
+	rank?: number;
+	headTeacher?: string;
+	appraisals: {
+		CE?: string;
+		PP?: string;
+		VS?: string;
+	};
+	class: {
+		appraisal?: string;
+		averageGrade?: number;
+	};
+	council: {
+		start?: Date;
+		end?: Date;
+		room?: string;
+		verdict?: string;
+	};
+	calcDate?: Date;
+	subjects: Array<Subject>;
+	_raw: _period;
+
+	constructor(o: _period) {
+		this.code = o.idPeriode;
+		this.name = o.periode;
+		this.yearly = o.annuel;
+		this.closed = o.cloture;
+		this.start = new Date(o.dateDebut);
+		this.end = new Date(o.dateFin);
+		this.mockExam = o.examenBlanc;
+		this.headcount = o.ensembleMatieres.effectif
+			? +o.ensembleMatieres.effectif
+			: undefined;
+		this.rank = o.ensembleMatieres.rang ? +o.ensembleMatieres.rang : undefined;
+		this.headTeacher = o.ensembleMatieres.nomPP;
+		this.appraisals = {
+			CE: o.ensembleMatieres.appreciationCE,
+			PP: o.ensembleMatieres.appreciationPP,
+			VS: o.ensembleMatieres.appreciationVS,
+		};
+		this.class = {
+			appraisal: o.ensembleMatieres.appreciationGeneraleClasse,
+			averageGrade: o.ensembleMatieres.moyenneClasse
+				? +o.ensembleMatieres.moyenneClasse.replace(/,/, ".")
+				: undefined,
+		};
+		this.council = {
+			start: o.dateConseil
+				? new Date(o.dateConseil + " " + (o.heureConseil || ""))
+				: undefined,
+			end:
+				o.dateConseil && o.heureFinConseil
+					? new Date(o.dateConseil + " " + o.heureFinConseil)
+					: undefined,
+			room: o.salleConseil,
+			verdict: o.ensembleMatieres.decisionDuConseil || undefined,
+		};
+		this.calcDate = o.ensembleMatieres.dateCalcul
+			? new Date(o.ensembleMatieres.dateCalcul)
+			: undefined;
+		this.subjects = o.ensembleMatieres.disciplines.map(d => new Subject(d));
+		this._raw = o;
+	}
+
+	toJSON(): periodJson {
+		return {
+			code: this.code,
+			name: this.name,
+			yearly: this.yearly,
+			closed: this.closed,
+			start: this.start,
+			end: this.end,
+			mockExam: this.mockExam,
+			headcount: this.headcount,
+			rank: this.rank,
+			headTeacher: this.headTeacher,
+			appraisals: this.appraisals,
+			class: this.class,
+			council: this.council,
+			calcDate: this.calcDate,
+			subjects: this.subjects.map(s => s.toJSON()),
+			_raw: this._raw,
+		};
+	}
+}
+
+export interface periodJson {
+	code: string;
+	name: string;
+	yearly: boolean;
+	closed: boolean;
+	start: Date;
+	end: Date;
+	mockExam: boolean;
+	headcount?: number;
+	rank?: number;
+	headTeacher?: string;
+	appraisals: {
+		CE?: string;
+		PP?: string;
+		VS?: string;
+	};
+	class: {
+		appraisal?: string;
+		averageGrade?: number;
+	};
+	council: {
+		start?: Date;
+		end?: Date;
+		room?: string;
+		verdict?: string;
+	};
+	calcDate?: Date;
+	subjects: Array<subjectJson>;
+	_raw: _period;
+}
+
+export class Subject {
+	id: number;
+	code: string;
+	name: string;
+	weight: number;
+	headcount: number;
+	rank: number;
+	minorSubject: boolean;
+	minorSubjectCode?: string;
+	group: boolean;
+	groupId: number;
+	appraisals: Array<ExpandedBase64>;
+	option: number;
+	teachers: Array<{
+		id: number;
+		name: string;
+	}>;
+	class: {
+		appraisal?: ExpandedBase64;
+		max?: number;
+		avg?: number;
+		min?: number;
+	};
+	_raw: _subject;
+
+	constructor(o: _subject) {
+		this.id = o.id;
+		this.code = o.codeMatiere;
+		this.name = o.discipline;
+		this.weight = o.coef;
+		this.headcount = o.effectif;
+		this.rank = o.rang;
+		this.minorSubject = o.sousMatiere;
+		this.minorSubjectCode = o.codeSousMatiere || undefined;
+		this.group = o.groupeMatiere;
+		this.groupId = o.idGroupeMatiere;
+		this.appraisals = o.appreciations
+			? o.appreciations.filter(a => !!a).map(a => new ExpandedBase64(a))
+			: [];
+		this.option = o.option;
+		this.teachers = o.professeurs.map(p => ({
+			id: p.id,
+			name: p.nom,
+		}));
+		this.class = {
+			appraisal: o.appreciationClasse
+				? new ExpandedBase64(o.appreciationClasse)
+				: undefined,
+			max: o.moyenneMax ? +o.moyenneMax.replace(/,/, ".") : undefined,
+			avg: o.moyenneClasse ? +o.moyenneClasse.replace(/,/, ".") : undefined,
+			min: o.moyenneMin ? +o.moyenneMin.replace(/,/, ".") : undefined,
+		};
+		this._raw = o;
+	}
+
+	toJSON(): subjectJson {
+		const toReturn = {
+			id: this.id,
+			code: this.code,
+			name: this.name,
+			weight: this.weight,
+			headcount: this.headcount,
+			rank: this.rank,
+			minorSubject: this.minorSubject,
+			minorSubjectCode: this.minorSubjectCode,
+			group: this.group,
+			groupId: this.groupId,
+			appraisals: this.appraisals.map(a => a.toJSON()),
+			option: this.option,
+			teachers: this.teachers,
+			class: {
+				appraisal: this.class.appraisal?.toJSON(),
+				max: this.class.max,
+				avg: this.class.avg,
+				min: this.class.min,
+			},
+			_raw: this._raw,
+		};
+		return toReturn;
+	}
+}
+
+// export interface periodJson {
+
+// }
+
+export interface subjectJson {
+	id: number;
+	code: string;
+	name: string;
+	weight: number;
+	headcount: number;
+	rank: number;
+	minorSubject: boolean;
+	minorSubjectCode?: string;
+	group: boolean;
+	groupId: number;
+	appraisals: expandedBase64Json[];
+	option: number;
+	teachers: { id: number; name: string }[];
+	class: {
+		appraisal?: expandedBase64Json;
+		max?: number;
+		avg?: number;
+		min?: number;
+	};
+	_raw: _subject;
+}
+</file>
+
+<file path="lib/classes/School.ts">
+import {
+	teacherSchool as _school,
+	teacherLevel as _level,
+	teacherClass as _class,
+	teacherStudent as _student,
+} from "ecoledirecte-api-types";
+
+export class TeachersSchool {
+	id: number;
+	code: string;
+	name: string;
+
+	levels: TeachersLevel[];
+
+	_raw: _school;
+
+	constructor(o: _school) {
+		this.id = o.id;
+		this.code = o.code;
+		this.name = o.libelle;
+
+		this.levels = o.niveaux.map(l => new TeachersLevel(l));
+
+		this._raw = o;
+	}
+}
+
+export class TeachersLevel {
+	id: number;
+	code: string;
+	name: string;
+
+	classes: TeachersClass[];
+
+	_raw: _level;
+
+	constructor(o: _level) {
+		this.id = o.id;
+		this.code = o.code;
+		this.name = o.libelle;
+
+		this.classes = o.classes.map(c => new TeachersClass(c));
+
+		this._raw = o;
+	}
+}
+
+export class TeachersClass {
+	id: number;
+	code: string;
+	name: string;
+
+	isHeadTeacher: boolean;
+	headTeachers: {
+		id: number;
+		firstName: string;
+		lastName: string;
+	}[];
+
+	_raw: _class;
+
+	constructor(o: _class) {
+		this.id = o.id;
+		this.code = o.code;
+		this.name = o.libelle;
+
+		this.isHeadTeacher = o.isPP;
+		this.headTeachers = o.tabPP.map(r => ({
+			id: r.id,
+			firstName: r.prenom,
+			lastName: r.nom,
+		}));
+
+		this._raw = o;
+	}
+}
+
+export class TeachersStudent {
+	id: number;
+	firstName: string;
+	lastName: string;
+
+	_raw: _student;
+
+	constructor(o: _student) {
+		this.id = o.id;
+		this.firstName = o.prenom;
+		this.lastName = o.nom;
+
+		this._raw = o;
+	}
+}
+</file>
+
+<file path="lib/classes/Timeline.ts">
+import {
+	studTlElem as _studTlElem,
+	studCommonTlEvent as _studCommonTlEvent,
+} from "ecoledirecte-api-types/v3";
+import { ExpandedBase64 } from "./ExpandedB64";
+
+export class TimelineElem {
+	date: Date;
+	type: string;
+	id: number;
+	title: string;
+	subtitle: string;
+	content: string;
+	_raw: _studTlElem;
+	constructor(o: _studTlElem) {
+		this.date = new Date(o.date);
+		this.type = o.typeElement;
+		this.id = o.idElement;
+		this.title = o.titre;
+		this.subtitle = o.soustitre;
+		this.content = o.contenu;
+		this._raw = o;
+	}
+}
+
+export class TimelineEvent {
+	id: number;
+	title: string;
+	description: ExpandedBase64;
+	start: Date;
+	end: Date;
+	cibles: Array<"F" | "E" | "A" | "P">;
+	_raw: _studCommonTlEvent;
+
+	constructor(o: _studCommonTlEvent) {
+		this.id = o.id;
+		this.title = o.libelle;
+		this.description = new ExpandedBase64(o.description);
+		this.start = new Date(o.dateDebut + " " + (o.heureDebut || ""));
+		this.end = new Date(o.dateFin + " " + (o.heureFin || ""));
+		this.cibles = o.cibles;
+		this._raw = o;
+	}
+}
+</file>
+
+<file path="lib/classes/Wallet.ts">
+import {
+	compte as _compte,
+	ecriture as _ecriture,
+} from "ecoledirecte-api-types";
+
+export type walletType = "wallet" | "activity";
+
+export class Wallet {
+	id: number;
+	/**
+	 * Should be identical to `id`
+	 */
+	studentId: number;
+	type: walletType;
+	available: boolean;
+
+	unitCost: number;
+	editableAmount: boolean;
+	editableQuantity: boolean;
+	code: string;
+
+	classServiceId: number;
+	name: string;
+
+	balance: number;
+
+	future: unknown[];
+	transactions: Transaction[];
+
+	_raw: _compte;
+
+	constructor(o: _compte) {
+		this.id = o.id;
+		this.studentId = o.idEleve;
+		this.type = o.typeCompte === "portemonnaie" ? "wallet" : "activity";
+		this.available = o.disponible;
+		this.unitCost = o.montantVersement;
+		this.editableAmount = o.montantModifiable;
+		this.editableQuantity = o.quantiteModifiable;
+		this.code = o.codeCompte;
+		this.classServiceId = o.idServiceClasse;
+		this.name = o.libelleCompte;
+		this.balance = o.solde;
+		this.future = o.avenir;
+		this.transactions = o.ecritures && o.ecritures.map(e => new Transaction(e));
+
+		this._raw = o;
+	}
+}
+
+export class Transaction {
+	date: Date;
+	name?: string;
+	lettering?: string;
+	compInfo?: string;
+	amount: number;
+	transactions?: Transaction[];
+
+	_raw: _ecriture;
+
+	constructor(o: _ecriture) {
+		this.date = new Date(o.date);
+		this.name = o.libelle;
+		this.lettering = o.lettrage || undefined;
+		this.compInfo = o.infoComp || undefined;
+		this.amount = o.montant;
+		this.transactions = o.ecritures && o.ecritures.map(e => new Transaction(e));
+
+		this._raw = o;
+	}
+}
+</file>
+
+<file path="lib/util/global/cloud.ts">
+import fetch from "node-fetch";
+
+import { Routes, cloudResSuccess } from "ecoledirecte-api-types/v3";
+import { makeRequest, USER_AGENT, Config } from "../util";
+import { Account } from "../../accounts";
+
+export async function getCloudFolder(
+	account: Account,
+	folderPath?: string,
+	context: Record<string, unknown> = {}
+): Promise<cloudResSuccess> {
+	const body: cloudResSuccess = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.cloudFolder(account.__raw.typeCompte, account.edId, {
+				verbe: "get",
+				idFolder: folderPath || undefined,
+			}),
+			body: { token: account.token },
+			guard: true,
+		},
+		{ userId: account.edId, action: "getGrades", ...context },
+		account
+	);
+
+	return body;
+}
+
+const EdHeadersFile = {
+	authority: "api.ecoledirecte.com",
+	// This header, that references a specific version, might cause issues in the future
+	"sec-ch-ua":
+		// eslint-disable-next-line quotes
+		'" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"',
+	accept: "application/json, text/plain, */*",
+	"sec-ch-ua-mobile": "?0",
+	"user-agent": USER_AGENT,
+	"content-type": "application/x-www-form-urlencoded",
+	origin: "https://www.ecoledirecte.com",
+	"sec-fetch-site": "same-site",
+	"sec-fetch-mode": "cors",
+	"sec-fetch-dest": "empty",
+	referer: "https://www.ecoledirecte.com/",
+	"accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+};
+
+export async function fetchFile(
+	fileId: string,
+	token: string
+): Promise<[Buffer, string]> {
+	//TODO  Bug token usage issues to fix...
+	const urlencoded = new URLSearchParams();
+	urlencoded.append("data", JSON.stringify({ forceDownload: 0, token: token }));
+	const url = new URL(
+		Routes.downloadFile({
+			verbe: "post",
+			fichierId: encodeURI(fileId),
+			leTypeDeFichier: "CLOUD",
+		}),
+		Config.get("root")
+	).href;
+	const res = await fetch(url, {
+		method: "POST",
+		headers: { ...EdHeadersFile, ...Config.get("addedHeaders") },
+		body: urlencoded,
+	});
+	const buf = await res.buffer();
+	const str =
+		"data:" +
+		res.headers.get("Content-Type") +
+		";base64," +
+		buf.toString("base64");
+	return [buf, str];
+}
+</file>
+
+<file path="lib/util/global/timetable.ts">
+import { Routes, timetableResSuccess } from "ecoledirecte-api-types/v3";
+import { makeRequest, toISODate } from "../util";
+import { Student } from "../../accounts/";
+
+export async function getTimetable(
+	account: Student,
+	dates: Array<Date | string | number> | (Date | string | number) = Date.now(),
+	context: Record<string, unknown> = {}
+): Promise<timetableResSuccess> {
+	if (!account.hasModule("EDT")) {
+		throw new Error("Account does not have timetable enabled");
+	}
+
+	if (!Array.isArray(dates)) dates = [dates];
+	if (!dates[1]) dates[1] = dates[0];
+
+	const startDate = new Date(dates[0]);
+	const endDate = new Date(dates[1]);
+
+	if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+		throw new Error("Invalid dates");
+	}
+
+	if (startDate > endDate) throw new Error("Start date is after end date");
+
+	const body: timetableResSuccess = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.timetable(account.__raw.typeCompte, account.edId),
+			body: {
+				token: account.token,
+				dateDebut: toISODate(startDate),
+				dateFin: toISODate(endDate),
+			},
+			guard: true,
+		},
+		{ userId: account.edId, action: "getTimetable", ...context }
+	);
+
+	return body;
+}
+</file>
+
+<file path="lib/util/student/documents.ts">
+import { Routes } from "ecoledirecte-api-types/v3";
+import { studentDocsResSuccess } from "ecoledirecte-api-types/v3";
+
+import { makeRequest } from "../util";
+
+export async function getDocuments(
+	token: string,
+	archiveYear?: string
+): Promise<studentDocsResSuccess> {
+	const body: studentDocsResSuccess = await makeRequest({
+		method: "POST",
+		path: Routes.studentDocuments({ archive: archiveYear ?? "" }),
+		body: { token },
+		guard: true,
+	});
+
+	return body;
+}
+
+export async function downloadDocument(
+	token: string,
+	documentId: number,
+	fileType?: string,
+	archiveYear?: string
+): Promise<Blob> {
+	const body: Blob = await makeRequest(
+		{
+			method: "GET",
+			path: Routes.downloadDocument({
+				fichierId: documentId,
+				leTypeDeFichier: fileType || "",
+				archive: !!archiveYear,
+				anneeArchive: archiveYear || "",
+			}),
+			body: {
+				forceDownload: 0,
+				archivve: !!archiveYear,
+				anneeArchive: archiveYear || "",
+			},
+			guard: true,
+			expectBuffer: true,
+		},
+		undefined,
+		undefined,
+		token
+	);
+
+	return body;
+}
+</file>
+
+<file path="lib/util/student/grades.ts">
+import { Routes, gradesResSuccess } from "ecoledirecte-api-types/v3";
+import { makeRequest } from "../util";
+
+export async function getGrades(
+	id: number,
+	token: string,
+	context: Record<string, unknown> = {}
+): Promise<gradesResSuccess> {
+	const body: gradesResSuccess = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.studentGrades(id),
+			body: { token },
+			guard: true,
+		},
+		{ userId: id, action: "getGrades", ...context }
+	);
+
+	return body;
+}
+</file>
+
+<file path="lib/util/student/mailbox.ts">
+import { Routes, mailboxResSuccess } from "ecoledirecte-api-types/v3";
+
+import { makeRequest } from "../util";
+import { Message } from "../../classes";
+import { Student } from "../../accounts";
+
+export async function getMessages(
+	id: number,
+	token: string,
+	direction: "received" | "sent" = "received",
+	context: Record<string, unknown> = {}
+): Promise<mailboxResSuccess> {
+	const body: mailboxResSuccess = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.studentMailbox(id, { typeRecuperation: direction }),
+			body: { token },
+			guard: true,
+		},
+		{ userId: id, action: "getMessages", ...context }
+	);
+
+	return body;
+}
+
+export function cleanMessages(
+	mailboxRes: mailboxResSuccess,
+	student: Student
+): Message[] {
+	const { received, sent } = mailboxRes.data.messages;
+	const all = [...received, ...sent];
+	const messages: Message[] = all
+		.map(v => new Message(v, student))
+		.sort((a, b) => a.id - b.id);
+
+	return messages;
+}
+</file>
+
+<file path="lib/util/student/textbook.ts">
+import { Routes } from "ecoledirecte-api-types/v3";
+
+import { makeRequest } from "../util";
+
+import {
+	textbookResSuccess,
+	textbookDateResSuccess,
+	textbookDateAssignement,
+} from "ecoledirecte-api-types/v3";
+
+/**
+ * @param id Account id
+ * @param token Auth token
+ */
+export async function getUpcomingAssignementDates(
+	id: number,
+	token: string,
+	context: Record<string, unknown> = {}
+): Promise<{ dates: string[]; token: string }> {
+	const body: textbookResSuccess = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.studentHomework(id),
+			body: { token },
+			guard: true,
+		},
+		{ userId: id, action: "getUpcomingAssignementDates", ...context }
+	);
+
+	const dates = Object.keys(body.data); // .map((date) => new Date(date));
+
+	return { dates, token: body.token || token };
+}
+
+/**
+ * @param id Account id
+ * @param token Auth token
+ * @param date Date of the textbook page (YYYY-MM-DD)
+ */
+export async function getTextbookPage(
+	id: number,
+	token: string,
+	date: string,
+	context: Record<string, unknown> = {}
+): Promise<textbookDateResSuccess> {
+	const body: textbookDateResSuccess = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.studentHomeworkDate(id, date),
+			body: { token },
+			guard: true,
+		},
+		{ userId: id, action: "getTextbookPage", ...context }
+	);
+
+	return body;
+}
+
+export async function tickAssignement(
+	id: number,
+	token: string,
+	assignement: textbookDateAssignement,
+	state?: boolean,
+	context: Record<string, unknown> = {}
+): Promise<{ code: 200; token: string; host: string }> {
+	if (!("aFaire" in assignement)) throw Error("No work in this assignement.");
+	if (state === undefined) state = !assignement.aFaire?.effectue;
+
+	const data: {
+		token: string;
+		idDevoirsEffectues?: number[];
+		idDevoirsNonEffectues?: number[];
+	} = {
+		token: token,
+	};
+	if (state) data.idDevoirsEffectues = [assignement.id];
+	if (!state) data.idDevoirsNonEffectues = [assignement.id];
+
+	const body: { code: 200; token: string; host: string } = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.studentHomework(id, { verbe: "put" }),
+			body: data,
+			guard: true,
+		},
+		{
+			userId: id,
+			assignementId: assignement.id,
+			action: "tickAssignement",
+			...context,
+		}
+	);
+
+	return body;
+}
+</file>
+
+<file path="lib/util/student/timelines.ts">
+import { Routes } from "ecoledirecte-api-types/v3";
+import {
+	studCommonTlResSuccess,
+	studTlResSuccess,
+} from "ecoledirecte-api-types/v3";
+
+import { makeRequest } from "../util";
+
+export async function getTimeline(
+	id: number,
+	token: string,
+	context: Record<string, unknown> = {}
+): Promise<studTlResSuccess> {
+	const body: studTlResSuccess = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.studentTimeline(id),
+			body: { token },
+			guard: true,
+		},
+		{ userId: id, action: "getTimeline", ...context }
+	);
+
+	return body;
+}
+
+export async function getCommonTimeline(
+	id: number,
+	token: string,
+	context: Record<string, unknown> = {}
+): Promise<studCommonTlResSuccess> {
+	const body: studCommonTlResSuccess = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.commonTimeline("E", id),
+			body: { token },
+			guard: true,
+		},
+		{ userId: id, action: "getCommonTimeline", ...context }
+	);
+
+	return body;
+}
+</file>
+
+<file path="lib/util/student/wallets.ts">
+//TODO See ed-api-types & Postman research
+
+import { Routes, walletsResSuccess } from "ecoledirecte-api-types/v3";
+import { makeRequest } from "../util";
+
+export async function getWallets(
+	token: string,
+	context: Record<string, unknown> = {}
+): Promise<walletsResSuccess> {
+	const body: walletsResSuccess = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.studentWallets(),
+			body: {},
+			guard: true,
+		},
+		{ action: "getWallets", ...context },
+		undefined,
+		token
+	);
+	return body;
+}
+</file>
+
+<file path="lib/util/teacher/schools.ts">
+// Function that fetches school (input: token)
+
+import { makeRequest } from "../util";
+import { schoolsResSuccess, Routes } from "ecoledirecte-api-types";
+
+export async function getTeachersSchools(
+	token: string
+): Promise<schoolsResSuccess> {
+	const body: schoolsResSuccess = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.teacherSchools(),
+			body: { token },
+			guard: true,
+			teachRoot: true,
+		},
+		{ action: "getTeachersSchools" }
+	);
+
+	return body;
+}
+</file>
+
+<file path="lib/util/teacher/students.ts">
+// Function that retrieves students for specific class
+// input: token, class id
+
+import { Routes, studentsResSuccess } from "ecoledirecte-api-types";
+import { makeRequest } from "../util";
+
+export async function getTeachersStudents(
+	token: string,
+	classId: number
+): Promise<studentsResSuccess> {
+	const body: studentsResSuccess = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.teacherStudents(classId),
+			body: { token },
+			guard: true,
+			teachRoot: true,
+		},
+		{ action: "getTeachersStudents" }
+	);
+
+	return body;
+}
+</file>
+
+<file path="lib/util/index.ts">
+export * from "./login";
+export * from "./util";
+export * from "./photo";
+//! TEXTBOOK
+
+export * from "./student/textbook";
+
+//! MAILBOX
+
+export * from "./student/mailbox";
+
+//! NOTES
+
+export * from "./student/grades";
+
+//! TIMELINES
+
+export * from "./student/timelines";
+
+//! WALLETS
+
+export * from "./student/wallets";
+
+//! DOCUMENTS
+
+export * from "./student/documents";
+
+//! CLOUD
+
+export * from "./global/cloud";
+
+//! TIMETABLE
+
+export * from "./global/timetable";
+
+//! TEACHER: SCHOOLS AND STUDENTS
+
+export * from "./teacher/schools";
+export * from "./teacher/students";
+</file>
+
+<file path="lib/util/login.ts">
+import { Routes } from "ecoledirecte-api-types/v3";
+
+import { makeRequest } from "./util";
+import { loginRes, account } from "ecoledirecte-api-types/v3";
+
+/**
+ * @returns EcoleDirecte `/v3/login.awp` response
+ */
+export async function login(
+	username: string,
+	password: string,
+	context: Record<string, unknown> = {}
+): Promise<loginRes> {
+	const body: loginRes = await makeRequest(
+		{
+			method: "POST",
+			path: Routes.login(),
+			body: {
+				identifiant: username,
+				motdepasse: password,
+			},
+		},
+		{ action: "login", username, password, ...context }
+	);
+
+	return body;
+}
+
+/**
+ * @returns The main account of the array
+ */
+export function getMainAccount(accounts: Array<account>): account {
+	const mainAccount = accounts.find(acc => acc.main) || accounts[0] || null;
+	return mainAccount;
+}
+</file>
+
+<file path="lib/util/photo.ts">
+import fetch from "node-fetch";
+import { Account } from "../accounts";
+import { Config } from "./util";
+
+const EdHeadersPhoto = {
+	Referer: "https://www.ecoledirecte.com/",
+	"User-Agent":
+		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36",
+};
+export async function fetchPhoto(
+	account: Account
+): Promise<[Buffer, string] | undefined> {
+	if (!(account.__raw.profile as Record<string, unknown>).photo) return;
+	const res = await fetch(
+		"https:" + (account.__raw.profile as Record<string, unknown>).photo,
+		{
+			method: "GET",
+			headers: { ...EdHeadersPhoto, ...Config.get("addedHeaders") },
+			redirect: "follow",
+		}
+	).catch(() => undefined);
+	if (!res) return;
+	const token = res.headers.get("x-token");
+	if (token) account.token = token;
+	const buf = await res.buffer();
+	const str =
+		"data:" +
+		res.headers.get("Content-Type") +
+		";base64," +
+		buf.toString("base64");
+	return [buf, str];
+}
+</file>
+
+<file path="lib/util/util.ts">
+import fetch, { RequestInit } from "node-fetch";
+import mime from "mime-types";
+import { failureRes, isFailure, root, rootp } from "ecoledirecte-api-types/v3";
+
+import logs from "../events";
+import { EcoleDirecteAPIError } from "../errors";
+import EventEmitter from "events";
+import { Account } from "../accounts";
+
+export function toISODate(date: Date | string | number): string {
+	const d = new Date(date);
+	if (isNaN(d.getTime())) throw new Error("Invalid date");
+
+	return [
+		d.getFullYear(),
+		(d.getMonth() + 1).toString().padStart(2, "0"),
+		d.getDate().toString().padStart(2, "0"),
+	].join("-");
+}
+
+/**
+ *
+ * @description Makes bytes human-readable
+ */
+export function formatBytes(bytes: number): string {
+	let formatted: string;
+	if (bytes >= 1073741824) {
+		formatted = (bytes / 1073741824).toFixed(2) + " GB";
+	} else if (bytes >= 1048576) {
+		formatted = (bytes / 1048576).toFixed(2) + " MB";
+	} else if (bytes >= 1024) {
+		formatted = (bytes / 1024).toFixed(2) + " KB";
+	} else if (bytes > 1) {
+		formatted = bytes + " bytes";
+	} else if (bytes === 1) {
+		formatted = bytes + " byte";
+	} else {
+		formatted = "0 bytes";
+	}
+	return formatted;
+}
+
+function getFileName(contentDisposition: string): string {
+	const utf8FilenameRegex = /filename\*=UTF-8''([\w%\-\.]+)(?:; ?|$)/i;
+	const asciiFilenameRegex = /^filename=(["']?)(.*?[^\\])\1(?:; ?|$)/i;
+
+	let fileName = "";
+	if (utf8FilenameRegex.test(contentDisposition)) {
+		const execArray = utf8FilenameRegex.exec(contentDisposition);
+		fileName = decodeURIComponent(execArray ? execArray[1] : "");
+	} else {
+		// prevent ReDos attacks by anchoring the ascii regex to string start and
+		//  slicing off everything before 'filename='
+		const filenameStart = contentDisposition.toLowerCase().indexOf("filename=");
+		if (filenameStart >= 0) {
+			const partialDisposition = contentDisposition.slice(filenameStart);
+			const matches = asciiFilenameRegex.exec(partialDisposition);
+			if (matches != null && matches[2]) {
+				fileName = matches[2];
+			}
+		}
+	}
+	return fileName;
+}
+
+export async function makeRequest(
+	options: {
+		method: "GET" | "POST";
+		path: string;
+		body?: Record<string, unknown>;
+		guard?: boolean;
+		teachRoot?: boolean;
+		expectBuffer?: boolean;
+	},
+	context: Record<string, unknown> = {},
+	account?: Account,
+	token?: string
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+): Promise<any> {
+	const { method, path, body, guard, teachRoot, expectBuffer } = options;
+	const url = Config.get(teachRoot ? "rootp" : "root") + path;
+	const resListener = new EventEmitter();
+	function onRes(callback: (res: Response) => void) {
+		resListener.on("response", callback);
+	}
+	function offRes(callback: (res: Response) => void) {
+		resListener.off("response", callback);
+	}
+	const params: RequestInit = {
+		method: method,
+		headers: {
+			...EdHeaders,
+			"x-token": (token || account?.token) ?? "",
+			...Config.get("addedHeaders"),
+		},
+	};
+	logs.emit("request", {
+		method,
+		url,
+		body,
+		headers: params.headers,
+		context,
+		onRes,
+		offRes,
+	});
+
+	if (method === "POST") {
+		const urlencoded = new URLSearchParams();
+		urlencoded.append("data", JSON.stringify(body));
+		params.body = urlencoded;
+	}
+
+	const response = await fetch(url, params);
+
+	const resBody = expectBuffer
+		? await response.buffer()
+		: ((await response.json()) as Record<string, unknown>);
+
+	resListener.emit("response", { response, body: resBody });
+
+	const failure =
+		!expectBuffer && isFailure(resBody as Record<string, unknown>);
+	if (guard && failure) throw new EcoleDirecteAPIError(resBody as failureRes);
+
+	const someToken =
+		(!expectBuffer &&
+			((resBody as Record<string, unknown>).token as string | undefined)) ||
+		response.headers.get("x-token");
+
+	if (!failure && account && someToken) account.token = someToken;
+
+	if (expectBuffer) {
+		const buff = resBody as Buffer;
+		const contentDisposition = response.headers.get("content-disposition");
+		if (!contentDisposition) throw new Error("No content-disposition");
+		// Get file name
+		const fileName = getFileName(contentDisposition);
+		// Get MIME type
+		const mimeType = mime.lookup(fileName);
+		// Create Blob
+		const blob = new Blob([buff], { type: mimeType || undefined });
+		return blob;
+	}
+
+	return resBody;
+}
+
+export const USER_AGENT =
+	"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
+
+export const EdHeaders = {
+	authority: "api.ecoledirecte.com",
+	accept: "application/json, text/plain, */*",
+	"accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+	"content-type": "application/x-www-form-urlencoded",
+	origin: "https://www.ecoledirecte.com",
+	"sec-fetch-dest": "empty",
+	"sec-fetch-mode": "cors",
+	"sec-fetch-site": "same-site",
+	referer: "https://www.ecoledirecte.com/",
+	"user-agent": USER_AGENT,
+};
+
+export type FullConfig = {
+	root: string;
+	rootp: string;
+	addedHeaders: Record<string, string>;
+};
+
+export type PartialConfig = Partial<FullConfig>;
+
+export const DefaultConfig: FullConfig = {
+	root: root,
+	rootp: rootp,
+	addedHeaders: {},
+};
+
+export class ConfigConstructor {
+	static instance = new ConfigConstructor();
+
+	constructor(public source: PartialConfig = {}) {}
+	get<K extends keyof FullConfig>(key: K): FullConfig[K] {
+		const fromSource = this.source[key] as FullConfig[K] | undefined;
+		const fromDefault = DefaultConfig[key];
+		return fromSource ?? fromDefault;
+	}
+}
+
+export const Config = ConfigConstructor.instance;
+</file>
+
+<file path="lib/errors.ts">
+import { failureRes } from "ecoledirecte-api-types/v3";
+
+export class EcoleDirecteAPIError extends Error {
+	constructor(public response: failureRes, message?: string) {
+		super(message || `${response.code} | ${response.message}`);
+		this.name = "EcoleDirecteAPIError";
+	}
+}
+</file>
+
+<file path="lib/events.d.ts">
+/// <reference types="node" />
+import { EventEmitter } from "events";
+import { Session } from "./session";
+
+interface LogEvents {
+	newToken: [{ oldToken: string; newToken: string; session: Session }];
+	request: [
+		{
+			method: string;
+			url: string;
+			body: unknown;
+			context:
+				| {
+						[key: string]: unknown;
+				  }
+				| {
+						action: "login";
+						username: string;
+						password: string;
+						[key: string]: unknown;
+				  }
+				| {
+						userId: number;
+						action: "getUpcomingAssignementDates";
+						[key: string]: unknown;
+				  }
+				| {
+						userId: number;
+						action: "getTextbookPage";
+						[key: string]: unknown;
+				  }
+				| {
+						userId: number;
+						action: "tickAssignement";
+						[key: string]: unknown;
+				  }
+				| {
+						userId: number;
+						action: "getMessages";
+						[key: string]: unknown;
+				  }
+				| {
+						userId: number;
+						action: "getGrades";
+						[key: string]: unknown;
+				  }
+				| {
+						userId: number;
+						action: "getTimeline";
+						[key: string]: unknown;
+				  }
+				| {
+						userId: number;
+						action: "getCommonTimeline";
+						[key: string]: unknown;
+				  };
+			onRes: (
+				callback: (res: {
+					response: Response;
+					body: Record<string, unknown>;
+				}) => void
+			) => void;
+			offRes: (callback: () => void) => void;
+		}
+	];
+}
+
+declare class EventsManager extends EventEmitter {
+	public on<K extends keyof LogEvents>(
+		event: K,
+		listener: (...args: LogEvents[K]) => void
+	): this;
+	public on<S extends string | symbol>(
+		event: Exclude<S, keyof LogEvents>,
+		listener: (...args: unknown[]) => void
+	): this;
+
+	public once<K extends keyof LogEvents>(
+		event: K,
+		listener: (...args: LogEvents[K]) => void
+	): this;
+	public once<S extends string | symbol>(
+		event: Exclude<S, keyof LogEvents>,
+		listener: (...args: unknown[]) => void
+	): this;
+
+	public emit<K extends keyof LogEvents>(
+		event: K,
+		...args: LogEvents[K]
+	): boolean;
+	public emit<S extends string | symbol>(
+		event: Exclude<S, keyof LogEvents>,
+		...args: unknown[]
+	): boolean;
+
+	public off<K extends keyof LogEvents>(
+		event: K,
+		listener: (...args: LogEvents[K]) => void
+	): this;
+	public off<S extends string | symbol>(
+		event: Exclude<S, keyof LogEvents>,
+		listener: (...args: unknown[]) => void
+	): this;
+
+	public removeAllListeners<K extends keyof LogEvents>(event?: K): this;
+	public removeAllListeners<S extends string | symbol>(
+		event?: Exclude<S, keyof LogEvents>
+	): this;
+}
+declare const logs: EventsManager;
+export default logs;
+</file>
+
+<file path="lib/events.ts">
+import { EventEmitter } from "events";
+class EventManager extends EventEmitter {}
+/**
+ * Important note: the profile picture requests don't trigger the event manager
+ */
+const events = new EventManager();
+export default events;
+</file>
+
+<file path="lib/index.ts">
+import { Session } from "./Session";
+import events from "./events";
+import { EcoleDirecteAPIError } from "./errors";
+
+export { Session, events, EcoleDirecteAPIError };
+export * from "./accounts";
+export * from "./classes";
+export { Config, FullConfig, PartialConfig, DefaultConfig } from "./util/util";
+
+export default Session;
+</file>
+
+<file path="lib/Session.ts">
+import { loginRes, isFailure } from "ecoledirecte-api-types/v3";
+import { getMainAccount, login } from "./util";
+import { Family, Staff, Student, Teacher } from "./accounts";
+import { EcoleDirecteAPIError } from "./errors";
+import logs from "./events";
+
+export class Session {
+	private _username: string;
+	private _password: string;
+	/**
+	 * @async
+	 * @returns EcoleDirecte login response
+	 */
+	public loginRes?: loginRes;
+	private _token = "";
+
+	get token(): string {
+		return this._token;
+	}
+
+	set token(value: string) {
+		logs.emit("newToken", {
+			oldToken: this._token,
+			newToken: value,
+			session: this,
+		});
+		this._token = value;
+	}
+
+	constructor(username: string, password: string) {
+		(this._username = username), (this._password = password);
+	}
+
+	async login(
+		context: Record<string, unknown> = {}
+	): Promise<Family | Staff | Student | Teacher> {
+		const { _username: username, _password: password } = this;
+		const loginRes = await login(username, password, context);
+
+		this.loginRes = loginRes;
+		this.token = loginRes.token;
+		if (isFailure(loginRes)) throw new EcoleDirecteAPIError(loginRes);
+
+		// Login succeeded
+
+		const account = getMainAccount(loginRes.data.accounts);
+		switch (account.typeCompte) {
+			case "E":
+				return new Student(this);
+			case "1":
+				return new Family(this);
+			case "P":
+				return new Teacher(this);
+			case "A":
+				return new Staff(this);
+			default:
+				throw new Error(
+					`UNKNOWN ACCOUNT TYPE: '${
+						(account as { typeCompte: string }).typeCompte
+					}'`
+				);
+		}
+	}
+
+	/**
+	 * @returns Given credentials
+	 */
+	get credentials(): { username: string; password: string } {
+		const credentials = { username: this._username, password: this._password };
+		return credentials;
+	}
+}
+</file>
+
+<file path=".eslintignore">
+coverage
+node_modules
+dist
+.github
+</file>
+
+<file path=".eslintrc.json">
+{
+	"env": {
+		"es2021": true,
+		"node": true
+	},
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"prettier"
+	],
+	"plugins": ["@typescript-eslint", "prettier"],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaVersion": 12,
+		"sourceType": "module"
+	},
+	"rules": {
+		// "indent": ["error", "tab"],
+		"no-mixed-spaces-and-tabs": "off", // Prettier conflict
+		"linebreak-style": ["error", "unix"],
+		"quotes": ["error", "double"],
+		"semi": ["error", "always"]
+
+		// "prettier/prettier": [
+		// 	"error",
+		// 	{
+		// 		"endOfLine": "lf"
+		// 	}
+		// ]
+	}
+}
+</file>
+
+<file path=".gitattributes">
+coverage/** linguist-generated
+</file>
+
+<file path=".gitignore">
+node_modules/
+dist/
+.env
+</file>
+
+<file path=".gitpod.dockerfile">
+FROM gitpod/workspace-full
+
+# Install Node
+RUN bash -c ". .nvm/nvm.sh && \
+        nvm install node --latest-npm && \
+        nvm alias default node"
+
+# Install npm global modules
+# RUN npm install -g nodemon typescript eslint prettier
+</file>
+
+<file path=".gitpod.yml">
+image:
+  file: .gitpod.dockerfile
+
+tasks:
+  - before: npm install -g nodemon typescript eslint prettier np npm
+    init: npm install
+    command: npm run build
+</file>
+
+<file path=".npmignore">
+node_modules/
+lib/
+.github/
+__tests__/
+coverage/
+jest.config.js
+.gitpod.*
+</file>
+
+<file path=".prettierignore">
+coverage
+node_modules
+dist
+.github
+</file>
+
+<file path=".prettierrc.json">
+{
+	"useTabs": true,
+	"trailingComma": "es5",
+	"arrowParens": "avoid",
+	"endOfLine": "lf"
+}
+</file>
+
+<file path="CONTRIBUTING.md">
+# Contributing to ed.js
+
+Thanks for your interest in this module!
+If you want to contribute and help in making it better, you can do so in the [GitHub repo](https://github.com/a2br/ecoledirecte.js).
+The rules there are the same as anywhere else: don't be toxic, and everything's gonna be fine. We can't wait to see you there!
+</file>
+
+<file path="jest.config.json">
+{
+	"preset": "ts-jest",
+	"testEnvironment": "node"
+}
+</file>
+
+<file path="LICENSE">
+MIT License
+
+Copyright (c) 2020 Anatole Debierre
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+</file>
+
+<file path="package.json">
+{
+	"name": "ecoledirecte.js",
+	"version": "1.0.0",
+	"description": "Good-looking client for EcoleDirecte's private API.",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/a2br/ecoledirecte.js.git"
+	},
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"keywords": [
+		"ecoledirecte"
+	],
+	"scripts": {
+		"prepare": "npm run build",
+		"start": "npm run build && node dist/index.js",
+		"build": "tsc && npm run copy-dts",
+		"lint": "eslint",
+		"pretty": "prettier -w .",
+		"check": "npm run pretty && npm run lint",
+		"test": "echo ED demo account unavailable. && exit 0",
+		"copy-dts": "copyfiles -u 1 \"lib/**/*.d.ts\" dist"
+	},
+	"author": "a2br",
+	"license": "MIT",
+	"engines": {
+		"node": ">=14.0.0"
+	},
+	"devDependencies": {
+		"@types/eslint": "*",
+		"@types/html-to-text": "^8.0.0",
+		"@types/jest": "^27.0.0",
+		"@types/mime-types": "^2.1.1",
+		"@types/node": "^18.14.6",
+		"@types/node-fetch": "^2.5.7",
+		"@typescript-eslint/eslint-plugin": "*",
+		"@typescript-eslint/parser": "*",
+		"copyfiles": "^2.4.1",
+		"dotenv": "^16.0.0",
+		"eslint": "*",
+		"eslint-config-prettier": "*",
+		"eslint-plugin-prettier": "*",
+		"jest": "^27.0.1",
+		"prettier": "*",
+		"ts-jest": "^27.0.1",
+		"typescript": "^4.2.2"
+	},
+	"dependencies": {
+		"ecoledirecte-api-types": "^0.14.0",
+		"html-to-text": "^8.0.0",
+		"mime-types": "^2.1.35",
+		"node-fetch": "^2.6.7"
+	}
+}
+</file>
+
+<file path="README.md">
+# ecoledirecte.js &middot; ![GitHub](https://img.shields.io/github/license/a2br/ecoledirecte.js) ![npm](https://img.shields.io/npm/v/ecoledirecte.js) ![npm](https://img.shields.io/npm/dw/ecoledirecte.js)
+
+> ⚠ **As of August 8, 2023, this module is no longer maintained**: This means that although the module is perfectly functioning, I will not update it to comply to future EcoleDirecte API changes. The module may fail to fetch or send data. I would greatly appreciate PRs for feature requests / bug patches, as I no longer have the time to work on this project. Thank you.
+
+Browse EcoleDirecte's private API with ED.js, an unofficial API client.
+
+`ed.js` is a Promise-based module, built on TypeScript for a better IntelliSense and type-guarded features.
+
+## Examples
+
+> Warning: these examples might not work on your machine (depending on whether you're using `commonjs` or ES6 `module`)
+
+### Get the homework of a day
+
+```typescript
+import { Session } from "ecoledirecte.js";
+
+// Create a new Session.
+const session = new Session("identifiant", "motdepasse");
+
+// Bring your session to life!
+const account = await session.login().catch(err => {
+	console.error("This login did not go well.");
+});
+
+// Is it a student account?
+if (!account || account.type !== "student") throw new Error("Not a student!");
+
+// Get the homework due for a specific date as a simplified array
+const homework = await account.getHomework({ dates: "2021-01-14" });
+
+// Every piece of data from the API is reformatted  (eg: base64 string are
+// converted to text/HTML). The raw data remains always available as _raw
+console.log(homework[2].contenuDeSeance.content.text);
+```
+
+### Introduction to events
+
+Events can be used to do something when something else happens, in real-time. (very specific, as you can tell)
+For instance, the following will log the method and the url each time `ed.js` sends a request to the EcoleDirecte servers.
+
+```typescript
+import { events } from "ecoledirecte.js";
+
+events.on("request", ({ method, url }) => console.log(method, url));
+// POST https://api.ecoledirecte.com/v3/login.awp
+// POST https://api.ecoledirecte.com/v3/eleves/4179/timeline.awp
+// ...
+```
+
+## Dependencies walkthrough
+
+| Dependency                                                                     | Description                                                                                       |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| [node-fetch](https://www.npmjs.com/package/node-fetch)                         | A light-weight module that brings window.fetch to Node.js                                         |
+| [html-to-text](https://www.npmjs.com/package/html-to-text)                     | Converter that parses HTML and returns text.                                                      |
+| [ecoledirecte-api-types](https://www.npmjs.com/package/ecoledirecte-api-types) | Module that maps the routes and types related to EcoleDirecte's API. Originally a part of `ed.js` |
+</file>
+
+<file path="tsconfig.json">
+{
+	"compilerOptions": {
+		/* Visit https://aka.ms/tsconfig.json to read more about this file */
+		/* Basic Options */
+		// "incremental": true,                   /* Enable incremental compilation */
+		"target": "es2019" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019', 'ES2020', or 'ESNEXT'. */,
+		"module": "commonjs" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'ESNext'. */,
+		// "lib": [],                             /* Specify library files to be included in the compilation. */
+		// "allowJs": true,                       /* Allow javascript files to be compiled. */
+		// "checkJs": true,                       /* Report errors in .js files. */
+		// "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
+		"declaration": true /* Generates corresponding '.d.ts' file. */,
+		// "declarationMap": true,                /* Generates a sourcemap for each corresponding '.d.ts' file. */
+		// "sourceMap": true,                     /* Generates corresponding '.map' file. */
+		// "outFile": "./",                       /* Concatenate and emit output to single file. */
+		"outDir": "./dist" /* Redirect output structure to the directory. */,
+		// "rootDir": "./",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+		// "composite": true,                     /* Enable project compilation */
+		// "tsBuildInfoFile": "./",               /* Specify file to store incremental compilation information */
+		// "removeComments": true,                /* Do not emit comments to output. */
+		// "noEmit": true,                        /* Do not emit outputs. */
+		// "importHelpers": true,                 /* Import emit helpers from 'tslib'. */
+		// "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
+		// "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
+
+		/* Strict Type-Checking Options */
+		"strict": true /* Enable all strict type-checking options. */,
+		// "noImplicitAny": true,                 /* Raise error on expressions and declarations with an implied 'any' type. */
+		// "strictNullChecks": true,              /* Enable strict null checks. */
+		// "strictFunctionTypes": true,           /* Enable strict checking of function types. */
+		// "strictBindCallApply": true,           /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
+		// "strictPropertyInitialization": true,  /* Enable strict checking of property initialization in classes. */
+		// "noImplicitThis": true,                /* Raise error on 'this' expressions with an implied 'any' type. */
+		// "alwaysStrict": true,                  /* Parse in strict mode and emit "use strict" for each source file. */
+
+		/* Additional Checks */
+		// "noUnusedLocals": true,                /* Report errors on unused locals. */
+		// "noUnusedParameters": true,            /* Report errors on unused parameters. */
+		// "noImplicitReturns": true,             /* Report error when not all code paths in function return a value. */
+		// "noFallthroughCasesInSwitch": true,    /* Report errors for fallthrough cases in switch statement. */
+
+		/* Module Resolution Options */
+		// "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
+		// "baseUrl": "./",                       /* Base directory to resolve non-absolute module names. */
+		// "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+		// "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
+		// "typeRoots": [],                       /* List of folders to include type definitions from. */
+		// "types": [],                           /* Type declaration files to be included in compilation. */
+		// "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
+		"esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
+		// "preserveSymlinks": true,              /* Do not resolve the real path of symlinks. */
+		// "allowUmdGlobalAccess": true,          /* Allow accessing UMD globals from modules. */
+
+		/* Source Map Options */
+		// "sourceRoot": "",                      /* Specify the location where debugger should locate TypeScript files instead of source locations. */
+		// "mapRoot": "",                         /* Specify the location where debugger should locate map files instead of generated locations. */
+		// "inlineSourceMap": true,               /* Emit a single file with source maps instead of having a separate file. */
+		// "inlineSources": true,                 /* Emit the source alongside the sourcemaps within a single file; requires '--inlineSourceMap' or '--sourceMap' to be set. */
+
+		/* Experimental Options */
+		// "experimentalDecorators": true,        /* Enables experimental support for ES7 decorators. */
+		// "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
+
+		/* Advanced Options */
+		"skipLibCheck": true /* Skip type checking of declaration files. */,
+		"forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
+	},
+	"exclude": ["node_modules", "dist"],
+	"include": ["lib"]
+}
+</file>
+
+</files>
