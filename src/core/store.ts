@@ -157,13 +157,11 @@ export async function clearSession(): Promise<void> {
   const storage = getConfig().storage;
   if (!storage) return;
 
-  await Promise.all([
-    storage.delete(STORAGE_KEYS.token),
-    storage.delete(STORAGE_KEYS.twofaToken),
-    storage.delete(STORAGE_KEYS.account),
-    storage.delete(STORAGE_KEYS.accounts),
-    storage.delete(STORAGE_KEYS.lastRefresh),
-  ]);
+  await storage.delete(STORAGE_KEYS.token);
+  await storage.delete(STORAGE_KEYS.twofaToken);
+  await storage.delete(STORAGE_KEYS.account);
+  await storage.delete(STORAGE_KEYS.accounts);
+  await storage.delete(STORAGE_KEYS.lastRefresh);
 }
 
 export async function loadSession(): Promise<boolean> {
