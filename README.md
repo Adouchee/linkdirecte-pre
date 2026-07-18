@@ -15,7 +15,7 @@
 * 💡 Output simplified
 * 🛜 Offline handled
 * 🎓 Support for most student features _(parent accounts soon!)_
-* 🌐 Compatible with Node.js 18+, Bun, Deno, browsers Cloudflare Workers, React Native / Expo, Capacitor, Electron, and more
+* 🌐 Compatible with Node.js 18+, Bun, Deno, browsers, Cloudflare Workers, React Native / Expo, Capacitor, Electron, and more
 * 🔒 No password stored
 
 ## 🚀 Quick start
