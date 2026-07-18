@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
 import type { CloudNode, CloudEntry } from '../../types';

@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { getGrades } from '../grades';
 import { getAttendance } from '../attendance';
 import dayjs from 'dayjs';
@@ -26,8 +27,6 @@ export async function correlate(): Promise<Correlation[]> {
 
   const correlations: Correlation[] = [];
   const grades = (gradesData as any).grades || [];
-  const absences = (attendanceData as any).attendance || [];
-
   const subjectGrades = groupGradesBySubject(grades);
 
   subjectGrades.forEach((gradeList, subject) => {

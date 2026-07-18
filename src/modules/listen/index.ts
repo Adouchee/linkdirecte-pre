@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { emitter } from './emitter';
 import { getGrades } from '../grades';
 import { getMessages } from '../messages';

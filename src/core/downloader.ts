@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from './fetch';
 import { getToken, getConfig } from './store';
 import { requireCurrentAccount } from './request';

@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { getConfig } from './store';
 import { edFetch } from './fetch';
 import { randomUUID } from './env';

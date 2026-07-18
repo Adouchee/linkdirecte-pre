@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { getConfig, getToken, getTwofaToken } from './store';
 import { EdNetworkError, EdRateLimitError } from './errors';
 import { signalWithTimeout, isFormData } from './env';

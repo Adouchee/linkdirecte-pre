@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import dayjs from 'dayjs';
 
 const KEY_MAPPING: Record<string, string> = {

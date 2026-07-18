@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from '../../core/fetch';
 import { postOptions, requireCurrentAccount } from '../../core/request';
 import { decodeBase64Content } from '../../core/transform';

@@ -1,75 +1,5 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { getConfig, setToken } from './store';
-
-function pLimit(concurrency: number) {
-  const queue: (() => void)[] = [];
-  let activeCount = 0;
-
-  const next = () => {
-    if (activeCount < concurrency && queue.length > 0) {
-      activeCount++;
-      const fn = queue.shift()!;
-      fn();
-    }
-  };
-
-  return <T>(fn: () => Promise<T>): Promise<T> => {
-    return new Promise<T>((resolve, reject) => {
-      queue.push(() => {
-        fn()
-          .then(resolve)
-          .catch(reject)
-          .finally(() => {
-            activeCount--;
-            next();
-          });
-      });
-      next();
-    });
-  };
-}
-
-async function pRetry<T>(
-  fn: () => Promise<T>,
-  options: {
-    retries: number;
-    minTimeout: number;
-    factor: number;
-    onFailedAttempt?: (info: {
-      error: any;
-      attemptNumber: number;
-    }) => Promise<void> | void;
-    shouldRetry?: (info: { error: any }) => Promise<boolean> | boolean;
-  },
-): Promise<T> {
-  const { retries, minTimeout, factor, onFailedAttempt, shouldRetry } = options;
-  let attempt = 0;
-  let delay = minTimeout;
-
-  while (true) {
-    try {
-      return await fn();
-    } catch (error) {
-      attempt++;
-      if (attempt > retries) {
-        throw error;
-      }
-
-      if (shouldRetry) {
-        const keepRetrying = await shouldRetry({ error });
-        if (!keepRetrying) {
-          throw error;
-        }
-      }
-
-      if (onFailedAttempt) {
-        await onFailedAttempt({ error, attemptNumber: attempt });
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      delay *= factor;
-    }
-  }
-}
 import {
   DEFAULT_CONCURRENCY,
   DEFAULT_MAX_RETRIES,
@@ -79,17 +9,15 @@ import {
   SUCCESS_CODES,
   buildApiUrl,
   appendQueryParams,
-  type QueryParams,
-} from './http';
-import { EdApiError, EdAuthError, EdNetworkError } from './errors';
-import { transform } from './transform';
-import {
   buildHeaders,
   buildRequestBody,
   parseJsonResponse,
   sendRequest,
   type HttpMethod,
+  type QueryParams,
 } from './http';
+import { EdApiError, EdAuthError } from './errors';
+import { transform } from './transform';
 import { offlineQueue } from './queue';
 import {
   resolveModule,
@@ -115,10 +43,6 @@ export interface FetchOptions {
   returnEnvelope?: boolean;
 }
 
-let refreshPromise: Promise<string | undefined> | null = null;
-
-const MAX_REFRESH_ATTEMPTS = 1;
-
 interface PreparedRequest {
   url: URL;
   method: HttpMethod;
@@ -127,12 +51,39 @@ interface PreparedRequest {
   options: FetchOptions;
 }
 
-const limiters = new Map<number, ReturnType<typeof pLimit>>();
+let refreshPromise: Promise<string | undefined> | null = null;
+const limiters = new Map<number, (fn: () => Promise<any>) => Promise<any>>();
 
-function getLimiter(concurrency: number): ReturnType<typeof pLimit> {
+function createLimiter(concurrency: number) {
+  const queue: (() => void)[] = [];
+  let active = 0;
+
+  const next = () => {
+    if (active < concurrency && queue.length > 0) {
+      active++;
+      queue.shift()!();
+    }
+  };
+
+  return <T>(fn: () => Promise<T>): Promise<T> => {
+    return new Promise<T>((resolve, reject) => {
+      queue.push(() => {
+        fn()
+          .then(resolve, reject)
+          .finally(() => {
+            active--;
+            next();
+          });
+      });
+      next();
+    });
+  };
+}
+
+function getLimiter(concurrency: number) {
   let limiter = limiters.get(concurrency);
   if (!limiter) {
-    limiter = pLimit(concurrency);
+    limiter = createLimiter(concurrency);
     limiters.set(concurrency, limiter);
   }
   return limiter;
@@ -145,7 +96,7 @@ export async function edFetch<T>(
   const config = getConfig();
   const limiter = getLimiter(config.concurrency ?? DEFAULT_CONCURRENCY);
 
-  const runRequest = async (refreshAttempts = 0): Promise<T> => {
+  const run = async (attempts = 0): Promise<T> => {
     const cacheModule = resolveModule(endpoint);
     const cacheKey = cacheModule
       ? buildCacheKey(endpoint, options.body)
@@ -155,21 +106,19 @@ export async function edFetch<T>(
       ttl > 0 && !options.raw && !options.isDownload && !options.returnEnvelope;
 
     if (isCacheable && cacheKey) {
-      const cached = getFromCache<unknown>(cacheKey);
-      if (cached !== undefined) {
-        return cached as T;
-      }
+      const cached = getFromCache<T>(cacheKey);
+      if (cached !== undefined) return cached;
     }
 
-    const request = prepareRequest(endpoint, options);
+    const req = prepareRequest(endpoint, options);
     let response: Response;
 
     try {
       response = await sendRequest({
-        url: request.url.toString(),
-        method: request.method,
-        headers: request.headers,
-        body: request.body,
+        url: req.url.toString(),
+        method: req.method,
+        headers: req.headers,
+        body: req.body,
         timeoutMs: config.timeout ?? DEFAULT_TIMEOUT_MS,
       });
     } catch (error) {
@@ -181,16 +130,12 @@ export async function edFetch<T>(
       ) {
         offlineQueue.push(endpoint, options as Record<string, unknown>);
       }
-
       throw error;
     }
 
-    if (options.isDownload) {
-      return response as T;
-    }
+    if (options.isDownload) return response as T;
 
     const headerToken = response.headers.get('x-token');
-
     const data = await parseJsonResponse(response);
 
     if (headerToken) {
@@ -198,8 +143,8 @@ export async function edFetch<T>(
       data.token = headerToken;
     }
 
-    if (isSessionExpired(data)) {
-      if (refreshAttempts >= MAX_REFRESH_ATTEMPTS) {
+    if (SESSION_EXPIRED_CODES.has(data.code)) {
+      if (attempts >= 1) {
         throw new EdAuthError(
           data.message || 'Session expired after refresh attempt',
           String(data.code),
@@ -215,7 +160,6 @@ export async function edFetch<T>(
       }
 
       const refreshed = await refreshPromise;
-
       if (!refreshed) {
         throw new EdAuthError(
           data.message || 'Session expired',
@@ -225,12 +169,44 @@ export async function edFetch<T>(
         );
       }
 
-      return runRequest(refreshAttempts + 1);
+      return run(attempts + 1);
     }
 
-    throwIfApiError(data, response);
+    if (!SUCCESS_CODES.has(data.code)) {
+      throw new EdApiError(
+        data.message || 'API error',
+        String(data.code),
+        response.status,
+        data,
+      );
+    }
 
-    const result = prepareResponseData<T>(data, request, options);
+    if (data.token) {
+      setToken(data.token);
+    }
+
+    if (options.returnEnvelope) {
+      return data as unknown as T;
+    }
+
+    let result = options.raw ? data.data : transform(data.data);
+
+    if (options.explain) {
+      result = {
+        ...result,
+        _debug: {
+          rawResponse: data,
+          transformLog: [],
+          requestDump: {
+            url: req.url.toString(),
+            headers: req.headers,
+            body: req.options.body,
+          },
+          cacheHit: false,
+          retries: 0,
+        },
+      };
+    }
 
     if (isCacheable && cacheKey) {
       setInCache(cacheKey, result, ttl);
@@ -239,23 +215,36 @@ export async function edFetch<T>(
     return result;
   };
 
-  return limiter(() =>
-    pRetry(() => runRequest(0), {
-      retries: config.maxRetries ?? DEFAULT_MAX_RETRIES,
-      minTimeout: config.retryDelay ?? DEFAULT_RETRY_DELAY_MS,
-      factor: 2,
-      onFailedAttempt: async ({ error }) => {
+  const retries = config.maxRetries ?? DEFAULT_MAX_RETRIES;
+  const retryDelay = config.retryDelay ?? DEFAULT_RETRY_DELAY_MS;
+
+  const execute = async () => {
+    let currentAttempt = 0;
+    let delay = retryDelay;
+
+    while (true) {
+      try {
+        return await run(0);
+      } catch (error: any) {
+        currentAttempt++;
+        const isRetryable = !(
+          error instanceof EdAuthError || error instanceof EdApiError
+        );
+        if (currentAttempt > retries || !isRetryable) {
+          throw error;
+        }
         if (config.onError) {
-          await config.onError(error, async (retryOpts) => {
-            await new Promise((r) => setTimeout(r, retryOpts?.delay ?? 1000));
+          await config.onError(error, async (opts) => {
+            await new Promise((r) => setTimeout(r, opts?.delay ?? 1000));
           });
         }
-      },
-      shouldRetry: async ({ error }) => {
-        return !isNonRetryable(error);
-      },
-    }),
-  );
+        await new Promise((r) => setTimeout(r, delay));
+        delay *= 2;
+      }
+    }
+  };
+
+  return limiter(execute);
 }
 
 function prepareRequest(
@@ -264,7 +253,6 @@ function prepareRequest(
 ): PreparedRequest {
   const url = buildApiUrl(endpoint);
   appendQueryParams(url, options.params);
-
   return {
     url,
     method: options.method ?? 'POST',
@@ -279,73 +267,10 @@ function prepareRequest(
   };
 }
 
-function isSessionExpired(data: EdResponse<unknown>): boolean {
-  return SESSION_EXPIRED_CODES.has(data.code);
-}
-
-function throwIfApiError(data: EdResponse<unknown>, response: Response): void {
-  if (!SUCCESS_CODES.has(data.code)) {
-    throw new EdApiError(
-      data.message || 'API error',
-      String(data.code),
-      response.status,
-      data,
-    );
-  }
-}
-
-function prepareResponseData<T>(
-  data: EdResponse<T>,
-  request: PreparedRequest,
-  options: FetchOptions,
-): T {
-  if (data.token) {
-    setToken(data.token);
-  }
-
-  if (options.returnEnvelope) {
-    return data as unknown as T;
-  }
-
-  const result = options.raw ? data.data : transform(data.data);
-
-  if (options.explain) {
-    return addDebugInfo(result, data, request) as T;
-  }
-
-  return result;
-}
-
-function addDebugInfo<T>(
-  result: T,
-  rawResponse: EdResponse<T>,
-  request: PreparedRequest,
-): T & { _debug: DebugInfo } {
-  return {
-    ...result,
-    _debug: {
-      rawResponse,
-      transformLog: [],
-      requestDump: {
-        url: request.url.toString(),
-        headers: request.headers,
-        body: request.options.body,
-      },
-      cacheHit: false,
-      retries: 0,
-    },
-  };
-}
-
-function isNonRetryable(error: unknown): boolean {
-  return error instanceof EdAuthError || error instanceof EdApiError;
-}
-
 async function refreshSession(): Promise<string | undefined> {
   try {
     const { refreshToken } = await import('../auth');
     const token = await refreshToken();
-
     setToken(token);
     return token;
   } catch {

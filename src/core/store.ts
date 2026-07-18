@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { EdConfig, StorageAdapter, Account } from '../types';
 import {
   indexedDBStorage,
@@ -39,7 +40,6 @@ export function getConfig(): EdConfig {
   return state.config;
 }
 
-// ponytail: smart auto-detection of storage & transparent passkey wrapping
 export function setConfig(config: Partial<EdConfig>): void {
   if ('storage' in config) {
     state.rawStorage = config.storage;
