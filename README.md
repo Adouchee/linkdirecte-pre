@@ -6,22 +6,22 @@
   <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/group/npm/linkdirecte+github/Scolup/Linkdirecte/stars+github/Scolup/Linkdirecte/license+badge/Actively-maintained-22c55e.svg?variant=secondary&amp;theme=blue&amp;mode=light" /><img alt="badge group" src="https://shieldcn.dev/group/npm/linkdirecte+github/Scolup/Linkdirecte/stars+github/Scolup/Linkdirecte/license+badge/Actively-maintained-22c55e.svg?variant=secondary&amp;theme=blue" /></picture>
 </p>
 
-**Linkdirecte** is a ultra-modern, blazing fast, resilient, and fully tree-shakable TypeScript/JavaScript SDK for interacting with the private **EcoleDirecte API**.
+**Linkdirecte** is a fast, easy-to-use, complete and fully tree-shakable TypeScript/JavaScript SDK for interacting with the private **EcoleDirecte API**.
 
-Whether you are building custom widgets, native mobile apps, desktop clients, or automation dashboards, Linkdirecte handles all the messy protocol details so you can focus on building what matters.
+Whether you are building Discord bots, native mobile apps, web apps, or others, Linkdirecte handles all the messy protocol details so you can focus on building what matters.
 
 ---
 
 ## ⭐️ Key Features
 
-- 🌳 **Tree-Shakeable & Lightweight** — Import only what you use, maintaining minimal bundle size.
-- 🚪 **Hands-Free Authentication** — Session cookies, tokens, Two-Factor Challenges (2FA), double auth states, and token refreshes are fully automated silently.
-- 🛣️ **Built-in Proxy Support** — Perfect for running directly in client web-browsers with standard CORS gateways.
-- 🧠 **Type-Safe Mappings** — Dynamic French-to-English translation of API keys, timestamp normalization into JS `Date` objects, and automated Base64 HTML decoding.
-- 🛜 **Offline Resilience** — Local caches and built-in offline action queues for marking homework as done.
-- 🎓 **Rich Feature Set** — Supports Grades, Timetables, Homework calendars, Messages, Attendance records, Cloud folder management, and more.
-- 🌐 **Ubiquitous Compatibility** — Works flawlessly on Node.js 18+, Bun, Deno, modern Web Browsers, Cloudflare Workers, React Native, Capacitor, Electron, etc.
-- 🔒 **Secure by Design** — Absolutely zero credentials or passwords stored; supports transparent local AES-GCM data encryption.
+- 🌳 **Tree-Shakeable & Lightweight** | Import only what you use, maintaining minimal bundle size.
+- 🚪 **Hands-Free Authentication** | Session cookies, tokens, Two-Factor Challenges (2FA), double auth states, and token refreshes are fully automated silently.
+- 🛣️ **Built-in Proxy Support** | Perfect for running directly in client web-browsers with standard CORS gateways.
+- 🧠 **Type-Safe Mappings** | Dynamic French-to-English translation of API keys, timestamp normalization into JS `Date` objects, and automated Base64 HTML decoding.
+- 🛜 **Offline Resilience** | Local caches and built-in offline action queues for marking homework as done.
+- 🎓 **Rich Feature Set** | Supports Grades, Timetables, Homework calendars, Messages, Attendance records, Cloud folder management, and more.
+- 🌐 **Ubiquitous Compatibility** | Works flawlessly on Node.js 18+, Bun, Deno, modern Web Browsers, Cloudflare Workers, React Native, Capacitor, Electron, etc.
+- 🔒 **Secure by Design** | Absolutely zero credentials or passwords stored; supports transparent local AES-GCM data encryption.
 
 ---
 
@@ -72,27 +72,16 @@ import { getGrades } from "linkdirecte";
 const gradesResult = await getGrades();
 
 console.log(`Loaded ${gradesResult.grades.length} grades!`);
-console.log(`Your average is: ${gradesResult.subjects[0]?.average ?? "N/A"}`);
+console.log(`Your average is: ${gradesResult.average ?? "N/A"}`);
 ```
 
 ---
 
-## 📖 Comprehensive Documentation
+## 📖 Documentation
 
-Our documentation is designed to be highly readable and beginner-friendly. For full instructions, configuration guides, and references, explore the **[docs directory](docs/)**:
+For full instructions, configuration guides, and references, explore the **[docs directory](docs/)**.
 
-* [🔑 Authentication & 2FA Setup](docs/auth.md)
-* [⚙️ Core SDK Configuration & Encryption](docs/core.md)
-* [🎓 Grades & Performance Stats](docs/grades.md)
-* [📅 Class Schedules & Timetables](docs/timetable.md)
-* [📚 Homework Cahier de Texte](docs/homework.md)
-* [✉️ Messaging & Email Inbox](docs/messages.md)
-* [🎒 Absences & Lateness Records](docs/attendance.md)
-* [☁️ Cloud File Storage & Porte-documents](docs/cloud.md)
-* [📄 Official Reports & Documents](docs/documents.md)
-* [📝 Online Forms & Quizzes (QCM)](docs/forms.md)
-* [🔔 Event Hooks & Polling Systems](docs/listen.md)
-* [🗂️ Complete Type Reference](docs/types.md)
+If you are building with AI, you can copy the [LLMs.md file](llms.md) and give it to your agent. It will understand how to use Linkdirecte.
 
 ---
 
@@ -100,10 +89,10 @@ Our documentation is designed to be highly readable and beginner-friendly. For f
 
 Linkdirecte is licensed under the **Affero General Public License v3** (AGPL 3.0).
 
-This means if you utilize Linkdirecte inside a project and make it publicly available (such as an executable download, mobile application, or web/server service), you **must** make your project open-source under the same license terms.
+This means if you utilize Linkdirecte inside a project and make it publicly available (such as an executable download, mobile application, or web/server service), you **must** make your project open-source under that same license.
 
 > [!TIP]
-> For projects under GPL 3.0, **you don't have to change your license!** GPL and AGPL are fully compatible. You are however required to use AGPL if you host Linkdirecte on a server.
+> For projects already under GPL 3.0, **you don't have to change your license!** GPL and AGPL are fully compatible. You are only required to use AGPL if you host Linkdirecte on a server.
 
 *This project is an independent third-party development and is **not affiliated or sponsored** in any way with Aplim or EcoleDirecte.*
 
