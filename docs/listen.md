@@ -1,5 +1,5 @@
-<p align="left">
-  <picture><source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/glow.svg?title=Event+listening&amp;subtitle=Learn+how+to+listen+for+events+with+Linkdirecte.&amp;logo=lu%3ABell&amp;mode=dark&amp;theme=blue&amp;align=left" /><img alt="Event listening | Learn how to listen for events with Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=Event+listening&amp;subtitle=Learn+how+to+listen+for+events+with+Linkdirecte.&amp;logo=lu%3ABell&amp;mode=light&amp;theme=blue&amp;align=left" /></picture>
+<p align="center">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Event+listening&amp;subtitle=Learn+how+to+listen+for+events+with+Linkdirecte.&amp;logo=lu%3ABell&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Event listening | Learn how to listen for events with Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=Event+listening&amp;subtitle=Learn+how+to+listen+for+events+with+Linkdirecte.&amp;logo=lu%3ABell&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
 </p>
 
 The Listen module provides a simple event system that lets you poll EcoleDirecte for changes and respond immediately when something new happens—like receiving a brand-new grade, a message, or a new school bulletin!
