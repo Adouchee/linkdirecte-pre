@@ -1,4 +1,6 @@
-# 📚 Homework (Cahier de Texte)
+<p align="center">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Homework+%26+session+content&amp;subtitle=Learn+how+to+get+homework+and+session+content+with+Linkdirecte.&amp;logo=lu%3ANotebook&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Homework &amp; Session content | Learn how to get homework and session content with Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=Homework+%26+session+content&amp;subtitle=Learn+how+to+get+homework+and+session+content+with+Linkdirecte.&amp;logo=lu%3ANotebook&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
+</p>
 
 The Homework module gives you programmatic access to the student's assignment diary ("Cahier de Texte"). It allows you to fetch homework assignments, load full descriptions, retrieve attachments, and mark tasks as done (even when offline!).
 
