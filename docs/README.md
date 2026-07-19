@@ -1,33 +1,37 @@
+<p align="center">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Docs&amp;subtitle=Learn+how+to+use+Linkdirecte.&amp;logo=lu%3ABook&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Docs | Learn how to use Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=Docs&amp;subtitle=Learn+how+to+use+Linkdirecte.&amp;logo=lu%3ABook&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
+</p>
+
 # 📚 Linkdirecte Documentation
 
-Welcome to the official, exhaustive guide for **Linkdirecte**! Linkdirecte is a modern, light, resilient, and fully tree-shakable SDK tailored for interfacing with the private EcoleDirecte API.
+Welcome to the official, exhaustive guide for **Linkdirecte**! Linkdirecte is _the best_ SDK for interacting with EcoleDirecte _(approved and used by Scolup!)_.
 
 ---
 
 ## 📖 Table of Contents
 
 ### Getting Started
-- [🔑 Authentication](auth.md) - Learn how to log in, handle Two-Factor Authentication (2FA) challenges, and manage active sessions.
-- [⚙️ Core Configurations & Storage](core.md) - Adjust network behaviors, set up persistent storage, handle downloads, and configure encryption passkeys.
+- [🔑 Authentication](auth.md) | Learn how to log in, handle Two-Factor Authentication (2FA) challenges, and manage active sessions.
+- [⚙️ Core Configurations & Storage](core.md) | Adjust network behaviors, set up persistent storage, handle downloads, and configure encryption passkeys.
 
 ### Academic Modules
-- [🎓 Grades & Statistics](grades.md) - Retrieve student grades, term periods, and computed averages.
-- [📅 Timetable](timetable.md) - Fetch class schedules or retrieve third-party calendar (iCal) URLs.
-- [📚 Homework](homework.md) - Browse Cahier de Texte assignments, read detailed HTML text, download attachments, and mark homework as done.
+- [🎓 Grades & Statistics](grades.md) | Retrieve student grades, term periods, and computed averages.
+- [📅 Timetable](timetable.md) | Fetch class schedules or retrieve third-party calendar (iCal) URLs.
+- [📚 Homework](homework.md) | Browse Cahier de Texte assignments, read detailed HTML text, download attachments, and mark homework as done.
 
 ### Communication & School Life
-- [✉️ Messages](messages.md) - Connect to the mailbox, browse custom folders, retrieve attachment details, and reply to teachers.
-- [🎒 Attendance & School Life](attendance.md) - Track absences, late arrivals, and school punishments.
-- [📅 Timeline & Analytics](timeline.md) - Retrieve student activities or perform statistical correlation passes.
+- [✉️ Messages](messages.md) | Connect to the mailbox, browse custom folders, retrieve attachment details, and reply to teachers.
+- [🎒 Attendance & School Life](attendance.md) | Track absences, late arrivals, and school punishments.
+- [📅 Timeline & Analytics](timeline.md) | Retrieve student activities or perform statistical correlation passes.
 
 ### Additional Modules
-- [☁️ Cloud Storage](cloud.md) - Work with the student's personal cloud space ("Porte-documents"), manage folders, or delete files.
-- [📄 Official Documents](documents.md) - Download administrative paperwork, invoices, and quarterly report cards.
-- [📝 Forms & QCMs](forms.md) - Fetch assigned quizzes, inspect questions, and submit answer choices.
-- [🔔 Event Polling](listen.md) - Hook up real-time event listeners for grades, messages, or activities.
+- [☁️ Cloud Storage](cloud.md) | Work with the student's personal cloud space ("Porte-documents"), manage folders, or delete files.
+- [📄 Official Documents](documents.md) | Download administrative paperwork, invoices, and quarterly report cards.
+- [📝 Forms & QCMs](forms.md) | Fetch assigned quizzes, inspect questions, and submit answer choices.
+- [🔔 Event Polling](listen.md) | Hook up real-time event listeners for grades, messages, or activities.
 
 ### Type Reference
-- [🗂️ Complete Type Reference](types.md) - Quick reference for public TypeScript interfaces and data models.
+- [🗂️ Complete Type Reference](types.md) | Quick reference for public TypeScript interfaces and data models.
 
 ---
 
@@ -37,7 +41,7 @@ Linkdirecte works natively across almost all modern runtimes and environments wi
 
 To install Linkdirecte in your project, choose your preferred package manager:
 
-### Using npm (Node.js)
+### Using npm (included in Node.js)
 ```bash
 npm install linkdirecte
 ```
@@ -66,8 +70,8 @@ yarn add linkdirecte
 | **Node.js (v18+)** | ✅ Yes | Full support. |
 | **Bun** | ✅ Yes | Full support. Native speed-up! |
 | **Deno** | ✅ Yes | Full support. |
-| **Browsers (Chrome, Safari, Firefox, Edge)** | ✅ Yes | Native storage auto-detection (IndexedDB/localStorage). |
-| **React Native / Expo (Hermes)** | ✅ Yes | Fully compatible. Storage can be bound to AsyncStorage. |
+| **Browsers** | ✅ Yes | Full support. Default storage : IndexedDB |
+| **React Native / Expo** | ✅ Yes | Fully compatible. Storage can be bound to AsyncStorage. |
 | **Cloudflare Workers / Vercel Edge** | ✅ Yes | Fully compatible. |
 | **Capacitor / Electron** | ✅ Yes | Full support. |
 
@@ -96,5 +100,5 @@ if ("question" in session) {
 
 // 3. You are now logged in and verified. Fetch grades instantly!
 const gradesInfo = await getGrades();
-console.log(`Your average grade is: ${gradesInfo.subjects[0]?.average ?? "N/A"}`);
+console.log(`Your average is: ${gradesInfo.average ?? "N/A"}`);
 ```
