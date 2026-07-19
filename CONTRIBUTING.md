@@ -44,6 +44,7 @@ Tests live in `tests/` and use Bun's built-in test runner. If you're adding a ne
 * To work on Linkdirecte, _fork the project_ and target your PR to either `main` or another official branch.
 * Versioning is managed only by the project admins. Please do not change it directly.
 * **NEVER** manually publish to npm (except if the GitHub workflow doesn't work and the release can't wait to be published).
+* Update the docs in the [wiki](wiki/) folder if needed.
 
 ## 🤖 Developing with AI
 
