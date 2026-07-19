@@ -1,4 +1,6 @@
-# 📅 Timeline & Correlation Analytics
+<p align="center">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Post-its+%26+timeline&amp;subtitle=Learn+how+to+get+post-its+and+timeline+with+Linkdirecte.&amp;logo=lu%3AStickyNote&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Post-its &amp; timeline | Learn how to get post-its and timeline with Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=Post-its+%26+timeline&amp;subtitle=Learn+how+to+get+post-its+and+timeline+with+Linkdirecte.&amp;logo=lu%3AStickyNote&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
+</p>
 
 The Timeline module combines student-centric activity tracking (new assignments, grades, school messages) and smart data analysis across academic and school life behaviors to reveal valuable performance correlations.
 
