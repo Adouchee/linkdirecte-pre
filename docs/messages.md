@@ -1,4 +1,6 @@
-# ✉️ Messaging System
+<p align="center">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Messages&amp;subtitle=Learn+how+to+interact+with+mail+with+Linkdirecte.&amp;logo=lu%3AMessagesSquare&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Messages | Learn how to interact with mail with Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=Messages&amp;subtitle=Learn+how+to+interact+with+mail+with+Linkdirecte.&amp;logo=lu%3AMessagesSquare&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
+</p>
 
 The Messages module connects you directly to the school's communication channels. It handles reading received mail, viewing attachments, sending replies, and organizing drafts.
 
