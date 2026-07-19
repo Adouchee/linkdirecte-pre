@@ -1,12 +1,38 @@
-# Settings
+# ⚙️ Account Settings & Accessibility
 
-The settings module allows managing user account preferences and personal information.
+The Settings module allows you to view and adjust account properties, update user emails or phone numbers, change security answers, and configure accessibility settings (such as high-contrast themes) for the student.
 
-## Functions
+---
+
+## 🚀 Getting Started
+
+Let's read the current user preferences and check out their registered details:
+
+```typescript
+import { getSettings, updateSettings } from "linkdirecte";
+
+// Retrieve active settings
+const preferences = await getSettings();
+
+console.log(`Identifier: ${preferences.identifiant}`);
+console.log(`Registered Email: ${preferences.email}`);
+console.log(`Mobile Phone: ${preferences.mobilePhone || "None specified"}`);
+
+// Update user details (for example, setting a new email)
+const updated = await updateSettings({
+  email: "new.student@email.com",
+});
+
+console.log(`Email updated to: ${updated.email}`);
+```
+
+---
+
+## 📖 API Reference
 
 ### `getSettings`
 
-Fetches the account settings for the currently connected user.
+Fetches user login attributes and profile settings.
 
 ```typescript
 function getSettings(options?: {
@@ -15,29 +41,33 @@ function getSettings(options?: {
 }): Promise<AccountSettings>
 ```
 
+---
+
 ### `updateSettings`
 
-Updates the user's account information.
+Saves updated contact details, credentials, or security questions.
 
 ```typescript
 function updateSettings(
   data: {
     email?: string;
-    portable?: string;
-    questionSecrete?: string;
-    reponse?: string;
-    nouveauMotDePasse?: string;
-    identifiant?: string;
+    portable?: string;              // French alias for mobile phone (mapped under the hood)
+    questionSecrete?: string;       // French alias for secret question
+    reponse?: string;               // French alias for answer
+    nouveauMotDePasse?: string;     // French alias for new password
+    identifiant?: string;           // Username identifier
   },
   options?: { raw?: boolean; explain?: boolean }
 ): Promise<AccountSettings>
 ```
 
-> **Note**: When `nouveauMotDePasse` is provided, the SDK automatically handles `confirmationMotDePasse` internally.
+> **Note**: If you provide `nouveauMotDePasse` (new password) to change the account password, Linkdirecte handles the required password confirmation payload parameters internally for you.
+
+---
 
 ### `updateAccessibility`
 
-Enables or disables the visual accessibility parameter in EcoleDirecte.
+Enables or disables visual accessibility enhancements (e.g. high contrast or enlarged typography settings) inside EcoleDirecte.
 
 ```typescript
 function updateAccessibility(
@@ -51,23 +81,29 @@ function updateAccessibility(
 ```typescript
 import { updateAccessibility } from "linkdirecte";
 
-await updateAccessibility(true); // Enable visual accessibility
+// Turn on visual accessibility features!
+const result = await updateAccessibility(true);
+
+if (result.success) {
+  console.log("Visual accessibility preferences saved.");
+}
 ```
 
 ---
 
-## Types
+## 🗂️ Type Definitions
 
 ### `AccountSettings`
-```typescript
-interface AccountSettings {
-  id: number;
-  identifiant: string;
-  email: string;
-  portable: string;
-  questionSecrete: string;
-  reponse: string;
-  accessToken: string;
-  questionsPossibles: string[];
-}
-```
+
+The properties of `AccountSettings` are mapped to clean English keys by the Linkdirecte transform engine:
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `id` | `number` | Unique ID of the login profile. |
+| `identifiant` | `string` | Account username. |
+| `email` | `string` | Registered contact email address. |
+| `mobilePhone` | `string` | Registered mobile telephone number. |
+| `secretQuestion` | `string` | The active security challenge question. |
+| `answer` | `string` | Decoded answer for the security question. |
+| `accessToken` | `string` | Secure session access token. |
+| `possibleQuestions` | `string[]` | Pre-defined questions available to choose from for your security question. |

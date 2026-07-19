@@ -1,25 +1,54 @@
-# Cloud Storage
+# ☁️ Cloud Storage (Porte-documents)
 
-The cloud module provides access to the "Porte-documents" (Cloud storage) feature of EcoleDirecte.
+The Cloud module gives you full access to EcoleDirecte's "Porte-documents" (document holder / personal cloud storage). This allows students to retrieve personal files, organize their workspaces into folders, and clean up unwanted documents.
 
-## Functions
+---
+
+## 🚀 Getting Started
+
+Let's fetch the contents of the student's personal cloud and traverse the folder structure.
+
+```typescript
+import { getCloud } from "linkdirecte";
+
+// Retrieve the files and folders up to a depth of 3 folders deep
+const cloudItems = await getCloud({ depth: 3 });
+
+console.log(`You have ${cloudItems.length} top-level files or folders.`);
+
+cloudItems.forEach(item => {
+  if (item.type === "folder") {
+    console.log(`📁 Folder: ${item.label} (contains ${item.children?.length ?? 0} items)`);
+  } else {
+    console.log(`📄 File: ${item.label} (${(item.size / 1024).toFixed(1)} KB)`);
+  }
+});
+```
+
+---
+
+## 📖 API Reference
 
 ### `getCloud`
 
-Fetches the contents of the user's cloud storage.
+Fetches all files and folders available in the student's personal space.
 
 ```typescript
 function getCloud(options?: GetCloudOptions): Promise<CloudEntry[]>
 ```
 
-#### `GetCloudOptions`
-- `depth`: (Optional) How deep to traverse the folder structure. Defaults to `3`.
-- `raw`: If true, returns the raw API response.
-- `explain`: If true, returns debug information.
+#### Parameters
+
+- `options` *(optional)*:
+  - `depth` *(number)*: How many folders deep the SDK should scan and build children arrays for. Defaults to `3`.
+  - `raw` *(boolean)*: Returns the original raw response from the server if `true`.
+  - `explain` *(boolean)*: Includes request dumps, logs, and caching details in `_debug`.
+
+---
 
 ### `createFolder`
 
-Creates a new folder in the cloud storage.
+Creates a new folder under a parent directory.
 
 ```typescript
 function createFolder(
@@ -29,12 +58,31 @@ function createFolder(
 ): Promise<CloudNode>
 ```
 
-- `name`: Name of the new folder.
-- `parentNode`: The parent folder node where the new folder should be created.
+#### Parameters
+
+- `name` *(string)*: The name for your new folder.
+- `parentNode` *(CloudNode)*: The folder node where your new folder should be created.
+- `options` *(optional)*: `{ raw?: boolean, explain?: boolean }`.
+
+#### Example
+
+```typescript
+import { getCloud, createFolder } from "linkdirecte";
+
+const tree = await getCloud();
+const myParentFolder = tree.find(node => node.type === "folder" && node.label === "My Documents");
+
+if (myParentFolder) {
+  const newFolder = await createFolder("Math Homework", myParentFolder);
+  console.log(`Successfully created folder: ${newFolder.label}`);
+}
+```
+
+---
 
 ### `deleteNodes`
 
-Deletes files or folders from the cloud storage.
+Moves files or folders to the Recycle Bin / Trash.
 
 ```typescript
 function deleteNodes(
@@ -43,7 +91,10 @@ function deleteNodes(
 ): Promise<{ success: boolean }>
 ```
 
-- `nodes`: An array of file/folder nodes to be deleted (moved to trash).
+#### Parameters
+
+- `nodes` *(CloudNode[])*: An array of file or folder nodes to delete.
+- `options` *(optional)*: `{ raw?: boolean, explain?: boolean }`.
 
 #### Example
 
@@ -51,32 +102,38 @@ function deleteNodes(
 import { getCloud, deleteNodes } from "linkdirecte";
 
 const tree = await getCloud();
-const fileToDelete = tree.find(node => node.type === "file" && node.label === "old.pdf");
-if (fileToDelete) {
-  await deleteNodes([fileToDelete]);
+const oldFile = tree.find(node => node.type === "file" && node.label === "temporary_draft.txt");
+
+if (oldFile) {
+  const result = await deleteNodes([oldFile]);
+  if (result.success) {
+    console.log("File successfully moved to trash!");
+  }
 }
 ```
 
 ---
 
-## Types
+## 🗂️ Type Definitions
 
 ### `CloudNode`
-Represents a file or folder in the cloud.
+
+Represents either a folder or a file inside the EcoleDirecte cloud:
+
 ```typescript
 interface CloudNode {
-  id: string;
-  type: "file" | "folder";
-  label: string;
-  date: string;
-  size: number;
-  isReadOnly: boolean;
-  isHidden: boolean;
-  isTrash: boolean;
-  isLoaded?: boolean;
-  quota?: number;
-  displayText?: string;
-  children?: CloudNode[];
+  id: string;               // Unique string ID of the file or folder
+  type: "file" | "folder";  // Node type
+  label: string;            // Name of the file or folder
+  date: string;             // Date string when created or updated
+  size: number;             // File size in bytes
+  isReadOnly: boolean;      // True if the node is write-protected
+  isHidden: boolean;        // True if the item is hidden
+  isTrash: boolean;         // True if the item is currently in the trash
+  isLoaded?: boolean;       // Indicates if subfolders have been loaded
+  quota?: number;           // Space limit in bytes (usually present on top folder)
+  displayText?: string;     // Friendly display string
+  children?: CloudNode[];   // Child nodes (if a folder)
   owner?: {
     id: number;
     type: string;
@@ -88,7 +145,18 @@ interface CloudNode {
 ```
 
 ### `CloudEntry`
-A union type for items returned by `getCloud`:
+
+A simple union representing the entries returned:
+
 ```typescript
 type CloudEntry = CloudFolderNode | CloudFileNode;
+
+interface CloudFolderNode extends CloudNode {
+  type: "folder";
+  children: CloudNode[];
+}
+
+interface CloudFileNode extends CloudNode {
+  type: "file";
+}
 ```

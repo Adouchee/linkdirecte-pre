@@ -1,341 +1,200 @@
-# Core Functionalities
+# ⚙️ Core Configuration & Utilities
 
-This module covers the global configuration, storage management, file downloads, and offline capabilities of the SDK.
+The Core module handles global SDK configurations, session state preservation via **Storage Adapters**, file downloads, proactive token health keepalives, background data prefetching, and transparent storage encryption.
 
-## Configuration & Stats
+---
+
+## 🛠️ Global Configuration
+
+You can customize how Linkdirecte behaves (such as request timeouts, retry behavior, caching, and offline queues) globally by calling the `configure` function.
 
 ### `configure`
-
-Sets the global configuration for the SDK.
-
-```typescript
-function configure(config: Partial<EdConfig>): void
-```
-
-#### `EdConfig` Options
-
-| Option | Type | Default | Description |
-| :--- | :--- | :--- | :--- |
-| `userAgent` | `string` | *(Modern iOS ED UA)* | Custom User-Agent for requests. |
-| `maxRetries` | `number` | `3` | Number of times to retry failed requests. |
-| `retryDelay` | `number` | `500` | Initial delay between retries in ms. |
-| `concurrency` | `number` | `3` | Max concurrent requests. |
-| `timeout` | `number` | `15000` | Request timeout in ms. |
-| `storage` | `StorageAdapter` | *auto-detected* | Session and data storage strategy. Auto-detects IndexedDB → localStorage → none. |
-| `offlineQueue` | `boolean` | `false` | Enable/disable the offline mutation queue. |
-| `prefetch` | `PrefetchConfig` | — | Background prefetching configuration. |
-| `proxyUrl` | `string` | — | Custom API proxy base URL. |
-| `onError` | `ErrorMiddleware` | — | Global error handling middleware. |
-| `on2faRequired` | `(question: string, choices: string[]) => number \| Promise<number>` | — | Global 2FA callback. |
-| `onCredentialsRequired` | `() => { identifiant, motdepasse } \| Promise<...>` | — | Callback to supply credentials on token refresh failure. |
-| `cache` | `CacheConfig` | — | Per-module cache duration overrides. |
-
-#### Example
 
 ```typescript
 import { configure } from "linkdirecte";
 
 configure({
   maxRetries: 5,
-  // storage is auto-detected: IndexedDB > localStorage > none
+  retryDelay: 1000,
+  timeout: 10000, // 10 seconds timeout
+  offlineQueue: true, // Queue actions if offline!
 });
 ```
 
----
+### All Configuration Options (`EdConfig`)
 
-### `getAccount`
-
-Returns the currently active `Account` object, or `undefined` if not logged in.
-
-```typescript
-function getAccount(): Account | undefined
-```
-
-### `getAccounts`
-
-Returns an array of all authenticated accounts returned by the login process (e.g. multiple children for parent logins).
-
-```typescript
-function getAccounts(): Account[]
-```
-
-### `switchAccount`
-
-Seamlessly changes the active account in the SDK state. Persists the switch if a storage adapter is enabled.
-
-```typescript
-async function switchAccount(accountId: number): Promise<void>
-```
-
-### `getLastTokenRefresh`
-
-Returns the timestamp of the last token refresh.
-
-```typescript
-function getLastTokenRefresh(): Date | undefined
-```
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `userAgent` | `string` | *(Modern iOS mobile user agent)* | Custom User-Agent header for API requests. |
+| `maxRetries` | `number` | `3` | Number of times to automatically retry failed requests (e.g. on HTTP 500 or timeout). |
+| `retryDelay` | `number` | `500` | Initial delay between retries in milliseconds (uses exponential backoff). |
+| `concurrency` | `number` | `3` | Maximum number of concurrent network requests allowed at once. |
+| `timeout` | `number` | `15000` | Request timeout in milliseconds. |
+| `storage` | `StorageAdapter` | *auto-detected* | Session and data storage adapter. |
+| `passkey` | `string` | `undefined` | Key used to transparently encrypt everything saved in your storage adapter using AES-GCM. |
+| `offlineQueue` | `boolean` | `false` | Enable or disable the offline mutation queue. |
+| `prefetch` | `PrefetchConfig` | `undefined` | Background prefetching scheduler. |
+| `cache` | `CacheConfig` | `undefined` | Custom per-module cache duration overrides. |
+| `cacheMaxEntries` | `number` | `undefined` | Limit the number of entries stored in the cache. |
+| `on2faRequired` | `Function` | `undefined` | Global callback to handle 2FA challenges. |
+| `onCredentialsRequired` | `Function` | `undefined` | Callback to supply credentials on token refresh failure. |
+| `onError` | `ErrorMiddleware` | `undefined` | Custom error interception middleware. |
 
 ---
 
-## Storage Adapters
+## 🗄️ Storage Adapters (Auto-Detected!)
 
-When no `storage` option is provided, the SDK auto-detects the best available backend:
+By default, Linkdirecte automatically detects and selects the best storage option for your environment:
 
-1. **IndexedDB** — if available (browsers, Cloudflare Workers, Deno)
-2. **localStorage** — if available (browsers, Deno)
-3. **Node/Bun File Storage** — if running in Node.js or Bun
-4. **none** — in-memory only (all data lost on restart)
+1. **IndexedDB** — used in IndexedDB-capable runtimes (browsers, CF Workers, Deno).
+2. **localStorage** — used in standard Web Storage runtimes (browsers, React Native).
+3. **Node/Bun File Storage** — used in Node.js or Bun environments.
+4. **Memory Storage** — falls back to volatile in-memory storage if nothing else is available.
 
-You can override this by passing an explicit adapter.
-
-### `memoryStorage`
-
-Default volatile storage. All data is lost when the process terminates.
+You can explicitly force an adapter or supply a custom one.
 
 ### `indexedDBStorage`
-
-Persistent storage backed by IndexedDB. Uses a dedicated `linkdirecte` database with a single `data` object store. Works in browsers, Cloudflare Workers, and Deno.
-
+Backed by IndexedDB under a database named `linkdirecte`. Perfect for standard web browsers.
 ```typescript
 import { configure, indexedDBStorage } from "linkdirecte";
-
 configure({ storage: indexedDBStorage });
 ```
 
 ### `localStorageStorage`
-
-Persistent storage backed by the Web `localStorage` API. Works in browsers and React Native.
-
+Backed by the browser's `localStorage` API. Excellent for simple React Native, Capacitor, or Chrome extension usage.
 ```typescript
 import { configure, localStorageStorage } from "linkdirecte";
-
 configure({ storage: localStorageStorage });
 ```
 
 ### `nodeStorage`
-
-Persistent storage backed by a JSON file on disk. Uses dynamic `import('node:fs/promises')` so it's safe to import in browser bundles — the import only fires when a method is called.
-
+Saves your session to a local JSON file. Excellent for command-line tools or servers running in Node.js or Bun.
 ```typescript
 import { configure, nodeStorage } from "linkdirecte";
 
-// Default path: ./linkdirecte-session.json
+// Saves to './linkdirecte-session.json' by default
 configure({ storage: nodeStorage() });
 
-// Or with a custom path
-configure({ storage: nodeStorage("~/.linkdirecte/session.json") });
+// Or specify a custom path:
+configure({ storage: nodeStorage("/var/data/session.json") });
 ```
 
 ### `cloudflareKVStorage`
-
-Persistent storage backed by a Cloudflare Workers KV namespace. Pass the KV binding from your worker's `env` object.
-
+Wraps a Cloudflare KV namespace.
 ```typescript
 import { configure, cloudflareKVStorage } from "linkdirecte";
 
 export default {
-  async fetch(request: Request, env: { SESSION_KV: KVNamespace }) {
-    configure({ storage: cloudflareKVStorage(env.SESSION_KV) });
+  async fetch(request, env) {
+    configure({ storage: cloudflareKVStorage(env.MY_SESSION_KV) });
     // ...
-  },
+  }
 };
 ```
 
-### `asyncStorage`
-
-Factory that wraps any async key-value store into a `StorageAdapter`. Works in every runtime.
-
-```typescript
-function asyncStorage(backend: {
-  getItem(key: string): string | null | Promise<string | null>;
-  setItem(key: string, value: string): void | Promise<void>;
-  removeItem(key: string): void | Promise<void>;
-}): StorageAdapter
-```
-
-#### React Native example
-
+### `asyncStorage` (Custom Wrappers)
+Allows you to wrap any asynchronous key-value storage engine. Here's how to wrap React Native's `@react-native-async-storage/async-storage`:
 ```typescript
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { configure, asyncStorage } from "linkdirecte";
 
 configure({
   storage: asyncStorage({
-    getItem: (k) => AsyncStorage.getItem(k),
-    setItem: (k, v) => AsyncStorage.setItem(k, v),
-    removeItem: (k) => AsyncStorage.removeItem(k),
+    getItem: (key) => AsyncStorage.getItem(key),
+    setItem: (key, value) => AsyncStorage.setItem(key, value),
+    removeItem: (key) => AsyncStorage.removeItem(key),
   }),
 });
 ```
 
 ---
 
-## Downloads
+## 🔒 Transparent AES-GCM Encryption
+
+Concerned about storing credentials on disk or in the browser? Simply provide a `passkey`!
+
+When a `passkey` is specified, Linkdirecte will **automatically wrap** your active storage adapter with an encrypted wrapper. All session tokens, IDs, and account info will be encrypted using robust **AES-GCM** before writing, and decrypted on read.
+
+```typescript
+import { configure, nodeStorage } from "linkdirecte";
+
+configure({
+  storage: nodeStorage(),
+  passkey: "super-secret-user-defined-password" // Transparent encryption enabled!
+});
+```
+
+---
+
+## 📥 File Downloads
 
 ### `download`
 
-Downloads a file from EcoleDirecte (e.g., invoices, documents).
+Retrieves documents, invoices, or resources from EcoleDirecte.
 
 ```typescript
 function download(url: string, options?: DownloadOptions): Promise<ArrayBuffer | Blob | ReadableStream>
 ```
 
-#### `DownloadOptions`
+#### Options (`DownloadOptions`)
+- `as` *("buffer" | "blob" | "stream")*: The format to return. Defaults to `"buffer"`.
+- `params` *(Record<string, any>)*: Extra post body parameters.
 
-- `as`: Desired format (`"buffer"`, `"blob"`, or `"stream"`). Defaults to `"buffer"` (returns `ArrayBuffer`).
-- `params`: Additional POST body parameters.
-
-#### Example
-
+#### Example (Writing a downloaded PDF to disk in Node/Bun):
 ```typescript
 import { download } from "linkdirecte";
+import { writeFile } from "node:fs/promises";
 
-const data = await download("https://...");
-// data is an ArrayBuffer — use it however your runtime needs
+const fileArrayBuffer = await download("https://api.ecoledirecte.com/v3/file-endpoint.awp");
+
+await writeFile("./report-card.pdf", Buffer.from(fileArrayBuffer));
+console.log("PDF written to disk!");
 ```
-
----
 
 ### `downloadPhoto`
 
-Downloads the profile picture of the active account.
+Retrieves the profile picture of the currently active account.
 
 ```typescript
-function downloadPhoto(options?: { as?: DownloadFormat }): Promise<ArrayBuffer | Blob | ReadableStream | null>
-```
-
-#### Options
-
-- `as`: Desired format (`"buffer"`, `"blob"`, or `"stream"`). Defaults to `"buffer"` (returns `ArrayBuffer`).
-
-#### Example
-
-```typescript
-import { downloadPhoto } from "linkdirecte";
-
-const photoBuffer = await downloadPhoto();
-if (photoBuffer) {
-  // Use profile photo ArrayBuffer (or Blob/Stream if specified)
-}
+function downloadPhoto(options?: { as?: "buffer" | "blob" | "stream" }): Promise<ArrayBuffer | Blob | ReadableStream | null>
 ```
 
 ---
 
-## Token Health
+## 🛟 Offline Mutation Queue
 
-The SDK proactively monitors token validity using a lightweight health-check endpoint, rather than relying solely on detecting failures from regular API calls.
+When the network is spotty, you don't want actions like marking homework as completed to be lost. By enabling `offlineQueue: true` in your configuration, any modifying requests (like `markAsDone`) will be recorded locally if the user is offline.
 
-### How it works
-
-1. **Proactive keepalive** — After login, 2FA completion, session restore, or token refresh, a 45-minute interval is started that checks token health via `POST /v3/rdt/sondages.awp`. If the token is expired (response code 521), it is automatically refreshed.
-2. **Reactive fallback** — If a regular API call returns code 520, 521, or 525, `edFetch` triggers an automatic refresh and retries the request.
-
-### `checkTokenHealth`
-
-Checks whether the current session token is still valid by hitting a lightweight health-check endpoint.
+You can synchronize them once the connection is restored:
 
 ```typescript
-async function checkTokenHealth(): Promise<boolean>
-```
+import { offlineQueue } from "linkdirecte";
 
-Returns `true` if the token is valid (response code 200), `false` if expired (521) or on any error.
+// Check the queue
+const pendingCount = offlineQueue.getQueue().length;
+console.log(`You have ${pendingCount} offline actions pending.`);
 
-```typescript
-import { checkTokenHealth } from "linkdirecte";
-
-const valid = await checkTokenHealth();
-if (!valid) {
-  console.log("Token has expired");
-}
-```
-
-### `startTokenKeepalive`
-
-Starts a proactive keepalive loop that checks token health every 45 minutes and refreshes the token if expired.
-
-```typescript
-function startTokenKeepalive(): void
-```
-
-- Safe to call multiple times — subsequent calls reset the timer.
-- Called automatically after `login()`, 2FA completion, `loadSession()`, and `refreshToken()`.
-- If the refresh fails, keepalive stops and the reactive fallback in `edFetch` takes over.
-- **No-ops silently** in environments without timer support (Cloudflare Workers, Vercel Edge). In these environments, the reactive fallback in `edFetch` handles session expiry automatically.
-
-### `stopTokenKeepalive`
-
-Stops the proactive token keepalive timer.
-
-```typescript
-function stopTokenKeepalive(): void
+// Flush the queue to send them to EcoleDirecte
+await offlineQueue.flush();
 ```
 
 ---
 
-## Offline & Resilience
+## 🧠 Background Prefetching
 
-### `offlineQueue`
-
-Manages mutations (like marking homework as done) that should be replayed when the network is available.
-
-#### Methods
-
-- `push(endpoint, options)`: Adds a request to the queue.
-- `flush()`: Attempts to execute all queued requests.
-- `getQueue()`: Returns the list of pending mutations.
-
----
-
-## Prefetching
-
-Prefetching allows you to warm up the cache by fetching data for multiple modules at once.
-
-### `prefetchAll`
-
-Fetches data for all or specific modules.
+Prefetching warms up the SDK cache by loading module data in the background, making your app respond instantly!
 
 ```typescript
-function prefetchAll(config?: PrefetchConfig): Promise<void>
-```
+import { configure, startAutoPrefetch } from "linkdirecte";
 
-### `startAutoPrefetch`
-
-Starts a background interval to regularly prefetch data.
-
-```typescript
-function startAutoPrefetch(): void
-```
-
-Requires `prefetch` to be enabled in global configuration:
-```typescript
 configure({
   prefetch: {
     enabled: true,
-    interval: "15m", // Supports s, m, h
-    modules: ["grades", "messages"]
+    interval: "15m", // Prefetch every 15 minutes (supports 's', 'm', 'h')
+    modules: ["grades", "messages", "homework"]
   }
 });
 
+// Start background syncing!
 startAutoPrefetch();
-```
-
-### `stopAutoPrefetch`
-
-Stops the background prefetch interval.
-
-```typescript
-function stopAutoPrefetch(): void
-```
-
----
-
-## Types
-
-### `PrefetchConfig`
-```typescript
-interface PrefetchConfig {
-  enabled?: boolean;
-  interval?: string; // e.g. "30s", "5m", "1h"
-  modules?: string[]; // e.g. ["grades", "messages", "homework", "timetable", "timeline"]
-}
 ```

@@ -1,22 +1,56 @@
-# Event Listening & Polling
+# 🔔 Event Listening & Polling
 
-The listen module allows you to react to real-time updates from EcoleDirecte by polling the API and emitting events when changes are detected.
+The Listen module provides a simple event system that lets you poll EcoleDirecte for changes and respond immediately when something new happens—like receiving a brand-new grade, a message, or a new school bulletin!
 
-## Functions
+---
+
+## 🚀 Getting Started
+
+Let's set up a daemon to watch for new events in real-time.
+
+```typescript
+import { startPolling, on } from "linkdirecte";
+
+// 1. Listen for new grades
+const unsubscribeGrades = on("newGrade", (grade) => {
+  console.log(`🎉 New Grade Posted! ${grade.value}/${grade.outOf} in ${grade.subjectLabel}`);
+});
+
+// 2. Listen for new messages
+on("newMessage", (message) => {
+  console.log(`✉️ New Message from ${message.fromName}: "${message.subject}"`);
+});
+
+// 3. Listen for polling errors (useful if servers go down)
+on("pollingError", (error) => {
+  console.error("⚠️ An error occurred while polling:", error);
+});
+
+// 4. Start the engine! (Polls every 30 seconds)
+startPolling({ interval: 30000 });
+```
+
+---
+
+## 📖 API Reference
 
 ### `startPolling`
 
-Starts the background polling process.
+Spins up a lightweight background timer that regularly pulls data from EcoleDirecte, computes differences, and emits events when updates are discovered.
 
 ```typescript
 function startPolling(config?: PollingConfig): void
 ```
 
-- `config.interval`: The polling interval in milliseconds. Defaults to `60,000` (1 minute).
+#### Parameters
+- `config` *(optional)*:
+  - `interval` *(number)*: How often the SDK should query EcoleDirecte, specified in milliseconds. Defaults to `60000` (1 minute).
+
+---
 
 ### `stopPolling`
 
-Stops the background polling process.
+Shuts down the background timer and stops all polling requests.
 
 ```typescript
 function stopPolling(): void
@@ -24,21 +58,29 @@ function stopPolling(): void
 
 ---
 
-## Event Management
-
 ### `on`
 
-Subscribes to a specific event.
+Registers a listener function for a specific event.
 
 ```typescript
 function on(event: string, handler: (data: any) => void): () => void
 ```
 
-- Returns an unsubscribe function.
+#### Returns
+An unsubscribe function. Call it to quickly remove the listener and clean up memory!
+
+```typescript
+const unsubscribe = on("newGrade", (g) => console.log(g));
+
+// Stop listening later
+unsubscribe();
+```
+
+---
 
 ### `off`
 
-Unsubscribes from a specific event.
+Explicitly removes a registered listener function.
 
 ```typescript
 function off(event: string, handler: (data: any) => void): void
@@ -46,47 +88,13 @@ function off(event: string, handler: (data: any) => void): void
 
 ---
 
-## Configuration
+## 🗂️ Event Types Reference
 
-### `PollingConfig`
-```typescript
-interface PollingConfig {
-  interval?: number; // Polling interval in ms. Default: 60,000 (1 minute).
-}
-```
+Linkdirecte processes changes across multiple student channels. You can subscribe to these events:
 
-| Event | Description | Data |
+| Event | Emitted When | Payload Type |
 | :--- | :--- | :--- |
-| `newGrade` | Emitted when a new grade is detected. | The grade object. |
-| `newMessage` | Emitted when a new message is received. | The message object. |
-| `newTimelineEntry` | Emitted when a new entry appears in the timeline. | The timeline entry object. |
-| `pollingError` | Emitted when an error occurs during polling. | The error object. |
-
-#### Example
-
-```typescript
-import { startPolling, on } from "linkdirecte";
-
-on("newGrade", (grade) => {
-  console.log(`New grade: ${grade.value}/${grade.outOf} in ${grade.subjectLabel}`);
-});
-
-on("newMessage", (msg) => {
-  console.log(`New message from ${msg.fromName}: ${msg.subject}`);
-});
-
-startPolling({ interval: 30000 }); // Poll every 30 seconds
-```
-
-### Using the Unsubscribe Function
-
-The `on` function returns an unsubscribe function for clean teardown:
-
-```typescript
-const unsubscribe = on("newGrade", (grade) => {
-  console.log("New grade:", grade);
-});
-
-// Later, stop listening:
-unsubscribe();
-```
+| `"newGrade"` | A new grade is entered into the system. | `GradeEntry` |
+| `"newMessage"` | A new message is received in the student's mailbox. | `MessageEntry` |
+| `"newTimelineEntry"` | A new event occurs on the student's activity feed. | `TimelineEntry` |
+| `"pollingError"` | An API fetch fails due to credentials, token expiry, or a network timeout. | `Error` |

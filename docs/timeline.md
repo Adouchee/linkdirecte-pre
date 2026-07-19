@@ -1,12 +1,52 @@
-# Timeline & Correlations
+# 📅 Timeline & Correlation Analytics
 
-The timeline module provides access to the student's activity feed and advanced data analysis between different modules.
+The Timeline module combines student-centric activity tracking (new assignments, grades, school messages) and smart data analysis across academic and school life behaviors to reveal valuable performance correlations.
 
-## Data Fetching
+---
+
+## 🚀 Getting Started
+
+Let's read the latest events from the student's personalized timeline:
+
+```typescript
+import { getTimeline } from "linkdirecte";
+
+const events = await getTimeline();
+
+console.log(`There are ${events.length} recent events on your feed:`);
+
+events.slice(0, 5).forEach(event => {
+  console.log(`- [${event.elementType}] ${event.title || "Activity update"}`);
+  if (event.subtitle) console.log(`  Detail: ${event.subtitle}`);
+});
+```
+
+Let's run the **smart correlation engine** to see statistical performance trends!
+
+```typescript
+import { correlate } from "linkdirecte";
+
+const correlations = await correlate();
+
+correlations.forEach(insight => {
+  if (insight.type === "gradeTrend") {
+    console.log(`📈 Trend in [${insight.subject}]: Overall calculated average is ${insight.data.average.toFixed(2)}/20 (Based on ${insight.observations} observations).`);
+  } else if (insight.type === "gradeVsDayOfWeek") {
+    console.log(`📅 Weekly patterns in [${insight.subject}]:`);
+    for (const [day, average] of Object.entries(insight.data)) {
+      console.log(`   • ${day}: ${average.toFixed(1)}/20`);
+    }
+  }
+});
+```
+
+---
+
+## 📖 API Reference
 
 ### `getTimeline`
 
-Fetches the student's personal timeline (new grades, homework assigned, etc.).
+Retrieves a chronologically ordered list of events relevant to the logged-in student.
 
 ```typescript
 function getTimeline(options?: {
@@ -15,93 +55,63 @@ function getTimeline(options?: {
 }): Promise<TimelineEntry[]>
 ```
 
+---
+
 ### `getCommonTimeline`
 
-Fetches the school's general timeline/news feed.
+Fetches general school notices, bulletins, and shared announcements. Linkdirecte automatically decodes French HTML "sticky notes" (`stickyNotes`) for you in the process.
 
 ```typescript
 function getCommonTimeline(options?: {
   raw?: boolean;
   explain?: boolean;
 }): Promise<TimelineEntry[]>
-```
-
-### `TimelineEntry`
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `number` | Unique ID of the entry. |
-| `elementType` | `string` | Type of event (e.g., `"Note"`, `"Devoir"`). |
-| `title` | `string` | Main title (optional). |
-| `subtitle` | `string` | Secondary information (optional). |
-| `content` | `string` | Details or description (optional). |
-| `creationDate` | `Date` | Creation date. |
-| `subjectLabel` | `string` | Subject name (optional). |
-| `teacherName` | `string` | Teacher name (optional). |
-
-#### Example
-
-```typescript
-import { getTimeline } from "linkdirecte";
-
-const entries = await getTimeline();
-entries.forEach(entry => {
-  console.log(`[${entry.elementType}] ${entry.title ?? entry.subtitle ?? "No title"}`);
-});
-```
-
-### `getCommonTimeline`
-
-Fetches the school's general timeline/news feed.
-
-```typescript
-function getCommonTimeline(options?: {
-  raw?: boolean;
-  explain?: boolean;
-}): Promise<TimelineEntry[]>
-```
-
-#### Example
-
-```typescript
-import { getCommonTimeline } from "linkdirecte";
-
-const commonEntries = await getCommonTimeline();
-console.log(`${commonEntries.length} shared entries.`);
 ```
 
 ---
 
-## Data Analysis
-
 ### `correlate`
 
-Analyzes historical data across modules to find patterns and insights.
+Runs an advanced correlation pass across different modules (grades and attendance) to construct statistical insights.
+
+> **Note**: Linkdirecte only includes subjects in the analysis that have **at least 5 graded entries** to maintain statistical reliability.
 
 ```typescript
 function correlate(): Promise<Correlation[]>
 ```
 
-The function currently analyzes relationships such as:
-- **Grade Trends** (`gradeTrend`): Performance evolution over time per subject.
-- **Day of Week Patterns** (`gradeVsDayOfWeek`): Whether certain days of the week consistently yield better or worse grades.
+---
 
-Only subjects with at least 5 grades are analyzed.
+## 🗂️ Type Definitions
 
-#### Returns
+### `TimelineEntry`
 
-An array of `Correlation` objects.
-
-#### `Correlation`
-| Field | Type | Description |
+| Property | Type | Description |
 | :--- | :--- | :--- |
-| `type` | `CorrelationType` | The type of analysis performed. |
-| `subject` | `string` | The subject being analyzed. |
-| `finding` | `string` | A summary of the insight. |
-| `data` | `Record<string, number>` | Numerical data supporting the finding. |
-| `confidence` | `number` | Reliability score (0 to 1). |
-| `observations` | `number` | Number of data points analyzed. |
+| `id` | `number` | Unique ID of the event. |
+| `elementType` | `string` | The event code (e.g., `"Note"`, `"Devoir"`, `"Viescolaire"`). |
+| `creationDate` | `Date` | Timestamp of when the event occurred. |
+| `title` | `string` *(optional)* | Primary description of the event. |
+| `subtitle` | `string` *(optional)* | Supporting description or sub-label. |
+| `content` | `string` *(optional)* | Extended body text. |
+| `subjectLabel` | `string` *(optional)* | Classroom subject associated with this update. |
+| `teacherName` | `string` *(optional)* | Teacher related to this item. |
 
-#### `CorrelationType`
+### `Correlation`
+
+```typescript
+interface Correlation {
+  type: CorrelationType;             // Category of correlation analysis
+  subject: string;                   // Subject name being analyzed
+  finding: string;                   // Brief summary of findings
+  data: Record<string, number>;      // Key-value statistics map (averages, days, etc.)
+  confidence: number;                // Statistical confidence score (from 0 to 1)
+  observations: number;              // Number of entries/data-points analyzed
+}
+```
+
+### `CorrelationType`
+
 ```typescript
 type CorrelationType =
   | "gradeVsPresence"
@@ -109,17 +119,4 @@ type CorrelationType =
   | "gradeVsTimeOfDay"
   | "homeworkVsGrade"
   | "gradeTrend";
-```
-
-#### Example
-
-```typescript
-import { correlate } from "linkdirecte";
-
-const insights = await correlate();
-insights.forEach(insight => {
-  if (insight.type === "gradeVsDayOfWeek") {
-    console.log(`In ${insight.subject}, you perform best on ${findBestDay(insight.data)}`);
-  }
-});
 ```

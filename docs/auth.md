@@ -1,147 +1,187 @@
-# Authentication
+# 🔑 Authentication & Sessions
 
-The authentication module handles connection to the EcoleDirecte API, including support for two-factor authentication (2FA) and token refreshing.
+The authentication module is the gateway to Linkdirecte. It manages everything related to connecting to EcoleDirecte's servers, handling Two-Factor Authentication (2FA), saving session cookies secretly, and auto-refreshing expired tokens.
 
-## Functions
+---
 
-### `login`
+## 🚀 Getting Started
 
-Authenticates a user with their credentials. Supports both positional arguments and a unified options-object format.
+Logging in with Linkdirecte is extremely easy and flexible. You can use standard positional parameters or a modern, unified options object.
 
-```typescript
-// Positional style
-function login(identifiant: string, motdepasse: string, options?: LoginOptions): Promise<LoginResult>
+### Option A: Positional Style (Classic)
 
-// Unified object style
-function login(params: LoginUnifiedOptions): Promise<LoginResult>
-```
-
-#### Parameters
-
-- `identifiant` / `username` / `identifier`: The user's username (used in positional style, or as properties of the unified options object).
-- `motdepasse` / `password`: The user's password (used in positional style, or as properties of the unified options object).
-- `options` / `params`: Configuration for the login process.
-  - `rememberMe`: If true, attempts to store an access token, UUID and 2FA tokens (`cn`/`cv`) for future refreshes.
-    - `on2faRequired`: (Optional) A callback function to handle 2FA automatically. It receives the question and choices, and can return either the index of the chosen answer (e.g. `0`) or the text of the chosen option itself (e.g. `"Red"`).
-
-> **Note**: The UUID is automatically generated and managed by the SDK. When `rememberMe: true`, it is persisted in storage along with the access token and reused for session renewal.
-
-#### Returns
-
-Returns a `Promise<LoginResult>`. Since EcoleDirecte may require 2FA, the result can be either a success or a challenge.
-
-- **`LoginSuccess`**: If authentication is successful without 2FA.
-  - `user`: The `Account` object.
-  - `token`: The session token.
-  - `sessionId`: The unique session identifier.
-- **`LoginChallenge`**: If 2FA is required.
-  - `type`: Always `"securityQuestion"`.
-  - `question`: The security question (decoded from Base64).
-  - `choices`: An array of possible answers (decoded from Base64).
-  - `answer(choiceIndexOrText)`: A function to submit the chosen answer. Accepts either a numeric index or the string value of the selected choice (case-insensitive). Returns a `Promise` of the next step (usually `LoginSuccess`).
-
-#### Example
+Perfect for quick scripts!
 
 ```typescript
 import { login } from "linkdirecte";
 
-// Simple login using positional arguments
-const result = await login("username", "password");
+const session = await login("your_username", "your_password");
+console.log(`Successfully logged in as ${session.user.firstName}!`);
+```
 
-// Simple login using unified options-object format with camelCase keys
-const resultUnified = await login({
-  username: "username",
-  password: "password",
-  on2faRequired: (question, choices) => "Red" // Return string option directly!
+### Option B: Unified Object Style (Recommended)
+
+Perfect for application-level integration. It supports aliases like `username`, `password`, and `identifier`.
+
+```typescript
+import { login } from "linkdirecte";
+
+const session = await login({
+  username: "your_username",
+  password: "your_password",
+  rememberMe: true, // Auto-save for easy subsequent reconnects!
 });
+console.log(`Hello, ${session.user.firstName}!`);
+```
 
-if (result.type === "securityQuestion") {
-  // Can answer with index or the option string directly
-  const session = await result.answer("Red");
-}
+---
 
-// Login with automatic 2FA handling
+## 🔒 Handling Two-Factor Authentication (2FA)
+
+EcoleDirecte frequently prompts users with security questions. Linkdirecte provides two different ways to tackle this challenge effortlessly!
+
+### 1. The Automatic Callback (Simplest)
+
+Provide an `on2faRequired` handler in your configuration. It will run whenever a 2FA challenge occurs. You can return either the index of the choice or the actual choice text (case-insensitive!).
+
+```typescript
+import { login } from "linkdirecte";
+
 const session = await login("username", "password", {
   on2faRequired: async (question, choices) => {
-    // Show UI modal or CLI prompt
-    return 0; // Return index of choice
+    console.log("Security Question:", question);
+    console.log("Options:", choices);
+
+    // You can prompt the user, or simply return a selection:
+    return 0; // Selects the first choice
+    // OR:
+    // return "Red"; // Selects the choice matching "Red" (case-insensitive)
   }
 });
 ```
+
+### 2. The Step-by-Step Response (Interactive)
+
+If no callback is provided, `login()` returns a special `LoginChallenge` object. You can present this to your user and call its `.answer()` method when they're ready!
+
+```typescript
+import { login } from "linkdirecte";
+
+const result = await login("username", "password");
+
+if ("question" in result) {
+  console.log("2FA Challenge Received!");
+  console.log("Question:", result.question);
+  console.log("Options:", result.choices);
+
+  // Submit the selected choice index or option text:
+  const session = await result.answer("My Secret Answer");
+  console.log(`Logged in! Hello, ${session.user.firstName}`);
+} else {
+  console.log(`Directly logged in! Hello, ${result.user.firstName}`);
+}
+```
+
+---
+
+## 📖 API Reference
+
+### `login`
+
+Authenticates a student and registers the session.
+
+```typescript
+// Positional Signature
+function login(
+  identifiant: string,
+  motdepasse: string,
+  options?: LoginOptions
+): Promise<LoginResult>
+
+// Unified Object Signature
+function login(
+  params: LoginUnifiedOptions
+): Promise<LoginResult>
+```
+
+#### Options & Aliases
+
+When using the unified object style, you can use any of the following aliases to make your code look clean:
+- **Username**: `identifiant`, `username`, or `identifier`
+- **Password**: `motdepasse` or `password`
+
+Other configurations:
+- `rememberMe` *(boolean)*: If set to `true`, Linkdirecte stores the encrypted refresh tokens, UUID, and session identifiers locally. This allows you to restore the session later without prompting the user for credentials.
+- `on2faRequired` *(function)*: A callback triggered if a 2FA challenge is present.
 
 ---
 
 ### `logout`
 
-Clears the current session token.
+Disconnects the active account, stops background keepalives, and completely wipes the session details from memory and storage.
 
 ```typescript
-function logout(): Promise<void>
+async function logout(): Promise<void>
 ```
 
 ---
 
 ### `refreshToken`
 
-Refreshes the current session token using a stored access token. Requires a storage adapter to be configured and `rememberMe: true` to have been used during a previous `login`.
+Renews the current session token behind the scenes. If you used `rememberMe: true` during your previous login, you can call this at startup to refresh your connection.
 
 ```typescript
-function refreshToken(): Promise<string>
+async function refreshToken(): Promise<string>
 ```
 
-After a successful refresh, the token keepalive is restarted automatically.
+---
 
-#### Returns
+## 🗂️ Type Definitions
 
-A `Promise<string>` containing the new session token.
+### `LoginResult`
 
-#### Throws
-
-- `EdAuthError`: If no account is active, no access token is found in storage, or the refresh fails and no `onCredentialsRequired` callback is configured.
-
-#### Example
+The return value of `login()` is a union:
 
 ```typescript
-import { refreshToken } from "linkdirecte";
+type LoginResult = LoginSuccess | LoginChallenge;
+```
 
-try {
-  const newToken = await refreshToken();
-  console.log("New token:", newToken);
-} catch (e) {
-  console.error("Failed to refresh token", e);
+### `LoginSuccess`
+
+Returned when the user is successfully logged in.
+
+```typescript
+interface LoginSuccess {
+  user: Account;       // The active student account details
+  token: string;       // Current API session token
+  sessionId: string;   // Unique session ID
 }
 ```
 
-## Related Types
+### `LoginChallenge`
 
-### `LoginOptions`
+Returned if EcoleDirecte requires a 2FA question response.
+
 ```typescript
-interface LoginOptions {
-  rememberMe?: boolean;
-  on2faRequired?: (
-    question: string,
-    choices: string[],
-  ) => number | string | Promise<number | string>;
-}
-
-interface LoginUnifiedOptions extends LoginOptions {
-  identifiant?: string;
-  username?: string;
-  identifier?: string;
-  motdepasse?: string;
-  password?: string;
+interface LoginChallenge {
+  type: "securityQuestion";
+  question: string;
+  choices: string[];
+  answer: (choiceIndexOrText: number | string) => Promise<LoginSuccess>;
 }
 ```
 
 ### `Account`
-The user account information returned upon successful login.
+
+Contains the student's profile, classes, and active modules:
+
 ```typescript
 interface Account {
   loginId: number;
   id: number;
   uid: string;
   identifiant: string;
-  accountType: AccountType;
+  accountType: "E" | "P" | "A" | "F"; // "E" for student
   firstName: string;
   lastName: string;
   email: string;

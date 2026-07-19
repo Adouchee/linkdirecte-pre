@@ -1,11 +1,15 @@
-# Type Reference
+# 🗂️ Complete Type Reference
 
-This page provides a reference for the TypeScript interfaces and types exported by the SDK.
+This index gathers and explains all public TypeScript interfaces and data structures exported by Linkdirecte. Use this as a quick-lookup reference when building typed integrations or setting up custom applications!
 
-## Core Configuration
+---
+
+## 🛠️ Configurations & Options
 
 ### `EdConfig`
-Global configuration options.
+
+Defines global parameters passed to `configure()`.
+
 ```typescript
 interface EdConfig {
   userAgent?: string;
@@ -18,25 +22,34 @@ interface EdConfig {
   offlineQueue?: boolean;
   prefetch?: PrefetchConfig;
   onError?: ErrorMiddleware;
-  on2faRequired?: (question: string, choices: string[]) => number | Promise<number>;
+  on2faRequired?: (
+    question: string,
+    choices: string[]
+  ) => number | string | Promise<number | string>;
   onCredentialsRequired?: () =>
     | { identifiant: string; motdepasse: string }
     | Promise<{ identifiant: string; motdepasse: string }>;
   cache?: CacheConfig;
+  cacheMaxEntries?: number;
 }
 ```
 
 ### `PrefetchConfig`
+
+Configures the background cache prefetching daemon.
+
 ```typescript
 interface PrefetchConfig {
   enabled?: boolean;
-  interval?: string | false; // e.g. "30s", "5m", "1h", or false to disable
+  interval?: string | false; // e.g., "30s", "5m", "1h", or false to disable
   modules?: string[];
 }
 ```
 
 ### `CacheConfig`
-Per-module cache duration overrides. Each value can be a duration string (e.g. `"5m"`) or `false` to disable caching.
+
+Per-module cache durations. You can configure how long items should stay cached.
+
 ```typescript
 interface CacheConfig {
   grades?: string | false;
@@ -51,7 +64,9 @@ interface CacheConfig {
 ```
 
 ### `StorageAdapter`
-Interface for implementing custom storage strategies.
+
+The standard interface for defining custom data storage persistence.
+
 ```typescript
 interface StorageAdapter {
   get(key: string): string | null | Promise<string | null>;
@@ -60,48 +75,50 @@ interface StorageAdapter {
 }
 ```
 
-### `ErrorMiddleware`
+---
+
+## 🔑 Session & Authentication
+
+### `LoginResult`
+
+The result returned from `login()` is a union type representing either a successful session or a 2FA prompt.
+
 ```typescript
-type ErrorMiddleware = (
-  error: any,
-  retry: (options?: { delay?: number }) => Promise<unknown>,
-) => void | Promise<void>;
+type LoginResult = LoginSuccess | LoginChallenge;
 ```
 
-## API Response
+### `LoginSuccess`
 
-### `EdResponse<T>`
-Generic API response envelope.
 ```typescript
-interface EdResponse<T> {
-  host: string;
-  code: number;
-  token?: string;
-  message: string;
-  data: T;
+interface LoginSuccess {
+  user: Account;
+  token: string;
+  sessionId: string;
 }
 ```
 
-## Account Types
+### `LoginChallenge`
 
-### `AccountType`
 ```typescript
-type AccountType = "E" | "P" | "A" | "F";
+interface LoginChallenge {
+  type: "securityQuestion";
+  question: string;
+  choices: string[];
+  answer: (choiceIndexOrText: number | string) => Promise<LoginSuccess>;
+}
 ```
-- `"E"`: Student (Élève)
-- `"P"`: Parent
-- `"A"`: Admin
-- `"F"`: Family
 
 ### `Account`
-The user account information returned upon successful login.
+
+Contains the profile and module details for a registered student.
+
 ```typescript
 interface Account {
   loginId: number;
   id: number;
   uid: string;
   identifiant: string;
-  accountType: AccountType;
+  accountType: "E" | "P" | "A" | "F"; // "E" for Student (Élève)
   firstName: string;
   lastName: string;
   email: string;
@@ -126,15 +143,8 @@ interface Account {
 }
 ```
 
-### `UserProfile`
-```typescript
-interface UserProfile {
-  token: string;
-  accounts: Account[];
-}
-```
-
 ### `AccountSettings`
+
 ```typescript
 interface AccountSettings {
   id: number;
@@ -148,56 +158,13 @@ interface AccountSettings {
 }
 ```
 
-## Auth Types
+---
 
-### `LoginResult`
-```typescript
-type LoginResult = LoginSuccess | LoginChallenge;
-```
+## 📊 Modules Types
 
-### `LoginSuccess`
-```typescript
-interface LoginSuccess {
-  user: Account;
-  token: string;
-  sessionId: string;
-}
-```
+### Grades Module
 
-### `LoginChallenge`
-```typescript
-interface LoginChallenge {
-  type: "securityQuestion";
-  question: string;
-  choices: string[];
-  answer: (choiceIndex: number) => Promise<LoginSuccess>;
-}
-```
-
-### `LoginOptions`
-```typescript
-interface LoginOptions {
-  rememberMe?: boolean;
-  on2faRequired?: (question: string, choices: string[]) => number | Promise<number>;
-}
-```
-
-## Error Types
-
-All errors extend the base `EdError` class.
-
-| Error Class | Description |
-| :--- | :--- |
-| `EdError` | Base error class. Contains `message`, `code`, `statusCode?`, and `raw?`. |
-| `EdAuthError` | Authentication or session errors. |
-| `EdNetworkError` | Network or transport errors. |
-| `EdRateLimitError` | HTTP 429 — rate limit exceeded. |
-| `EdApiError` | Non-success API response code. |
-| `EdTransformError` | Data transformation errors. |
-
-## Grades Types
-
-### `GradesResult`
+#### `GradesResult`
 ```typescript
 interface GradesResult {
   grades: GradeEntry[];
@@ -211,7 +178,7 @@ interface GradesResult {
 }
 ```
 
-### `GradeEntry`
+#### `GradeEntry`
 ```typescript
 interface GradeEntry {
   value: string;
@@ -231,7 +198,7 @@ interface GradeEntry {
 }
 ```
 
-### `SubjectEntry`
+#### `SubjectEntry`
 ```typescript
 interface SubjectEntry {
   subjectCode: string;
@@ -244,16 +211,18 @@ interface SubjectEntry {
 }
 ```
 
-## Timetable Types
+---
 
-### `TimetableResult`
+### Timetable Module
+
+#### `TimetableResult`
 ```typescript
 interface TimetableResult {
   timetable: TimetableEntry[];
 }
 ```
 
-### `TimetableEntry`
+#### `TimetableEntry`
 ```typescript
 interface TimetableEntry {
   id: number;
@@ -271,9 +240,11 @@ interface TimetableEntry {
 }
 ```
 
-## Messages Types
+---
 
-### `MessagesResult`
+### Messages Module
+
+#### `MessagesResult`
 ```typescript
 interface MessagesResult {
   messages?: {
@@ -284,7 +255,7 @@ interface MessagesResult {
 }
 ```
 
-### `MessageEntry`
+#### `MessageEntry`
 ```typescript
 interface MessageEntry {
   id: number;
@@ -299,35 +270,31 @@ interface MessageEntry {
 }
 ```
 
-### `GetMessagesOptions`
-```typescript
-interface GetMessagesOptions {
-  folderId?: number;
-  withContent?: boolean;
-  raw?: boolean;
-  explain?: boolean;
-}
-```
-
-### `SendMessageData`
+#### `SendMessageData`
 ```typescript
 interface SendMessageData {
   subject: string;
   content: string;
-  destinataires: unknown[];
+  destinataires: Array<{
+    id: number;
+    type: string;
+    [key: string]: any;
+  }>;
 }
 ```
 
-## Homework Types
+---
 
-### `HomeworkResult`
+### Homework Module
+
+#### `HomeworkResult`
 ```typescript
 interface HomeworkResult {
   [date: string]: HomeworkEntry[];
 }
 ```
 
-### `HomeworkEntry`
+#### `HomeworkEntry`
 ```typescript
 interface HomeworkEntry {
   id: number;
@@ -343,16 +310,11 @@ interface HomeworkEntry {
 }
 ```
 
-### `MarkAsDoneResult`
-```typescript
-interface MarkAsDoneResult {
-  success: boolean;
-}
-```
+---
 
-## Timeline Types
+### Timeline Module
 
-### `TimelineEntry`
+#### `TimelineEntry`
 ```typescript
 interface TimelineEntry {
   id: number;
@@ -366,20 +328,10 @@ interface TimelineEntry {
 }
 ```
 
-### `CorrelationType`
-```typescript
-type CorrelationType =
-  | "gradeVsPresence"
-  | "gradeVsDayOfWeek"
-  | "gradeVsTimeOfDay"
-  | "homeworkVsGrade"
-  | "gradeTrend";
-```
-
-### `Correlation`
+#### `Correlation`
 ```typescript
 interface Correlation {
-  type: CorrelationType;
+  type: "gradeVsPresence" | "gradeVsDayOfWeek" | "gradeVsTimeOfDay" | "homeworkVsGrade" | "gradeTrend";
   subject: string;
   finding: string;
   data: Record<string, number>;
@@ -388,9 +340,11 @@ interface Correlation {
 }
 ```
 
-## Attendance Types
+---
 
-### `AttendanceResult`
+### Attendance Module
+
+#### `AttendanceResult`
 ```typescript
 interface AttendanceResult {
   absences?: AttendanceEntry[];
@@ -401,7 +355,7 @@ interface AttendanceResult {
 }
 ```
 
-### `AttendanceEntry`
+#### `AttendanceEntry`
 ```typescript
 interface AttendanceEntry {
   id: number;
@@ -420,9 +374,11 @@ interface AttendanceEntry {
 }
 ```
 
-## Cloud Types
+---
 
-### `CloudNode`
+### Cloud Module
+
+#### `CloudNode`
 ```typescript
 interface CloudNode {
   id: string;
@@ -447,38 +403,36 @@ interface CloudNode {
 }
 ```
 
-### `CloudFolderNode`
+#### `CloudEntry`
 ```typescript
+type CloudEntry = CloudFolderNode | CloudFileNode;
+
 interface CloudFolderNode extends CloudNode {
   type: "folder";
   children: CloudNode[];
 }
-```
 
-### `CloudFileNode`
-```typescript
 interface CloudFileNode extends CloudNode {
   type: "file";
 }
 ```
 
-### `CloudEntry`
-```typescript
-type CloudEntry = CloudFolderNode | CloudFileNode;
-```
+---
 
-### `GetCloudOptions`
+### Documents Module
+
+#### `DocumentsResult`
 ```typescript
-interface GetCloudOptions {
-  depth?: number;
-  raw?: boolean;
-  explain?: boolean;
+interface DocumentsResult {
+  factures: DocumentEntry[];
+  grades?: DocumentEntry[];
+  viescolaire?: DocumentEntry[];
+  administratives?: DocumentEntry[];
+  toUploadList?: DocumentEntry[];
 }
 ```
 
-## Document Types
-
-### `DocumentEntry`
+#### `DocumentEntry`
 ```typescript
 interface DocumentEntry {
   id: number;
@@ -494,27 +448,18 @@ interface DocumentEntry {
 }
 ```
 
-### `DocumentsResult`
-```typescript
-interface DocumentsResult {
-  factures: DocumentEntry[];
-  grades?: DocumentEntry[];
-  viescolaire?: DocumentEntry[];
-  administratives?: DocumentEntry[];
-  toUploadList?: DocumentEntry[];
-}
-```
+---
 
-## Forms (QCM) Types
+### Forms (QCM) Module
 
-### `QcmsResult`
+#### `QcmsResult`
 ```typescript
 interface QcmsResult {
   associations?: QcmEntry[];
 }
 ```
 
-### `QcmEntry`
+#### `QcmEntry`
 ```typescript
 interface QcmEntry {
   id: number;
@@ -527,7 +472,7 @@ interface QcmEntry {
 }
 ```
 
-### `QcmDetailResult`
+#### `QcmDetailResult`
 ```typescript
 interface QcmDetailResult {
   qcmId: number;
@@ -537,51 +482,4 @@ interface QcmDetailResult {
     choices: Array<{ id: number; label: string }>;
   }>;
 }
-```
-
-## Listen (Polling) Types
-
-### `PollingConfig`
-```typescript
-interface PollingConfig {
-  interval?: number; // Default: 60,000 ms
-}
-```
-
-## Download Types
-
-### `DownloadFormat`
-```typescript
-type DownloadFormat = "buffer" | "blob" | "stream";
-```
-
-### `DownloadOptions`
-```typescript
-interface DownloadOptions {
-  as?: DownloadFormat;
-  filename?: string;
-  params?: Record<string, unknown>;
-}
-```
-
-## Debug Types
-
-### `DebugInfo`
-```typescript
-interface DebugInfo {
-  rawResponse: unknown;
-  transformLog: any[];
-  requestDump: {
-    url: string;
-    headers: Record<string, string>;
-    body: any;
-  };
-  cacheHit: boolean;
-  retries: number;
-}
-```
-
-### `WithDebug<T>`
-```typescript
-type WithDebug<T> = T & { _debug?: DebugInfo };
 ```

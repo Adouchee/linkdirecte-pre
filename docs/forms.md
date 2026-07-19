@@ -1,12 +1,44 @@
-# Forms & QCMs
+# 📝 Forms & QCMs (Quizzes)
 
-The forms module manages online quizzes (QCMs) and assessments.
+The Forms module manages online assessments, questionnaires, and multi-choice quizzes (QCMs) assigned to students by teachers.
 
-## Functions
+---
+
+## 🚀 Getting Started
+
+Here's how to fetch assigned quizzes, inspect their structures, and respond to questions.
+
+```typescript
+import { getQcms, getQcmDetail } from "linkdirecte";
+
+// 1. Fetch available quizzes
+const result = await getQcms();
+const activeQuiz = result.associations?.[0];
+
+if (activeQuiz) {
+  console.log(`Let's work on: ${activeQuiz.title || "Untitled Quiz"}`);
+
+  // 2. Fetch questions for this quiz
+  const details = await getQcmDetail(activeQuiz.qcmId, activeQuiz.id);
+
+  details.questions.forEach((question, index) => {
+    console.log(`Question ${index + 1}: ${question.label}`);
+    question.choices.forEach(choice => {
+      console.log(`  [ ] ID: ${choice.id} | ${choice.label}`);
+    });
+  });
+} else {
+  console.log("No quizzes assigned right now!");
+}
+```
+
+---
+
+## 📖 API Reference
 
 ### `getQcms`
 
-Lists all QCM associations available for the student.
+Retrieves a list of all assigned questionnaires/QCMs.
 
 ```typescript
 function getQcms(options?: {
@@ -15,34 +47,11 @@ function getQcms(options?: {
 }): Promise<QcmsResult>
 ```
 
-#### Returns
-A `QcmsResult` object with an `associations` array of `QcmEntry` objects.
-
-### `QcmEntry`
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `number` | Entry ID. |
-| `qcmId` | `number` | ID of the questionnaire. |
-| `subjectLabel` | `string` | Subject name (optional). |
-| `title` | `string` | Title of the QCM (optional). |
-| `teacherName` | `string` | Teacher name (optional). |
-| `date` | `Date` | Date (optional). |
-| `status` | `string` | Status (optional). |
-
-#### Example
-
-```typescript
-import { getQcms } from "linkdirecte";
-
-const result = await getQcms();
-result.associations?.forEach(qcm => {
-  console.log(`${qcm.title ?? "QCM"} (${qcm.status ?? "unknown status"})`);
-});
-```
+---
 
 ### `getQcmDetail`
 
-Retrieves the detailed structure and questions of a specific QCM.
+Retrieves the question set and candidate choices for a specific QCM.
 
 ```typescript
 function getQcmDetail(
@@ -52,27 +61,11 @@ function getQcmDetail(
 ): Promise<QcmDetailResult>
 ```
 
-#### Returns
-
-A `QcmDetailResult` containing the question structure:
-- `qcmId`: The QCM ID.
-- `questions`: Array of questions, each with `id`, `label`, and `choices` (array of `{ id, label }`).
-
-#### Example
-
-```typescript
-import { getQcmDetail } from "linkdirecte";
-
-const detail = await getQcmDetail(456, 789);
-detail.questions.forEach(q => {
-  console.log(`Q: ${q.label}`);
-  q.choices.forEach(c => console.log(`  - ${c.label}`));
-});
-```
+---
 
 ### `updateQcmStatus`
 
-Updates the status of a QCM (e.g., starting or finishing the assessment).
+Updates the student's status on a quiz (e.g., when they start or complete it).
 
 ```typescript
 function updateQcmStatus(
@@ -84,11 +77,14 @@ function updateQcmStatus(
 ): Promise<{ success: boolean }>
 ```
 
-- `idParticipant`: The participant ID obtained from the QCM detail response.
+- `idParticipant`: Participant ID returned in the QCM details.
+- `action`: Use `"updateStartDate"` when the student opens/starts the test, and `"updateEndDate"` when finalizing and submitting the complete exam.
+
+---
 
 ### `submitQcmAnswer`
 
-Submits an answer for a specific question within a QCM.
+Submits selected choice IDs for a single question.
 
 ```typescript
 function submitQcmAnswer(
@@ -104,20 +100,34 @@ function submitQcmAnswer(
 ): Promise<{ success: boolean }>
 ```
 
-- `idParticipant`: The participant ID obtained from the QCM detail response.
+- `choiceIds`: An array of numeric choice IDs the student selected for this question.
 
 ---
 
-## Types
+## 🗂️ Type Definitions
 
 ### `QcmsResult`
+
 ```typescript
 interface QcmsResult {
   associations?: QcmEntry[];
 }
 ```
 
+### `QcmEntry`
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `id` | `number` | The association ID. |
+| `qcmId` | `number` | The questionnaire ID. |
+| `title` | `string` *(optional)* | Title of the test. |
+| `subjectLabel` | `string` *(optional)* | Subject label. |
+| `teacherName` | `string` *(optional)* | Teacher who assigned the QCM. |
+| `date` | `Date` *(optional)* | The date when the quiz was assigned. |
+| `status` | `string` *(optional)* | Quiz state (e.g. `"Not Started"`, `"In Progress"`). |
+
 ### `QcmDetailResult`
+
 ```typescript
 interface QcmDetailResult {
   qcmId: number;

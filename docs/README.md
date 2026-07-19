@@ -1,78 +1,100 @@
-# Linkdirecte Documentation
+# 📚 Linkdirecte Documentation
 
-Welcome to the exhaustive documentation for `Linkdirecte`, a modern, resilient, and tree-shakable SDK for the private EcoleDirecte API.
+Welcome to the official, exhaustive guide for **Linkdirecte**! Linkdirecte is a modern, light, resilient, and fully tree-shakable SDK tailored for interfacing with the private EcoleDirecte API.
+
+---
 
 ## 📖 Table of Contents
 
 ### Getting Started
-- [Authentication](auth.md) - Connecting to EcoleDirecte and handling 2FA.
-- [Core Functionalities](core.md) - Global configuration, storage, and resilience.
+- [🔑 Authentication](auth.md) - Learn how to log in, handle Two-Factor Authentication (2FA) challenges, and manage active sessions.
+- [⚙️ Core Configurations & Storage](core.md) - Adjust network behaviors, set up persistent storage, handle downloads, and configure encryption passkeys.
 
-### Main Modules
-- [Grades](grades.md) - Fetching student grades.
-- [Timetable](timetable.md) - Schedule management.
-- [Messages](messages.md) - Full messaging system support.
-- [Homework](homework.md) - Managing the student's assignment diary.
+### Academic Modules
+- [🎓 Grades & Statistics](grades.md) - Retrieve student grades, term periods, and computed averages.
+- [📅 Timetable](timetable.md) - Fetch class schedules or retrieve third-party calendar (iCal) URLs.
+- [📚 Homework](homework.md) - Browse Cahier de Texte assignments, read detailed HTML text, download attachments, and mark homework as done.
+
+### Communication & School Life
+- [✉️ Messages](messages.md) - Connect to the mailbox, browse custom folders, retrieve attachment details, and reply to teachers.
+- [🎒 Attendance & School Life](attendance.md) - Track absences, late arrivals, and school punishments.
+- [📅 Timeline & Analytics](timeline.md) - Retrieve student activities or perform statistical correlation passes.
 
 ### Additional Modules
-- [Timeline & Correlations](timeline.md) - Activity feed and data analysis.
-- [Attendance](attendance.md) - Absences, delays, and school life.
-- [Cloud Storage](cloud.md) - Accessing and managing cloud files.
-- [Documents](documents.md) - Administrative documents and report cards.
-- [Forms & QCMs](forms.md) - Quizzes and online assessments.
-- [Events & Polling](listen.md) - Reacting to updates in real-time.
-- [Settings](settings.md) - Account preferences and management.
+- [☁️ Cloud Storage](cloud.md) - Work with the student's personal cloud space ("Porte-documents"), manage folders, or delete files.
+- [📄 Official Documents](documents.md) - Download administrative paperwork, invoices, and quarterly report cards.
+- [📝 Forms & QCMs](forms.md) - Fetch assigned quizzes, inspect questions, and submit answer choices.
+- [🔔 Event Polling](listen.md) - Hook up real-time event listeners for grades, messages, or activities.
 
-### Reference
-- [Type Reference](types.md) - Overview of common TypeScript interfaces.
+### Type Reference
+- [🗂️ Complete Type Reference](types.md) - Quick reference for public TypeScript interfaces and data models.
+
+---
 
 ## 🚀 Installation
 
+Linkdirecte works natively across almost all modern runtimes and environments with **zero extra configuration**.
+
+To install Linkdirecte in your project, choose your preferred package manager:
+
+### Using npm (Node.js)
+```bash
+npm install linkdirecte
+```
+
+### Using Bun
 ```bash
 bun add linkdirecte
-# or
-npm install linkdirecte
-# or
+```
+
+### Using Deno
+```bash
+deno add npm:linkdirecte
+```
+
+### Using Yarn
+```bash
 yarn add linkdirecte
 ```
 
-### Compatibility
+---
 
-| Runtime | Supported |
-| --- | --- |
-| Node.js 18+ | ✅ Full |
-| Bun | ✅ Full |
-| Deno | ✅ Full |
-| React Native / Expo (Hermes) | ✅ Full |
-| Browsers (Chrome, Safari, Firefox, Edge) | ✅ Full |
-| Browser Extensions (Manifest V3) | ✅ Full |
-| Cloudflare Workers | ✅ Full |
-| Vercel Edge Runtime | ✅ Full |
-| Capacitor / Cordova | ✅ Full |
-| Electron | ✅ Full |
+## ⚡ Runtime Support & Compatibility
 
-> **Timer-based features** (token keepalive, cache cleanup, auto-prefetch, polling) silently no-op in environments that lack `setInterval` (e.g. Cloudflare Workers, Vercel Edge). All other features work identically everywhere.
+| Environment | Supported | Notes |
+| :--- | :--- | :--- |
+| **Node.js (v18+)** | ✅ Yes | Full support. |
+| **Bun** | ✅ Yes | Full support. Native speed-up! |
+| **Deno** | ✅ Yes | Full support. |
+| **Browsers (Chrome, Safari, Firefox, Edge)** | ✅ Yes | Native storage auto-detection (IndexedDB/localStorage). |
+| **React Native / Expo (Hermes)** | ✅ Yes | Fully compatible. Storage can be bound to AsyncStorage. |
+| **Cloudflare Workers / Vercel Edge** | ✅ Yes | Fully compatible. |
+| **Capacitor / Electron** | ✅ Yes | Full support. |
 
-## 🛠️ Basic Usage
+> **Note on Timer-Based Features**: Background processes like automated token keepalives, polling loops, or cache prefetching rely on intervals. In serverless environments that lack continuous timers (e.g., short-lived Cloudflare Workers or Vercel Edge runs), these processes will quietly no-op. All regular API requests, custom cache expirations, and active session refreshes work identically everywhere!
+
+---
+
+## ⚡ Quick Start Example
+
+Here is a super simple script to log in, handle security questions if required, and fetch academic grades:
 
 ```typescript
 import { login, getGrades } from "linkdirecte";
 
-// Storage is auto-detected — zero config in browsers.
-// Node.js: configure({ storage: nodeStorage() })
+// 1. Log in. Linkdirecte will handle authentication flow under the hood!
+const session = await login("your_username", "your_password");
 
-// Log in
-const session = await login("username", "password");
-
-// session is either LoginSuccess or LoginChallenge (2FA)
+// 2. If 2FA is needed, respond easily
 if ("question" in session) {
-  console.log(session.question);
-  const success = await session.answer(0);
-  console.log(`Hello, ${success.user.firstName}!`);
-} else {
-  console.log(`Hello, ${session.user.firstName}!`);
+  console.log(`EcoleDirecte asks: "${session.question}"`);
+  console.log("Choices are:", session.choices);
+
+  // Submit the index (or string value) of the correct choice:
+  await session.answer(0);
 }
 
-// Fetch grades
-const grades = await getGrades();
+// 3. You are now logged in and verified. Fetch grades instantly!
+const gradesInfo = await getGrades();
+console.log(`Your average grade is: ${gradesInfo.subjects[0]?.average ?? "N/A"}`);
 ```
