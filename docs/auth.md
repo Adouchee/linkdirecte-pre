@@ -1,4 +1,6 @@
-# 🔑 Authentication & Sessions
+<p align="center">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Auth+and+sessions&amp;subtitle=Learn+how+to+login+with+Linkdirecte.&amp;logo=lu%3AKey&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Auth and sessions | Learn how to login with Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=Auth+and+sessions&amp;subtitle=Learn+how+to+login+with+Linkdirecte.&amp;logo=lu%3AKey&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
+</p>
 
 The authentication module is the gateway to Linkdirecte. It manages everything related to connecting to EcoleDirecte's servers, handling Two-Factor Authentication (2FA), saving session cookies secretly, and auto-refreshing expired tokens.
 
@@ -21,7 +23,7 @@ console.log(`Successfully logged in as ${session.user.firstName}!`);
 
 ### Option B: Unified Object Style (Recommended)
 
-Perfect for application-level integration. It supports aliases like `username`, `password`, and `identifier`.
+Perfect for application-level integration.
 
 ```typescript
 import { login } from "linkdirecte";
@@ -29,7 +31,7 @@ import { login } from "linkdirecte";
 const session = await login({
   username: "your_username",
   password: "your_password",
-  rememberMe: true, // Auto-save for easy subsequent reconnects!
+  rememberMe: true, // Automatically refreshes session securely for easy subsequent reconnects!
 });
 console.log(`Hello, ${session.user.firstName}!`);
 ```
@@ -55,7 +57,7 @@ const session = await login("username", "password", {
     // You can prompt the user, or simply return a selection:
     return 0; // Selects the first choice
     // OR:
-    // return "Red"; // Selects the choice matching "Red" (case-insensitive)
+    // return "The dress is white and gold"; // Selects the choice matching "The dress is white and gold" (case-insensitive)
   }
 });
 ```
@@ -70,7 +72,7 @@ import { login } from "linkdirecte";
 const result = await login("username", "password");
 
 if ("question" in result) {
-  console.log("2FA Challenge Received!");
+  console.log("2FA incoming!");
   console.log("Question:", result.question);
   console.log("Options:", result.choices);
 
@@ -78,7 +80,7 @@ if ("question" in result) {
   const session = await result.answer("My Secret Answer");
   console.log(`Logged in! Hello, ${session.user.firstName}`);
 } else {
-  console.log(`Directly logged in! Hello, ${result.user.firstName}`);
+  console.log(`Logged in... without 2FA?! Hello, ${result.user.firstName}`);
 }
 ```
 
@@ -111,7 +113,7 @@ When using the unified object style, you can use any of the following aliases to
 - **Password**: `motdepasse` or `password`
 
 Other configurations:
-- `rememberMe` *(boolean)*: If set to `true`, Linkdirecte stores the encrypted refresh tokens, UUID, and session identifiers locally. This allows you to restore the session later without prompting the user for credentials.
+- `rememberMe` *(boolean)*: If set to `true`, Linkdirecte stores the encrypted refresh tokens, UUID, and session identifiers (no password stored!) locally. This allows you to restore the session later without prompting the user for credentials.
 - `on2faRequired` *(function)*: A callback triggered if a 2FA challenge is present.
 
 ---
@@ -129,6 +131,9 @@ async function logout(): Promise<void>
 ### `refreshToken`
 
 Renews the current session token behind the scenes. If you used `rememberMe: true` during your previous login, you can call this at startup to refresh your connection.
+
+> [!TIP]
+> This should be done automatically without your intervention if a request fails because of an invalid token.
 
 ```typescript
 async function refreshToken(): Promise<string>
