@@ -73,7 +73,7 @@ export function buildHeaders(
   };
 
   if (config.proxyUrl) {
-    headers['X-Proxy-Base-URL'] = BASE_API_URL;
+    headers['X-Procsy-Base-URL'] = BASE_API_URL;
   }
 
   if (!options.skipAuth) {

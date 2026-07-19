@@ -70,7 +70,7 @@ if ('question' in result) {
 ```typescript
 interface EdConfig {
   userAgent?: string;
-  proxyUrl?: string;
+  proxyUrl?: string; // Base URL of a Procsy instance (https://github.com/Scolup/Procsy) to relay all API requests through (bypasses CORS in browsers)
   maxRetries?: number;
   retryDelay?: number;
   concurrency?: number;

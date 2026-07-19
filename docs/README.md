@@ -12,7 +12,7 @@ Welcome to the official, exhaustive guide for **Linkdirecte**! Linkdirecte is _t
 
 ### Getting Started
 - [🔑 Authentication](auth.md) | Learn how to log in, handle Two-Factor Authentication (2FA) challenges, and manage active sessions.
-- [⚙️ Core Configurations & Storage](core.md) | Adjust network behaviors, set up persistent storage, handle downloads, and configure encryption passkeys.
+- [⚙️ Core Configurations & Storage](core.md) | Adjust network behaviors, set up persistent storage, proxy configuration, handle downloads, and configure encryption passkeys.
 
 ### Academic Modules
 - [🎓 Grades & Statistics](grades.md) | Retrieve student grades, term periods, and computed averages.
