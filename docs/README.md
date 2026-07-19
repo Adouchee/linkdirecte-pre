@@ -94,8 +94,8 @@ if ("question" in session) {
   console.log(`EcoleDirecte asks: "${session.question}"`);
   console.log("Choices are:", session.choices);
 
-  // Submit the index (or string value) of the correct choice:
-  await session.answer(0);
+  // Submit the string value (or index number) of the correct choice:
+  await session.answer("Cereal before milk");
 }
 
 // 3. You are now logged in and verified. Fetch grades instantly!
