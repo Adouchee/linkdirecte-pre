@@ -1,12 +1,41 @@
-# Grades & Statistics
+# 🎓 Grades & Statistics
 
-The grades module provides functions to fetch student grades.
+The Grades module provides deep, structured access to a student's grades, averages, and subject performance metrics. It transforms the flat EcoleDirecte grade log into a cohesive, organized map of subjects, complete with statistical calculations.
 
-## Data Fetching
+---
+
+## 🚀 Getting Started
+
+Here's how to fetch your latest grades and output your average for each subject:
+
+```typescript
+import { getGrades } from "linkdirecte";
+
+const result = await getGrades();
+
+console.log(`Successfully loaded ${result.grades.length} grades!`);
+
+result.subjects.forEach(subject => {
+  console.log(`--- ${subject.subjectLabel} ---`);
+  console.log(`Student Average: ${subject.average ?? "N/A"}`);
+  console.log(`Class Average: ${subject.classAverage ?? "N/A"}`);
+
+  if (subject.grades.length > 0) {
+    console.log("Recent Grades:");
+    subject.grades.slice(0, 3).forEach(grade => {
+      console.log(`  • ${grade.value}/${grade.outOf} (Coeff: ${grade.coefficient})`);
+    });
+  }
+});
+```
+
+---
+
+## 📖 API Reference
 
 ### `getGrades`
 
-Fetches the student's grades for the current or a specific period.
+Fetches grades and statistics for either the current school period or a specific year.
 
 ```typescript
 function getGrades(options?: {
@@ -16,73 +45,70 @@ function getGrades(options?: {
 }): Promise<GradesResult>
 ```
 
-- `periodId`: (Optional) ID of the period (e.g., "A001").
-- `raw`: If true, returns the raw API response.
-- `explain`: If true, returns debug information along with the response.
+#### Parameters
+
+- `options` *(optional)*:
+  - `periodId` *(string)*: Focuses the query on a specific school term or period (e.g. `"A001"`). If not specified, returns grades across all available periods for the current year.
+  - `raw` *(boolean)*: Set to `true` to disable all key renaming and type conversions, returning the raw API response as is.
+  - `explain` *(boolean)*: Includes networking and cache statistics in a `_debug` property.
 
 #### Returns
 
-A `GradesResult` object containing:
-- `grades`: Array of `GradeEntry` objects (flat list of all grades).
-- `subjects`: Array of `SubjectEntry` objects (grades grouped by subject).
-- `averages`: Array of subject averages (code, average, classAverage).
-- `periods`: Array of available periods (code, label).
-
-#### Example
-
-```typescript
-import { getGrades } from "linkdirecte";
-
-const result = await getGrades();
-
-console.log(`You have ${result.grades.length} grades across ${result.subjects.length} subjects.`);
-
-result.subjects.forEach(subject => {
-  console.log(`${subject.subjectLabel}: ${subject.average ?? "N/A"} (class avg: ${subject.classAverage ?? "N/A"})`);
-});
-```
+A promise that resolves to a unified `GradesResult` object.
 
 ---
 
-## Types
+## 🗂️ Type Definitions
 
 ### `GradesResult`
+
 ```typescript
 interface GradesResult {
-  grades: GradeEntry[];
-  subjects: SubjectEntry[];
-  averages?: Array<{
+  grades: GradeEntry[];               // Flat list of every single grade
+  subjects: SubjectEntry[];           // Grades grouped by subject with computed averages
+  averages?: Array<{                  // Overall statistical summaries
     subjectCode: string;
     average: number;
     classAverage?: number;
   }>;
-  periods?: Array<{ code: string; label: string }>;
+  periods?: Array<{                  // List of semesters or terms found
+    code: string;
+    label: string;
+  }>;
 }
 ```
 
 ### `GradeEntry`
-| Field | Type | Description |
+
+| Property | Type | Description |
 | :--- | :--- | :--- |
-| `value` | `string` | The grade value (e.g., "15"). |
-| `outOf` | `string` | Maximum possible value (e.g., "20"). |
-| `coefficient` | `number` | Coefficient of the grade. |
-| `isLetter` | `boolean` | Whether the grade is a letter grade. |
-| `isTest` | `boolean` | Whether it was a test (vs continuous assessment). |
-| `date` | `Date` | Date of the grade. |
-| `subjectCode` | `string` | Subject code. |
-| `subjectLabel` | `string` | Subject name. |
-| `periodCode` | `string` | Period code. |
-| `entryDate` | `Date` | Date the grade was entered. |
-| `teacherName` | `string` | Teacher name (optional). |
-| `testType` | `string` | Type of test (optional). |
+| `value` | `string` | The grade value (e.g. `"18.5"`, or `"Abs"` for absent). |
+| `outOf` | `string` | The scale of the grade (e.g. `"20"`). |
+| `coefficient` | `number` | Weight of this grade in overall averages. |
+| `isLetter` | `boolean` | `true` if this grade is marked with a letter grade (like A, B, C) instead of a number. |
+| `isTest` | `boolean` | Indicates whether the entry represents a formal test. |
+| `date` | `Date` | The date when the test/assignment was taken. |
+| `subjectCode` | `string` | Unique code of the subject. |
+| `subjectLabel` | `string` | The title of the subject (e.g., `"Mathématiques"`). |
+| `periodCode` | `string` | The term/period this grade belongs to. |
+| `entryDate` | `Date` | The exact day the grade was posted online. |
+| `teacherName` | `string` *(optional)* | Name of the teacher who graded this test. |
+| `testType` | `string` *(optional)* | Type category of the exam. |
+| `subSubjectCode` | `string` *(optional)* | Sub-category code. |
+| `subSubjectLabel` | `string` *(optional)* | Sub-category label. |
 
 ### `SubjectEntry`
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `subjectCode` | `string` | Subject code. |
-| `subjectLabel` | `string` | Subject name. |
-| `coefficient` | `number` | Overall coefficient. |
-| `teacherName` | `string` | Teacher name (optional). |
-| `grades` | `GradeEntry[]` | Grades for this subject. |
-| `average` | `number` | Student's average (optional). |
-| `classAverage` | `number` | Class average (optional). |
+
+Grouped summary of performance for a specific class:
+
+```typescript
+interface SubjectEntry {
+  subjectCode: string;               // Unique subject code
+  subjectLabel: string;              // Name of the class
+  coefficient: number;               // Subject weight
+  grades: GradeEntry[];              // Array of grades within this subject
+  average?: number;                  // Computed average for the active student
+  classAverage?: number;             // Class average for comparison
+  teacherName?: string;              // Name of the main teacher
+}
+```

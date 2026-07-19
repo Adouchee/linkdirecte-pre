@@ -6,68 +6,109 @@
   <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/group/npm/linkdirecte+github/Scolup/Linkdirecte/stars+github/Scolup/Linkdirecte/license+badge/Actively-maintained-22c55e.svg?variant=secondary&amp;theme=blue&amp;mode=light" /><img alt="badge group" src="https://shieldcn.dev/group/npm/linkdirecte+github/Scolup/Linkdirecte/stars+github/Scolup/Linkdirecte/license+badge/Actively-maintained-22c55e.svg?variant=secondary&amp;theme=blue" /></picture>
 </p>
 
-## ⭐️ Features
+**Linkdirecte** is a ultra-modern, blazing fast, resilient, and fully tree-shakable TypeScript/JavaScript SDK for interacting with the private **EcoleDirecte API**.
 
-* 🌳 Tree-shakeable
-* 🚪 Login automatically handled (2FA, GTK, cn/cv, session refresh…)
-* 🛣️ Built-in proxy support (for web usage)
-* 🧠 Simple and type-safe data manipulation
-* 💡 Output simplified
-* 🛜 Offline handled
-* 🎓 Support for most student features _(parent accounts soon!)_
-* 🌐 Compatible with Node.js 18+, Bun, Deno, browsers, Cloudflare Workers, React Native / Expo, Capacitor, Electron, and more
-* 🔒 No password stored
+Whether you are building custom widgets, native mobile apps, desktop clients, or automation dashboards, Linkdirecte handles all the messy protocol details so you can focus on building what matters.
 
-## 🚀 Quick start
+---
 
-Linkdirecte is available as an **npm package**.
+## ⭐️ Key Features
 
+- 🌳 **Tree-Shakeable & Lightweight** — Import only what you use, maintaining minimal bundle size.
+- 🚪 **Hands-Free Authentication** — Session cookies, tokens, Two-Factor Challenges (2FA), double auth states, and token refreshes are fully automated silently.
+- 🛣️ **Built-in Proxy Support** — Perfect for running directly in client web-browsers with standard CORS gateways.
+- 🧠 **Type-Safe Mappings** — Dynamic French-to-English translation of API keys, timestamp normalization into JS `Date` objects, and automated Base64 HTML decoding.
+- 🛜 **Offline Resilience** — Local caches and built-in offline action queues for marking homework as done.
+- 🎓 **Rich Feature Set** — Supports Grades, Timetables, Homework calendars, Messages, Attendance records, Cloud folder management, and more.
+- 🌐 **Ubiquitous Compatibility** — Works flawlessly on Node.js 18+, Bun, Deno, modern Web Browsers, Cloudflare Workers, React Native, Capacitor, Electron, etc.
+- 🔒 **Secure by Design** — Absolutely zero credentials or passwords stored; supports transparent local AES-GCM data encryption.
+
+---
+
+## 🚀 Quick Start
+
+Get Linkdirecte up and running in under a minute!
+
+### 1. Install the SDK
+
+Using **npm**:
 ```bash
 npm install linkdirecte
 ```
 
+Using **Bun**:
 ```bash
-bun install linkdirecte
+bun add linkdirecte
 ```
 
-Easily log in _(Linkdirecte will handle the rest!)_ :
+### 2. Log In Easily
+
+Let Linkdirecte log you in, handle token storage, and coordinate security questions:
 
 ```typescript
-import { login } from "linkdirecte"
+import { login } from "linkdirecte";
 
-const result = await login("youridentifiant", "yourpassword", {
-  on2faRequired: (question, choices) => {
-    // Handle 2FA challenge
-    console.log("Security question:", question)
-    console.log("Choices:", choices)
-    // Return the index of the selected choice
-    return 0 // Example: select first choice
+const result = await login("your_username", "your_password", {
+  rememberMe: true, // Auto-saves session for seamless subsequent loads
+  on2faRequired: async (question, choices) => {
+    console.log("EcoleDirecte Security Question:", question);
+    console.log("Choices:", choices);
+
+    // Choose your answer: return either the choice index (number) or text (string)
+    return 0; // Selects the first choice
   }
-})
-// Linkdirecte saves the token silently and will automatically use it for subsequent requests. You never need to handle login again!
+});
+
+console.log(`Success! Logged in as ${result.user.firstName} ${result.user.lastName}`);
 ```
 
-Now you can call the API methods you need without worrying about authentication.
+### 3. Fetch Student Data
+
+Once authenticated, call any of Linkdirecte's modular methods. You never need to handle authorization tokens manually again:
 
 ```typescript
-import { getGrades } from "linkdirecte"
+import { getGrades } from "linkdirecte";
 
-const gradesResult = await getGrades()
+const gradesResult = await getGrades();
 
-console.log("Grades:", gradesResult.grades)
-console.log("Subjects:", gradesResult.subjects)
+console.log(`Loaded ${gradesResult.grades.length} grades!`);
+console.log(`Your average is: ${gradesResult.subjects[0]?.average ?? "N/A"}`);
 ```
 
-Full docs are available in [the `docs` directory](docs/).
+---
 
-## ⚖️ Legal
+## 📖 Comprehensive Documentation
 
-Linkdirecte is licensed under the **Affero General Public License 3** (AGPL 3). No warranty. This means if you use Linkdirecte in your project and make it publicly available by any way (executable, website, server...), you _must_ make it open-source under the same license.
+Our documentation is designed to be highly readable and beginner-friendly. For full instructions, configuration guides, and references, explore the **[docs directory](docs/)**:
+
+* [🔑 Authentication & 2FA Setup](docs/auth.md)
+* [⚙️ Core SDK Configuration & Encryption](docs/core.md)
+* [🎓 Grades & Performance Stats](docs/grades.md)
+* [📅 Class Schedules & Timetables](docs/timetable.md)
+* [📚 Homework Cahier de Texte](docs/homework.md)
+* [✉️ Messaging & Email Inbox](docs/messages.md)
+* [🎒 Absences & Lateness Records](docs/attendance.md)
+* [☁️ Cloud File Storage & Porte-documents](docs/cloud.md)
+* [📄 Official Reports & Documents](docs/documents.md)
+* [📝 Online Forms & Quizzes (QCM)](docs/forms.md)
+* [🔔 Event Hooks & Polling Systems](docs/listen.md)
+* [🗂️ Complete Type Reference](docs/types.md)
+
+---
+
+## ⚖️ License & Legal
+
+Linkdirecte is licensed under the **Affero General Public License v3** (AGPL 3.0).
+
+This means if you utilize Linkdirecte inside a project and make it publicly available (such as an executable download, mobile application, or web/server service), you **must** make your project open-source under the same license terms.
 
 > [!TIP]
 > For projects under GPL 3.0, **you don't have to change your license!** GPL and AGPL are fully compatible. You are however required to use AGPL if you host Linkdirecte on a server.
 
-This project is **not affiliated** in any way with Aplim.
+*This project is an independent third-party development and is **not affiliated or sponsored** in any way with Aplim or EcoleDirecte.*
 
-> [!IMPORTANT]
-> This software was built in the goal of making data handling easier for anyone working with EcoleDirecte’s data. **Please don’t use this for malicious purposes.**
+---
+
+<p align="center">
+  Made with ❤️ by typeof (Scolup)
+</p>

@@ -1,12 +1,34 @@
-# Attendance & Life School
+# 🎒 Attendance & School Life
 
-The attendance module provides information regarding student absences, delays, and other school life events.
+The attendance module makes it super easy to check on a student's absences, delays, and any disciplinary events (like punishments) recorded in EcoleDirecte.
 
-## Functions
+## 🚀 Getting Started
+
+To fetch attendance records, you'll use the `getAttendance` function. This retrieves a comprehensive summary of the student's school life events.
+
+```typescript
+import { getAttendance } from "linkdirecte";
+
+const data = await getAttendance();
+
+// Check if there are any absences
+if (data.absences && data.absences.length > 0) {
+  console.log(`Oh! You have ${data.absences.length} registered absence(s).`);
+  data.absences.forEach(absence => {
+    console.log(`- Date: ${absence.date.toLocaleDateString()} | Reason: ${absence.reason || "No reason specified"}`);
+  });
+} else {
+  console.log("Hooray! No absences recorded.");
+}
+```
+
+---
+
+## 📖 API Reference
 
 ### `getAttendance`
 
-Fetches the student's attendance records (absences, lateness, sanctions).
+Fetches the student's full attendance history, including lateness and punishments.
 
 ```typescript
 function getAttendance(options?: {
@@ -15,52 +37,50 @@ function getAttendance(options?: {
 }): Promise<AttendanceResult>
 ```
 
+#### Parameters
+
+- `options` *(optional)*:
+  - `raw` *(boolean)*: If set to `true`, Linkdirecte returns the raw, unmodified API response directly from EcoleDirecte.
+  - `explain` *(boolean)*: If set to `true`, includes a special `_debug` property on the result containing detailed HTTP and cache logs.
+
 #### Returns
 
-An `AttendanceResult` object containing:
-- `absences`: Array of absence `AttendanceEntry` objects.
-- `delays`: Array of delay `AttendanceEntry` objects.
-- `punishments`: Array of punishment `AttendanceEntry` objects.
-- `attendance`: Array of general attendance entries.
-- `settings`: Display settings.
-
-### `AttendanceEntry`
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `number` | Unique ID of the entry. |
-| `date` | `Date` | Date of the event. |
-| `type` | `string` | Event type (e.g., `"Absence"`, `"Retard"`). |
-| `subjectLabel` | `string` | Related subject (optional). |
-| `isJustified` | `boolean` | Whether it has been justified (optional). |
-| `justificationType` | `string` | Type of justification (optional). |
-| `teacherName` | `string` | Teacher name (optional). |
-| `licensePoints` | `number` | License points deducted (optional). |
-| `studentId` | `number` | Student ID (optional). |
-| `reason` | `string` | Reason for absence/delay (optional). |
-| `justifiedOnline` | `boolean` | Whether it was justified online (optional). |
-| `dontNeedJustification` | `boolean` | Whether justification is not required (optional). |
-| `day` | `Date` | Day reference (optional). |
+A promise that resolves to an `AttendanceResult` object.
 
 ---
 
-## Types
+## 🗂️ Type Definitions
 
 ### `AttendanceResult`
+
+This object groups different categories of school life events together:
+
 ```typescript
 interface AttendanceResult {
-  absences?: AttendanceEntry[];
-  delays?: AttendanceEntry[];
-  punishments?: AttendanceEntry[];
-  attendance?: AttendanceEntry[];
-  settings?: Record<string, unknown>;
+  absences?: AttendanceEntry[];      // List of absences
+  delays?: AttendanceEntry[];        // List of latenesses/delays
+  punishments?: AttendanceEntry[];   // List of punishments/sanctions
+  attendance?: AttendanceEntry[];    // General school life/attendance logs
+  settings?: Record<string, any>;    // Configuration parameters
 }
 ```
 
-#### Example
+### `AttendanceEntry`
 
-```typescript
-import { getAttendance } from "linkdirecte";
+Each entry provides detailed context about a specific school life event:
 
-const data = await getAttendance();
-console.log(`Total absences: ${data.attendance.length}`);
-```
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `id` | `number` | A unique identifier for this record. |
+| `date` | `Date` | The exact date and time the event occurred. |
+| `type` | `string` | The type of event (for example, `"Absence"`, `"Retard"`, `"Punition"`). |
+| `subjectLabel` | `string` *(optional)* | The name of the class subject if the event occurred during a class. |
+| `isJustified` | `boolean` *(optional)* | Whether the absence or delay has been officially justified. |
+| `justificationType` | `string` *(optional)* | The category/type of the justification. |
+| `reason` | `string` *(optional)* | The explained reason for the delay or absence. |
+| `teacherName` | `string` *(optional)* | The teacher who reported or is related to the event. |
+| `licensePoints` | `number` *(optional)* | If points were deducted from a conduct license. |
+| `studentId` | `number` *(optional)* | The identifier of the student. |
+| `justifiedOnline` | `boolean` *(optional)* | Whether the justification was submitted through the online portal. |
+| `dontNeedJustification` | `boolean` *(optional)* | `true` if the event does not require any justification. |
+| `day` | `Date` *(optional)* | The day of the event. |

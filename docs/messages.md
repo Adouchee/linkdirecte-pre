@@ -1,81 +1,80 @@
-# Messages
+# ✉️ Messaging System
 
-The messages module handles communication through the EcoleDirecte messaging system.
+The Messages module connects you directly to the school's communication channels. It handles reading received mail, viewing attachments, sending replies, and organizing drafts.
 
-## Functions
+---
+
+## 🚀 Getting Started
+
+Let's fetch the list of received messages and read the most recent unread email.
+
+```typescript
+import { getMessages, getMessage } from "linkdirecte";
+
+// Fetch the inbox
+const inbox = await getMessages();
+const unreadEmails = inbox.messages?.received?.filter(msg => !msg.isRead) ?? [];
+
+console.log(`You have ${unreadEmails.length} unread message(s).`);
+
+if (unreadEmails.length > 0) {
+  const firstUnread = unreadEmails[0];
+  console.log(`Reading: "${firstUnread.subject}" from ${firstUnread.fromName}...`);
+
+  // Load full content (EcoleDirecte handles base64-decoded HTML automatically inside the SDK!)
+  const fullDetail = await getMessage(firstUnread.id);
+  console.log("\nMessage body:");
+  console.log(fullDetail.content);
+}
+```
+
+---
+
+## 📖 API Reference
 
 ### `getMessages`
 
-Fetches the list of messages in the user's inbox or a specific folder.
+Retrieves a simplified directory of messages.
 
 ```typescript
 function getMessages(options?: GetMessagesOptions): Promise<MessagesResult>
 ```
 
-#### `GetMessagesOptions`
-- `folderId`: (Optional) ID of the folder to fetch.
-- `withContent`: If true, automatically fetches the full content of every received message. Warning: this may result in many API calls.
-- `raw`: If true, returns the raw API response.
-- `explain`: If true, returns debug information.
+#### Parameters
 
-#### Returns
+- `options` *(optional)*:
+  - `folderId` *(number)*: Pass a folder ID to retrieve messages from custom archives or folders.
+  - `withContent` *(boolean)*: If set to `true`, automatically makes individual parallel queries to retrieve the content bodies for all returned messages. Defaults to `false`.
+  - `raw` *(boolean)*: Returns original unmodified JSON.
+  - `explain` *(boolean)*: Adds HTTP caching and retry diagnostics to `_debug`.
 
-A `MessagesResult` object containing:
-- `messages.received`: Array of received `MessageEntry` objects.
-- `messages.sent`: Array of sent `MessageEntry` objects.
-- `messages.drafts`: Array of draft `MessageEntry` objects.
-
-#### Example
-
-```typescript
-import { getMessages } from "linkdirecte";
-
-const result = await getMessages({ folderId: 1 });
-const unread = result.messages?.received?.filter(m => !m.isRead) ?? [];
-console.log(`You have ${unread.length} unread messages.`);
-```
-
-### `MessageEntry`
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `number` | Unique ID of the message. |
-| `subject` | `string` | Subject of the message. |
-| `content` | `string` | Base64 encoded HTML content (only if `withContent` is used). |
-| `fromName` | `string` | Sender name (optional). |
-| `date` | `Date` | Reception or sending date. |
-| `isRead` | `boolean` | Whether the message has been read. |
-| `isAnswered` | `boolean` | Whether the message has been answered (optional). |
-| `isTransferred` | `boolean` | Whether the message was forwarded (optional). |
-| `canAnswer` | `boolean` | Whether the message can be replied to (optional). |
+---
 
 ### `getMessage`
 
-Fetches the full details and content of a specific message.
+Loads the detailed envelope and content body for a single message.
 
 ```typescript
-function getMessage(id: number, options?: {
-  raw?: boolean;
-  explain?: boolean;
-}): Promise<MessageEntry>
+function getMessage(
+  id: number,
+  options?: { raw?: boolean; explain?: boolean }
+): Promise<MessageEntry>
 ```
+
+> **Note**: Opening a message with `getMessage` automatically marks it as **read** on EcoleDirecte's servers.
+
+---
 
 ### `sendMessage`
 
-Sends a new message.
+Composes and sends a new message.
 
 ```typescript
-function sendMessage(data: SendMessageData, options?: {
-  raw?: boolean;
-  explain?: boolean;
-}): Promise<{ success: boolean }>
+function sendMessage(
+  data: SendMessageData,
+  options?: { raw?: boolean; explain?: boolean }
+): Promise<{ success: boolean }>
 ```
-
-#### `SendMessageData`
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `subject` | `string` | The subject of the message. |
-| `content` | `string` | The body of the message (plain text). |
-| `destinataires` | `unknown[]` | An array of recipient objects. |
 
 #### Example
 
@@ -83,23 +82,24 @@ function sendMessage(data: SendMessageData, options?: {
 import { sendMessage } from "linkdirecte";
 
 const result = await sendMessage({
-  subject: "Question about homework",
-  content: "Hello, I have a question regarding...",
+  subject: "Absence Excuse",
+  content: "Hello, this is to inform you that...",
   destinataires: [
-    { id: 123, type: "P" } // Example recipient
+    { id: 98765, type: "P" } // Target recipient object
   ]
 });
 
 if (result.success) {
-  console.log("Message sent!");
+  console.log("Message sent successfully!");
 }
 ```
 
 ---
 
-## Types
+## 🗂️ Type Definitions
 
 ### `MessagesResult`
+
 ```typescript
 interface MessagesResult {
   messages?: {
@@ -110,17 +110,30 @@ interface MessagesResult {
 }
 ```
 
-### `GetMessagesOptions`
+### `MessageEntry`
+
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `id` | `number` | Unique ID of the message. |
+| `subject` | `string` | Subject header of the email. |
+| `date` | `Date` | Date and time the email was received/sent. |
+| `isRead` | `boolean` | `true` if the message has been read. |
+| `content` | `string` *(optional)* | Fully decoded HTML or text of the message body (available when fetching via `getMessage` or `withContent: true`). |
+| `fromName` | `string` *(optional)* | Readable name of the sender. |
+| `isAnswered` | `boolean` *(optional)* | `true` if this message has already been replied to. |
+| `isTransferred` | `boolean` *(optional)* | `true` if the message was forwarded. |
+| `canAnswer` | `boolean` *(optional)* | Whether replies are permitted for this message. |
+
+### `SendMessageData`
+
 ```typescript
-interface GetMessagesOptions {
-  folderId?: number;
-  withContent?: boolean;
-  raw?: boolean;
-  explain?: boolean;
+interface SendMessageData {
+  subject: string;
+  content: string;
+  destinataires: Array<{
+    id: number;
+    type: string; // e.g. "P" (Teacher), "E" (Student)
+    [key: string]: any;
+  }>;
 }
 ```
-
-## Related Information
-
-- **Auto-Refresh**: Messages are automatically marked as read when fetched via `getMessage`.
-- **Formatting**: The SDK handles the Base64 encoding of message content required by the EcoleDirecte API.
