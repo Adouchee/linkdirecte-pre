@@ -1,4 +1,6 @@
-# ⚙️ Account Settings & Accessibility
+<p align="center">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Settings&amp;subtitle=Learn+how+to+get+and+change+settings+with+Linkdirecte.&amp;logo=lu%3ASettings&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Settings | Learn how to get and change settings with Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=Settings&amp;subtitle=Learn+how+to+get+and+change+settings+with+Linkdirecte.&amp;logo=lu%3ASettings&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
+</p>
 
 The Settings module allows you to view and adjust account properties, update user emails or phone numbers, change security answers, and configure accessibility settings (such as high-contrast themes) for the student.
 
