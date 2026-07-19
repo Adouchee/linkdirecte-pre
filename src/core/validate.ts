@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { EdApiError } from './errors';
 
 export function assertNonEmptyString(
@@ -36,3 +36,4 @@ export function assertNonEmptyArray(
     );
   }
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

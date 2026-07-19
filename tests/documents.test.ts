@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getDocuments, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -94,3 +95,4 @@ describe('Documents Module', () => {
     expect(result.administratives![0].signatureRequired).toBe('1');
   });
 });
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

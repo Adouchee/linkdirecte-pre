@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { EdConfig, StorageAdapter, Account } from '../types';
 import {
   indexedDBStorage,
@@ -212,3 +212,4 @@ export async function loadSession(): Promise<boolean> {
     return false;
   }
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

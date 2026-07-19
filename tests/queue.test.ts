@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { offlineQueue } from '../src/core/queue';
 import { configure, clearSession } from '../src/index';
@@ -23,7 +24,7 @@ describe('Offline Queue Module', () => {
     originalFetch = globalThis.fetch;
     requests = [];
     mockStorage.store.clear();
-    offlineQueue.getQueue().length = 0; // Clear queue
+    offlineQueue.getQueue().length = 0; 
     configure({
       storage: mockStorage,
       maxRetries: 0,
@@ -44,7 +45,7 @@ describe('Offline Queue Module', () => {
     expect(queue[0].endpoint).toBe('/some-endpoint.awp');
     expect(queue[0].options).toEqual({ body: 'data' });
 
-    // Verify it is persisted in storage
+    
     const savedStr = mockStorage.get('ed_offline_queue');
     expect(savedStr).toBeDefined();
     expect(JSON.parse(savedStr!)[0].endpoint).toBe('/some-endpoint.awp');
@@ -66,14 +67,15 @@ describe('Offline Queue Module', () => {
 
     await offlineQueue.flush();
 
-    // Verify both endpoints were called
+    
     expect(requests.length).toBe(2);
     expect(requests[0]).toContain('/mutation-1.awp');
     expect(requests[1]).toContain('/mutation-2.awp');
 
-    // Queue should now be empty and cleared from storage
+    
     expect(offlineQueue.getQueue().length).toBe(0);
     const saved = JSON.parse(mockStorage.get('ed_offline_queue') || '[]');
     expect(saved.length).toBe(0);
   });
 });
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

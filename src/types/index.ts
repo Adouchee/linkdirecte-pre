@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 export interface EdResponse<T> {
   host: string;
   code: number;
@@ -166,3 +166,4 @@ export interface CloudFileNode extends CloudNode {
 }
 
 export type CloudEntry = CloudFolderNode | CloudFileNode;
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getQcms, getQcmDetail, updateQcmStatus, submitQcmAnswer, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -207,3 +208,4 @@ describe('Forms Module', () => {
     expect(result.success).toBe(true);
   });
 });
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

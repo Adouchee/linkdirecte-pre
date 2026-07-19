@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { getConfig, getToken, getTwofaToken } from './store';
 import { EdNetworkError, EdRateLimitError } from './errors';
 import { signalWithTimeout, isFormData } from './env';
@@ -169,3 +169,4 @@ function hasBody(body: unknown): body is NonNullable<unknown> {
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !isFormData(value);
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

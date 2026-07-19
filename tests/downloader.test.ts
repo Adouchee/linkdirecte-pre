@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { download, downloadPhoto, configure, clearSession } from '../src/index';
 import { setToken, setAccount } from '../src/core/store';
@@ -166,3 +167,4 @@ describe('Downloader Module', () => {
     expect(result).toBeNull();
   });
 });
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

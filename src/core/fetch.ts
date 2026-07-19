@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { getConfig, setToken } from './store';
 import {
   DEFAULT_CONCURRENCY,
@@ -277,3 +277,4 @@ async function refreshSession(): Promise<string | undefined> {
     return undefined;
   }
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

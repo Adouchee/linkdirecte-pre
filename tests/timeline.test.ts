@@ -1,8 +1,8 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getTimeline, getCommonTimeline, correlate, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
 
-// Helper to encode string to Base64
 function encodeBase64(str: string): string {
   const bytes = new TextEncoder().encode(str);
   let binary = '';
@@ -224,7 +224,7 @@ describe('Timeline Module', () => {
     const trend = correlations.find((c) => c.type === 'gradeTrend');
     expect(trend).toBeDefined();
     expect(trend!.subject).toBe('Mathematics');
-    expect(trend!.data.average).toBe(17); // (18+15+16+17+19)/5 = 17
+    expect(trend!.data.average).toBe(17); 
 
     const dayPattern = correlations.find((c) => c.type === 'gradeVsDayOfWeek');
     expect(dayPattern).toBeDefined();
@@ -232,3 +232,4 @@ describe('Timeline Module', () => {
     expect(dayPattern!.observations).toBe(5);
   });
 });
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

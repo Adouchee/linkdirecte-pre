@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { describe, it, expect, beforeEach, afterEach, mock } from 'bun:test';
 import {
   login,
@@ -13,7 +14,6 @@ import {
 import { EdAuthError } from '../src/core/errors';
 import { stopTokenKeepalive } from '../src/core/health';
 
-// Helper to encode to base64 as EcoleDirecte expects
 function encodeBase64(str: string): string {
   const bytes = new TextEncoder().encode(str);
   let binary = '';
@@ -45,9 +45,9 @@ describe('Authentication Flow', () => {
     requests = [];
     mockResponses.clear();
 
-    // Reset store and configure default memory storage
+    
     configure({
-      storage: undefined, // default to memory
+      storage: undefined, 
       on2faRequired: undefined,
       onCredentialsRequired: undefined,
     });
@@ -87,7 +87,7 @@ describe('Authentication Flow', () => {
 
       requests.push({ url: urlStr, method, headers, body: parsedBody });
 
-      // Match mock responses
+      
       let matchedHandler = null;
       for (const [pattern, handler] of mockResponses.entries()) {
         if (urlStr.includes(pattern)) {
@@ -111,7 +111,7 @@ describe('Authentication Flow', () => {
         });
       }
 
-      // Default fallback
+      
       return new Response(JSON.stringify({ code: 404, message: 'Not found' }), {
         status: 404,
         headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -166,14 +166,14 @@ describe('Authentication Flow', () => {
   };
 
   it('performs a standard successful login', async () => {
-    // 1. Mock GTK token retrieval
+    
     mockResponses.set('/login.awp?gtk=1', () => ({
       status: 200,
       headers: { 'set-cookie': 'GTK=mocked_gtk_value; Path=/' },
       body: { code: 200, token: '', message: '', data: {} },
     }));
 
-    // 2. Mock main login
+    
     mockResponses.set('/login.awp?v=', (req) => {
       expect(req.headers['X-GTK']).toBe('mocked_gtk_value');
       expect(req.body.identifiant).toBe('testuser');
@@ -200,21 +200,21 @@ describe('Authentication Flow', () => {
     expect(getAccount()?.id).toBe(9876);
     expect(getLastTokenRefresh()).toBeDefined();
 
-    // Verify requests sent
+    
     expect(requests.length).toBe(2);
     expect(requests[0].url).toContain('gtk=1');
     expect(requests[1].url).toContain('login.awp?v=');
   });
 
   it('handles 2FA challenge flow successfully', async () => {
-    // 1. Mock GTK
+    
     mockResponses.set('/login.awp?gtk=1', () => ({
       status: 200,
       headers: { 'set-cookie': 'GTK=mocked_gtk_value; Path=/' },
       body: { code: 200, token: '', message: '', data: {} },
     }));
 
-    // 2. Mock dynamic login: first returns 250, second with cn/cv returns 200
+    
     mockResponses.set('/login.awp?v=', (req) => {
       if (
         req.body &&
@@ -241,7 +241,7 @@ describe('Authentication Flow', () => {
       };
     });
 
-    // 3. Mock 2FA challenge get
+    
     mockResponses.set('/connexion/doubleauth.awp?verbe=get', () => ({
       status: 200,
       headers: { '2fa-token': 't2', 'x-token': 'x2' },
@@ -260,7 +260,7 @@ describe('Authentication Flow', () => {
       },
     }));
 
-    // 4. Mock 2FA challenge post
+    
     mockResponses.set('/connexion/doubleauth.awp?verbe=post', () => ({
       status: 200,
       headers: { '2fa-token': 't3', 'x-token': 'x3' },
@@ -275,11 +275,11 @@ describe('Authentication Flow', () => {
       },
     }));
 
-    // We pass an on2faRequired handler
+    
     const on2faRequired = mock((question, choices) => {
       expect(question).toBe('What is your favorite color?');
       expect(choices).toEqual(['Blue', 'Red', 'Green']);
-      return 1; // choose Red (index 1)
+      return 1; 
     });
 
     const result = await login('testuser', 'testpass', { on2faRequired });
@@ -391,7 +391,7 @@ describe('Authentication Flow', () => {
     });
 
     const on2faRequired = mock((question, choices) => {
-      return 'red'; // case-insensitive selection of 'Red'
+      return 'red'; 
     });
 
     const result = await login('testuser', 'testpass', { on2faRequired });
@@ -492,14 +492,14 @@ describe('Authentication Flow', () => {
   });
 
   it('handles logout successfully', async () => {
-    // 1. Mock GTK token retrieval
+    
     mockResponses.set('/login.awp?gtk=1', () => ({
       status: 200,
       headers: { 'set-cookie': 'GTK=mocked_gtk_value; Path=/' },
       body: { code: 200, token: '', message: '', data: {} },
     }));
 
-    // 2. Mock main login
+    
     mockResponses.set('/login.awp?v=', () => ({
       status: 200,
       headers: { 'X-Token': 'mocked_session_token' },
@@ -520,3 +520,4 @@ describe('Authentication Flow', () => {
     expect(getAccount()).toBeUndefined();
   });
 });
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

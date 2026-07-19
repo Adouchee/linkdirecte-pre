@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { PrefetchConfig } from '../types';
 import { getConfig } from './store';
 import { parseDuration } from './cache';
@@ -70,3 +70,4 @@ export function stopAutoPrefetch(): void {
   safeClearInterval(prefetchInterval ?? undefined);
   prefetchInterval = null;
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

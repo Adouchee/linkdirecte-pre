@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { describe, it, expect, beforeEach, afterEach, mock } from 'bun:test';
 import { startPolling, stopPolling, on, off, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -53,7 +54,7 @@ describe('Listen Module (Polling & Events)', () => {
             data: {
               grades: [
                 {
-                  id: callCount === 0 ? 10 : 11, // diff id on subsequent polls
+                  id: callCount === 0 ? 10 : 11, 
                   valeur: '15',
                 },
               ],
@@ -125,7 +126,7 @@ describe('Listen Module (Polling & Events)', () => {
 
     startPolling({ interval: 5000 });
 
-    // Wait slightly for the async Promise.all in poll() to resolve
+    
     await new Promise((resolve) => setTimeout(resolve, 50));
 
     expect(requests.some((url) => url.includes('notes.awp'))).toBe(true);
@@ -136,7 +137,7 @@ describe('Listen Module (Polling & Events)', () => {
     expect(newMessageCallback).toHaveBeenCalled();
     expect(newTimelineCallback).toHaveBeenCalled();
 
-    // Clean up listeners
+    
     removeGradeListener();
     removeMessageListener();
     removeTimelineListener();
@@ -160,3 +161,4 @@ describe('Listen Module (Polling & Events)', () => {
     expect(errorCallback).toHaveBeenCalled();
   });
 });
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

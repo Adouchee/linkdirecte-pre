@@ -24,7 +24,7 @@ jobs:
         with:
           bun-version: latest
 
-      - run: bun install --frozen-lockfile
+      - run: bun install
 
       - name: Format check
         run: bun run format:check
@@ -48,7 +48,7 @@ jobs:
         with:
           bun-version: latest
 
-      - run: bun install --frozen-lockfile
+      - run: bun install
 
       - name: Format
         run: bun run format

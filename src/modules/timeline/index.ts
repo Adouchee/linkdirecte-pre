@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { edFetch } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
 import { decodeBase64Content } from '../../core/transform';
@@ -50,3 +50,4 @@ export async function getCommonTimeline(
 }
 
 export * from './correlator';
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

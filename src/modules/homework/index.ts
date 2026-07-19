@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { edFetch } from '../../core/fetch';
 import { postOptions, requireCurrentAccount } from '../../core/request';
 import { decodeBase64Content } from '../../core/transform';
@@ -112,3 +112,4 @@ export async function markAsDone(
 
   return edFetch<MarkAsDoneResult>(request.endpoint, request.options);
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

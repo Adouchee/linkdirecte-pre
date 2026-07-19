@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { edFetch } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
 import dayjs from 'dayjs';
@@ -60,3 +60,4 @@ export async function getTimetableIcalUrl(): Promise<string> {
   });
   return `https://api.ecoledirecte.com/v3/${result.url}`;
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

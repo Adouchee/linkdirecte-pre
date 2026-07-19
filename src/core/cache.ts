@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { getConfig } from './store';
 import { safeSetInterval, safeClearInterval } from './env';
 import type { CacheConfig } from '../types';
@@ -126,3 +126,4 @@ export function clearCache(): void {
   cache.clear();
   stopCleanup();
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

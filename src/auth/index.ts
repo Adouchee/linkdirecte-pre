@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import {
   getConfig,
   getAccount,
@@ -363,3 +363,4 @@ export async function refreshToken(): Promise<string> {
 
   throw new EdAuthError('Refresh failed', 'REFRESH_FAILED');
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { edFetch } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
 import type { AccountSettings } from '../../types';
@@ -60,3 +60,4 @@ export async function updateAccessibility(
     },
   );
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

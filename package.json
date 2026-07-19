@@ -1,6 +1,6 @@
 {
   "name": "linkdirecte",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Your first-rate SDK for working with EcoleDirecte data.",
   "repository": {
     "type": "git",
@@ -40,7 +40,7 @@
     "lint": "tsc",
     "format": "prettier --write src/",
     "format:check": "prettier --check src/",
-    "precommit": "npm run format && npm run lint && npm run test",
+    "precommit": "bun run format && bun run lint && bun run test",
     "test": "bun test"
   },
   "dependencies": {

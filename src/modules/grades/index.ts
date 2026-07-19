@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { edFetch } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
 
@@ -54,3 +54,4 @@ export async function getGrades(
     ...options,
   });
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

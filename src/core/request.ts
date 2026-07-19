@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { getAccount } from './store';
 import { EdAuthError } from './errors';
 import type { Account } from '../types';
@@ -27,3 +27,4 @@ export function postOptions<T extends FetchOptions = FetchOptions>(
     ...options,
   } as T;
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

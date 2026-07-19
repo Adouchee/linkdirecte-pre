@@ -1,8 +1,8 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getHomework, getHomeworkForDate, markAsDone, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
 
-// Helper to encode string to Base64
 function encodeBase64(str: string): string {
   const bytes = new TextEncoder().encode(str);
   let binary = '';
@@ -149,7 +149,7 @@ describe('Homework Module', () => {
     expect(requests[0].url).toContain('/Eleves/9876/cahierdetexte.awp');
     expect(requests[1].url).toContain('/Eleves/9876/cahierdetexte/2023-10-15.awp');
 
-    // result should have the mapped detail for the date
+    
     expect(result['2023-10-15']).toBeDefined();
     const subjects: any = result['2023-10-15'];
     expect(subjects[0].subjectName).toBe('Maths');
@@ -198,3 +198,4 @@ describe('Homework Module', () => {
     expect(result.success).toBe(true);
   });
 });
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

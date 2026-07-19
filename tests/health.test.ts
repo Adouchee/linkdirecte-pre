@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { checkTokenHealth, startTokenKeepalive, stopTokenKeepalive, configure, clearSession } from '../src/index';
 import { setToken } from '../src/core/store';
@@ -39,7 +40,7 @@ describe('Token Health Module', () => {
     globalThis.fetch = async (input) => {
       requests.push(input.toString());
       return new Response(JSON.stringify({ code: 500, message: 'Expired' }), {
-        status: 200, // API standard return
+        status: 200, 
         headers: { 'Content-Type': 'application/json' },
       });
     };
@@ -53,7 +54,8 @@ describe('Token Health Module', () => {
   it('can start and stop token keepalive keepalive timers', () => {
     startTokenKeepalive();
     stopTokenKeepalive();
-    // Verify no keepalive timer leaks or errors are thrown
+    
     expect(true).toBe(true);
   });
 });
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

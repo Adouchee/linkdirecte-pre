@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import dayjs from 'dayjs';
 
 const KEY_MAPPING: Record<string, string> = {
@@ -129,6 +129,7 @@ const KEY_MAPPING: Record<string, string> = {
   estApprenant: 'isLearner',
   lastConnexion: 'lastConnection',
   civilite: 'civility',
+  sexe: 'gender',
   prenom: 'firstName',
   nom: 'lastName',
   email: 'email',
@@ -313,3 +314,4 @@ export function transform(data: any): any {
 
   return data;
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

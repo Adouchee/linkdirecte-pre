@@ -1,3 +1,4 @@
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getCloud, createFolder, deleteNodes, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -168,3 +169,4 @@ describe('Cloud Module', () => {
     expect(result.success).toBe(true);
   });
 });
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.

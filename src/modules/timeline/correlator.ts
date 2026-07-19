@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { getGrades } from '../grades';
 import { getAttendance } from '../attendance';
 import dayjs from 'dayjs';
@@ -99,3 +99,4 @@ function analyzeDayOfWeekPattern(
     observations: gradeList.length,
   };
 }
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.
