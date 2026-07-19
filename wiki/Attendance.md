@@ -8,15 +8,20 @@ The attendance module makes it super easy to check on a student's absences, dela
 
 To fetch attendance records, you'll use the `getAttendance` function. This retrieves a comprehensive summary of the student's school life events.
 
+> [!NOTE]
+> In the real EcoleDirecte API, absences and latenesses are returned together under a single `attendance` array. You can easily filter them by their `elementType` (e.g. `"Absence"` or `"Retard"`).
+
 ```typescript
 import { getAttendance } from "linkdirecte";
 
 const data = await getAttendance();
 
-// Check if there are any absences
-if (data.absences && data.absences.length > 0) {
-  console.log(`Oh! You have ${data.absences.length} registered absence(s).`);
-  data.absences.forEach(absence => {
+// Filter for absences
+const absences = data.attendance?.filter(event => event.elementType === "Absence") ?? [];
+
+if (absences.length > 0) {
+  console.log(`Oh! You have ${absences.length} registered absence(s).`);
+  absences.forEach(absence => {
     console.log(`- Date: ${absence.date.toLocaleDateString()} | Reason: ${absence.reason || "No reason specified"}`);
   });
 } else {
@@ -53,52 +58,59 @@ A promise that resolves to an `AttendanceResult` object.
 
 ## 📋 Example Response
 
-Below is an example of the resolved `AttendanceResult` payload returned by `getAttendance()`:
+Below is an example of the resolved `AttendanceResult` payload returned by `getAttendance()` in a real environment (reflecting exact transformed keys):
 
 ```typescript
 {
-  absences: [
+  attendance: [
     {
-      id: 8872,
-      date: new Date("2026-02-18T08:00:00.000Z"),
-      type: "Absence",
+      id: 3367,
+      studentId: 1234,
+      elementType: "Absence",
+      date: new Date("2025-11-04T00:00:00.000Z"),
+      displayDate: "le mardi 04 novembre 2025 de 16:30 à 17:30",
+      label: "2 cours",
+      reason: "Consultation médicale",
       isJustified: true,
-      justificationType: "Medical",
-      reason: "Flu illness",
-      absenceComment: "Student has medical certificate",
-      justifiedOnline: true,
-      dontNeedJustification: false,
-      day: new Date("2026-02-18T00:00:00.000Z")
-    }
-  ],
-  delays: [
-    {
-      id: 8873,
-      date: new Date("2026-03-05T08:15:00.000Z"),
-      type: "Retard",
-      isJustified: false,
-      reason: "Missed the school bus",
-      lateComment: "Arrived during first period",
+      licensePoints: 0,
+      comment: "Rendez-vous médical urgent",
+      justificationType: "",
       justifiedOnline: false,
       dontNeedJustification: false,
-      day: new Date("2026-03-05T00:00:00.000Z")
-    }
-  ],
-  punishments: [
+      subjectName: "",
+      day: 0
+    },
     {
-      id: 8874,
-      date: new Date("2026-03-10T14:00:00.000Z"),
-      type: "Punition",
-      reason: "Disruptive behavior",
-      sanctionByWho: "M. Martin",
-      sanctionComment: "Excluded from classroom",
-      licensePoints: 2,
-      day: new Date("2026-03-10T00:00:00.000Z")
+      id: 2876,
+      studentId: 1234,
+      elementType: "Retard",
+      date: new Date("2025-10-13T00:00:00.000Z"),
+      displayDate: "le lundi 13 octobre 2025 de 09:00 à 09:55",
+      label: "00:55",
+      reason: "Panne de reveil ",
+      isJustified: true,
+      licensePoints: 0,
+      comment: "Panne de réveil",
+      justificationType: "Justifiée sur Internet",
+      justifiedOnline: true,
+      dontNeedJustification: false,
+      subjectName: "",
+      day: 0
     }
   ],
-  attendance: [],
+  sanctionsEncouragements: [],
+  dispenses: [],
   settings: {
-    displayPoints: true
+    justificationEnLigne: true,
+    absenceCommentaire: true,
+    retardCommentaire: true,
+    sanctionsVisible: true,
+    sanctionParQui: true,
+    sanctionCommentaire: true,
+    encouragementsVisible: true,
+    encouragementParQui: true,
+    encouragementCommentaire: true,
+    afficherPermisPoint: true
   }
 }
 ```
