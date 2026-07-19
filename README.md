@@ -14,14 +14,14 @@ Whether you are building Discord bots, native mobile apps, web apps, or others, 
 
 ## ⭐️ Key Features
 
-- 🌳 **Tree-Shakeable & Lightweight** | Import only what you use, maintaining minimal bundle size.
-- 🚪 **Hands-Free Authentication** | Session cookies, tokens, Two-Factor Challenges (2FA), double auth states, and token refreshes are fully automated silently.
-- 🛣️ **Built-in Proxy Support** | Perfect for running directly in client web-browsers with standard CORS gateways.
-- 🧠 **Type-Safe Mappings** | Dynamic French-to-English translation of API keys, timestamp normalization into JS `Date` objects, and automated Base64 HTML decoding.
-- 🛜 **Offline Resilience** | Local caches and built-in offline action queues for marking homework as done.
-- 🎓 **Rich Feature Set** | Supports Grades, Timetables, Homework calendars, Messages, Attendance records, Cloud folder management, and more.
-- 🌐 **Ubiquitous Compatibility** | Works flawlessly on Node.js 18+, Bun, Deno, modern Web Browsers, Cloudflare Workers, React Native, Capacitor, Electron, etc.
-- 🔒 **Secure by Design** | Absolutely zero credentials or passwords stored; supports transparent local AES-GCM data encryption.
+- 🌳 **Tree-shakeable** | Import only what you use.
+- 🚪 **Fully auto auth** | Session cookies, tokens, Two-Factor Challenges (2FA), double auth states, and token refreshes are fully managed silently.
+- 🛣️ **Built-in proxy support** | Perfect for running directly in browsers (bypass CORS).
+- 🧠 **Type-safe mappings** | Dynamic French-to-English translation of API keys, timestamp normalization into JS `Date` objects, and automated Base64 HTML decoding.
+- 🛜 **Offline** | Local caches and built-in offline action queues.
+- 🎓 **Rich feature set** | Supports Grades, Timetable, Homework, Messages, Attendance, Cloud, QCM and more. _Parent account support coming this year!_
+- 🌐 **Available everywhere** | Works flawlessly on Node.js 18+, Bun, Deno, modern Web Browsers, Cloudflare Workers, React Native, Capacitor, Electron, etc.
+- 🔒 **Secure** | Absolutely zero credentials or passwords stored; supports transparent local AES-GCM data encryption.
 
 ---
 
