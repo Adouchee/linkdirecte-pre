@@ -1,4 +1,6 @@
-# 📝 Forms & QCMs (Quizzes)
+<p align="center">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=QCMs&amp;subtitle=Learn+how+to+get+QCM+data+with+Linkdirecte.&amp;logo=lu%3AMailQuestion&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="QCMs | Lea<BadgeQuestionMark />rn how to get QCM data with Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=QCMs&amp;subtitle=Learn+how+to+get+QCM+data+with+Linkdirecte.&amp;logo=lu%3AMailQuestion&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
+</p>
 
 The Forms module manages online assessments, questionnaires, and multi-choice quizzes (QCMs) assigned to students by teachers.
 

@@ -1,4 +1,6 @@
-# 📄 Official Documents
+<p align="center">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Documents&amp;subtitle=Learn+how+to+get+documents+with+Linkdirecte.&amp;logo=lu%3AFileText&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Documents | Learn how to get documents with Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=Documents&amp;subtitle=Learn+how+to+get+documents+with+Linkdirecte.&amp;logo=lu%3AFileText&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
+</p>
 
 The Documents module provides straightforward access to official school paperwork, such as school invoices, quarterly report cards, or administrative PDF documents.
 

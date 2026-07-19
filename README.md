@@ -96,6 +96,9 @@ This means if you utilize Linkdirecte inside a project and make it publicly avai
 
 *This project is an independent third-party development and is **not affiliated or sponsored** in any way with Aplim or EcoleDirecte.*
 
+> [DANGER]
+> **LINKDIRECTE MIGHT HANDLE MINORS' DATA. ALWAYS ASK FOR PARENT CONSENT BEFORE PROCESSING DATA.**
+
 ---
 
 <p align="center">

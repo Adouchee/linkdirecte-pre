@@ -1,4 +1,6 @@
-# ⚙️ Core Configuration & Utilities
+<p align="center">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Core&amp;subtitle=Learn+how+to+get+configure+Linkdirecte.&amp;logo=lu%3AHeart&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Auth and sessions | Learn how to get attendance data with Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=Core&amp;subtitle=Learn+how+to+get+attendance+data+with+Linkdirecte.&amp;logo=lu%3AHeart&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
+</p>
 
 The Core module handles global SDK configurations, session state preservation via **Storage Adapters**, file downloads, proactive token health keepalives, background data prefetching, and transparent storage encryption.
 

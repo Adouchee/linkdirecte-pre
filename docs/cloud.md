@@ -1,4 +1,6 @@
-# ☁️ Cloud Storage (Porte-documents)
+<p align="center">
+  <picture><source media="(prefers-color-scheme: light)" srcset="https://shieldcn.dev/header/glow.svg?title=Cloud&amp;subtitle=Learn+how+to+get+cloud+data+with+Linkdirecte.&amp;logo=lu%3ACloud&amp;mode=light&amp;theme=blue&amp;align=left" /><img alt="Cloud | Learn how to get cloud data with Linkdirecte." src="https://shieldcn.dev/header/glow.svg?title=Cloud&amp;subtitle=Learn+how+to+get+cloud+data+with+Linkdirecte.&amp;logo=lu%3ACloud&amp;mode=dark&amp;theme=blue&amp;align=left" /></picture>
+</p>
 
 The Cloud module gives you full access to EcoleDirecte's "Porte-documents" (document holder / personal cloud storage). This allows students to retrieve personal files, organize their workspaces into folders, and clean up unwanted documents.
 
