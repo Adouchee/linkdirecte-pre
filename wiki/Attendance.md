@@ -22,7 +22,7 @@ const absences = data.attendance?.filter(event => event.elementType === "Absence
 if (absences.length > 0) {
   console.log(`Oh! You have ${absences.length} registered absence(s).`);
   absences.forEach(absence => {
-    console.log(`- Date: ${absence.date.toLocaleDateString()} | Reason: ${absence.reason || "No reason specified"}`);
+    console.log(`- Date: ${absence.date.toLocaleDateString()} | Reason: ${absence.motif || "No reason specified"}`);
   });
 } else {
   console.log("Hooray! No absences recorded.");
@@ -51,41 +51,3 @@ function getAttendance(options?: {
 #### Returns
 
 A promise that resolves to an `AttendanceResult` object.
-
----
-
-## 🗂️ Type Definitions
-
-### `AttendanceResult`
-
-This object groups different categories of school life events together:
-
-```typescript
-interface AttendanceResult {
-  absences?: AttendanceEntry[];      // List of absences
-  delays?: AttendanceEntry[];        // List of latenesses/delays
-  punishments?: AttendanceEntry[];   // List of punishments/sanctions
-  attendance?: AttendanceEntry[];    // General school life/attendance logs
-  settings?: Record<string, any>;    // Configuration parameters
-}
-```
-
-### `AttendanceEntry`
-
-Each entry provides detailed context about a specific school life event:
-
-| Property | Type | Description |
-| :--- | :--- | :--- |
-| `id` | `number` | A unique identifier for this record. |
-| `date` | `Date` | The exact date and time the event occurred. |
-| `type` | `string` | The type of event (for example, `"Absence"`, `"Retard"`, `"Punition"`). |
-| `libelleMatiere` | `string` *(optional)* | The name of the class subject if the event occurred during a class. |
-| `isJustified` | `boolean` *(optional)* | Whether the absence or delay has been officially justified. |
-| `justificationType` | `string` *(optional)* | The category/type of the justification. |
-| `reason` | `string` *(optional)* | The explained reason for the delay or absence. |
-| `nomProf` | `string` *(optional)* | The teacher who reported or is related to the event. |
-| `licensePoints` | `number` *(optional)* | If points were deducted from a conduct license. |
-| `studentId` | `number` *(optional)* | The identifier of the student. |
-| `justifiedOnline` | `boolean` *(optional)* | Whether the justification was submitted through the online portal. |
-| `dontNeedJustification` | `boolean` *(optional)* | `true` if the event does not require any justification. |
-| `day` | `Date` *(optional)* | The day of the event. |
