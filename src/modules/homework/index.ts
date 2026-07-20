@@ -3,7 +3,11 @@ import { edFetch } from '../../core/fetch';
 import { postOptions, requireCurrentAccount } from '../../core/request';
 import { encodeBase64 } from '../../core/transform';
 import { EdApiError } from '../../core/errors';
-import { assertNonEmptyArray, assertNonEmptyString, assertPositiveNumber } from '../../core/validate';
+import {
+  assertNonEmptyArray,
+  assertNonEmptyString,
+  assertPositiveNumber,
+} from '../../core/validate';
 import dayjs from 'dayjs';
 
 export interface HomeworkEntry {
