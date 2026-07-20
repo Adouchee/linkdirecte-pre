@@ -44,6 +44,8 @@ Spins up a lightweight background timer that regularly pulls data from EcoleDire
 function startPolling(config?: PollingConfig): void
 ```
 
+If called while polling is already active, it stops the existing timer before starting a new one. The first poll fires immediately—there is no initial delay.
+
 #### Parameters
 - `config` *(optional)*:
   - `interval` *(number)*: How often the SDK should query EcoleDirecte, specified in milliseconds. Defaults to `60000` (1 minute).
@@ -68,6 +70,10 @@ Registers a listener function for a specific event.
 function on(event: string, handler: (data: any) => void): () => void
 ```
 
+#### Parameters
+- `event` *(string)*: The event name to listen for (see [Event Types Reference](#-event-types-reference)).
+- `handler` *(`(data: any) => void`)*: Callback invoked with the event payload whenever the event fires.
+
 #### Returns
 An unsubscribe function. Call it to quickly remove the listener and clean up memory!
 
@@ -82,11 +88,25 @@ unsubscribe();
 
 ### `off`
 
-Explicitly removes a registered listener function.
+Explicitly removes a previously registered listener. You must pass the same function reference that was originally passed to `on`.
 
 ```typescript
 function off(event: string, handler: (data: any) => void): void
 ```
+
+#### Parameters
+- `event` *(string)*: The event name the handler was registered under.
+- `handler` *(`(data: any) => void`)*: The exact function reference originally passed to `on`.
+
+```typescript
+const handler = (grade) => console.log(grade);
+on("newGrade", handler);
+
+// Remove later — same reference required
+off("newGrade", handler);
+```
+
+> **Tip:** Prefer the unsubscribe function returned by `on` when you only need to remove a single listener. Use `off` when you need to remove a listener without holding onto the unsubscribe closure.
 
 ---
 
