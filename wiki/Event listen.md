@@ -15,7 +15,7 @@ import { startPolling, on } from "linkdirecte";
 
 // 1. Listen for new grades
 const unsubscribeGrades = on("newGrade", (grade) => {
-  console.log(`🎉 New Grade Posted! ${grade.value}/${grade.outOf} in ${grade.subjectLabel}`);
+  console.log(`🎉 New Grade Posted! ${grade.valeur}/${grade.noteSur} in ${grade.libelleMatiere}`);
 });
 
 // 2. Listen for new messages

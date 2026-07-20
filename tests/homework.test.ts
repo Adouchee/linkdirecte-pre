@@ -1,6 +1,6 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
-import { getHomework, getHomeworkForDate, markAsDone, configure, clearSession } from '../src/index';
+import { getHomework, getHomeworkForDate, markAsDone, sendHomeworkComment, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
 
 function encodeBase64(str: string): string {
@@ -17,19 +17,19 @@ describe('Homework Module', () => {
   let requests: { url: string; method: string; body: any }[] = [];
 
   const mockAccount = {
-    loginId: 1234567,
+    idLogin: 1234567,
     id: 9876,
     uid: 'session_uid',
     identifiant: 'Test.user',
-    accountType: 'E' as const,
-    firstName: 'John',
-    lastName: 'Doe',
+    typeCompte: 'E' as const,
+    prenom: 'John',
+    nom: 'Doe',
     email: 'john.doe@example.com',
-    schoolName: 'Ecole Test',
+    nomEtablissement: 'Ecole Test',
     main: true,
     profile: {
       sexe: 'M' as const,
-      photoUrl: 'https://example.com/photo.jpg',
+      photo: 'https://example.com/photo.jpg',
     },
     modules: [{ code: 'CAHIER_DE_TEXTES', enable: true, badge: 0, params: {} }],
   };
@@ -85,8 +85,8 @@ describe('Homework Module', () => {
     expect(requests.length).toBe(1);
     expect(requests[0].url).toContain('/Eleves/9876/cahierdetexte.awp');
     expect(result['2023-10-15']).toBeDefined();
-    expect(result['2023-10-15'][0].homeworkId).toBe(1);
-    expect(result['2023-10-15'][0].isDone).toBe(false);
+    expect(result['2023-10-15'][0].idDevoir).toBe(1);
+    expect(result['2023-10-15'][0].effectue).toBe('0');
   });
 
   it('fetches homework with content and decodes Base64 fields', async () => {
@@ -149,11 +149,10 @@ describe('Homework Module', () => {
     expect(requests[0].url).toContain('/Eleves/9876/cahierdetexte.awp');
     expect(requests[1].url).toContain('/Eleves/9876/cahierdetexte/2023-10-15.awp');
 
-    
     expect(result['2023-10-15']).toBeDefined();
     const subjects: any = result['2023-10-15'];
-    expect(subjects[0].subjectName).toBe('Maths');
-    expect(subjects[0].toDo.content).toBe('Solve equations');
+    expect(subjects[0].matiere).toBe('Maths');
+    expect(subjects[0].aFaire.contenu).toBe('Solve equations');
   });
 
   it('throws error for invalid date in getHomeworkForDate', async () => {
@@ -197,5 +196,42 @@ describe('Homework Module', () => {
     });
     expect(result.success).toBe(true);
   });
+
+  it('posts a homework comment successfully and encodes the message payload in base64', async () => {
+    globalThis.fetch = async (input, init) => {
+      const urlStr = input.toString();
+      const method = init?.method || 'GET';
+      let parsedBody: any = undefined;
+      if (init?.body) {
+        const bodyStr = init.body.toString();
+        if (bodyStr.startsWith('data=')) {
+          parsedBody = JSON.parse(decodeURIComponent(bodyStr.substring(5)));
+        } else {
+          parsedBody = bodyStr;
+        }
+      }
+      requests.push({ url: urlStr, method, body: parsedBody });
+
+      return new Response(
+        JSON.stringify({
+          code: 200,
+          message: '',
+          data: {
+            id: 12345,
+          },
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    };
+
+    const result = await sendHomeworkComment(55442, 'Hello comment!');
+
+    expect(requests.length).toBe(1);
+    expect(requests[0].url).toContain('/eleves/9876/afaire/commentaires.awp');
+    expect(requests[0].body).toEqual({
+      idContenu: 55442,
+      message: encodeBase64('Hello comment!'),
+    });
+    expect(result.id).toBe(12345);
+  });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

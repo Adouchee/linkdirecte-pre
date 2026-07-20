@@ -1,6 +1,7 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
+import { encodeBase64 } from '../../core/transform';
 import {
   assertNonEmptyString,
   assertNonEmptyArray,
@@ -10,7 +11,6 @@ import {
 export interface GetMessagesOptions {
   folderId?: number;
   withContent?: boolean;
-  raw?: boolean;
   explain?: boolean;
 }
 
@@ -26,9 +26,9 @@ export interface MessageEntry {
   content?: string;
   fromName?: string;
   date: Date;
-  isRead: boolean;
-  isAnswered?: boolean;
-  isTransferred?: boolean;
+  read: boolean;
+  answered?: boolean;
+  transferred?: boolean;
   canAnswer?: boolean;
   [key: string]: unknown;
 }
@@ -56,10 +56,9 @@ export async function getMessages(
 
   if (options.withContent && result.messages?.received) {
     result.messages.received = await Promise.all(
-      result.messages.received.map(async (msg) => {
+      result.messages.received.map(async (msg: MessageEntry) => {
         try {
           const detail = await getMessage(msg.id, {
-            raw: options.raw,
             explain: options.explain,
           });
           return { ...msg, ...detail };
@@ -75,7 +74,7 @@ export async function getMessages(
 
 export async function getMessage(
   id: number,
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<MessageEntry> {
   assertPositiveNumber(id, 'message id');
   const account = requireCurrentAccount();
@@ -89,7 +88,7 @@ export async function getMessage(
 
 export async function sendMessage(
   data: SendMessageData,
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<{ success: boolean }> {
   assertNonEmptyString(data.subject, 'subject');
   assertNonEmptyString(data.content, 'content');
@@ -103,18 +102,17 @@ export async function sendMessage(
     body: {
       message: {
         subject: data.subject,
-        content: btoa(unescape(encodeURIComponent(data.content))),
+        content: encodeBase64(data.content),
         groupesDestinataires: [
           {
             destinataires: data.destinataires,
             selection: { type: 'P' },
           },
         ],
-        from: { role: account.accountType, id: account.id, isRead: true },
+        from: { role: account.typeCompte, id: account.id, read: true },
       },
       anneeMessages: '',
     },
     ...options,
   });
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

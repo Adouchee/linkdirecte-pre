@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getQcms, getQcmDetail, updateQcmStatus, submitQcmAnswer, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -8,21 +8,21 @@ describe('Forms Module', () => {
   let lastRequest: { url: string; method: string; body: any } | null = null;
 
   const mockAccount = {
-    loginId: 1234567,
+    idLogin: 1234567,
     id: 9876,
     uid: 'session_uid',
     identifiant: 'Test.user',
-    accountType: 'E' as const,
-    firstName: 'John',
-    lastName: 'Doe',
+    typeCompte: 'E' as const,
+    prenom: 'John',
+    nom: 'Doe',
     email: 'john.doe@example.com',
-    schoolName: 'Ecole Test',
+    nomEtablissement: 'Ecole Test',
     main: true,
     profile: {
       sexe: 'M' as const,
-      photoUrl: 'https://example.com/photo.jpg',
+      photo: 'https://example.com/photo.jpg',
     },
-    modules: [{ code: 'FORMS', enable: true, badge: 0, params: {} }],
+    modules: [{ code: 'QCM', enable: true, badge: 0, params: {} }],
   };
 
   beforeEach(() => {
@@ -77,8 +77,8 @@ describe('Forms Module', () => {
     expect(lastRequest!.url).toContain('/eleves/9876/qcms/0/associations.awp');
     expect(result.associations).toBeDefined();
     expect(result.associations![0].id).toBe(11);
-    expect(result.associations![0].qcmId).toBe(22);
-    expect(result.associations![0].title).toBe('Math Test');
+    expect(result.associations![0].idQcm).toBe(22);
+    expect(result.associations![0].titre).toBe('Math Test');
   });
 
   it('gets detail of a QCM', async () => {
@@ -119,9 +119,9 @@ describe('Forms Module', () => {
     expect(lastRequest).toBeDefined();
     expect(lastRequest!.url).toContain('/eleves/9876/qcms/22/associations/11.awp');
     expect(lastRequest!.body).toEqual({ anneeQCMs: '' });
-    expect(result.qcmId).toBe(22);
+    expect(result.idQcm).toBe(22);
     expect(result.questions[0].id).toBe(123);
-    expect(result.questions[0].label).toBe('What is 2+2?');
+    expect(result.questions[0].libelle).toBe('What is 2+2?');
   });
 
   it('updates QCM status', async () => {
@@ -208,4 +208,3 @@ describe('Forms Module', () => {
     expect(result.success).toBe(true);
   });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

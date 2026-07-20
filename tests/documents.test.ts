@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getDocuments, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -8,19 +8,19 @@ describe('Documents Module', () => {
   let lastRequest: { url: string; method: string; body: any } | null = null;
 
   const mockAccount = {
-    loginId: 1234567,
+    idLogin: 1234567,
     id: 9876,
     uid: 'session_uid',
     identifiant: 'Test.user',
-    accountType: 'E' as const,
-    firstName: 'John',
-    lastName: 'Doe',
+    typeCompte: 'E' as const,
+    prenom: 'John',
+    nom: 'Doe',
     email: 'john.doe@example.com',
-    schoolName: 'Ecole Test',
+    nomEtablissement: 'Ecole Test',
     main: true,
     profile: {
       sexe: 'M' as const,
-      photoUrl: 'https://example.com/photo.jpg',
+      photo: 'https://example.com/photo.jpg',
     },
     modules: [{ code: 'DOCUMENTS', enable: true, badge: 0, params: {} }],
   };
@@ -86,13 +86,12 @@ describe('Documents Module', () => {
 
     expect(result.factures).toBeDefined();
     expect(result.factures[0].id).toBe(101);
-    expect(result.factures[0].label).toBe('Invoice Oct');
-    expect(result.factures[0].size).toBe(1542);
+    expect(result.factures[0].libelle).toBe('Invoice Oct');
+    expect(result.factures[0].taille).toBe(1542);
 
-    expect(result.administratives).toBeDefined();
-    expect(result.administratives![0].id).toBe(202);
-    expect(result.administratives![0].label).toBe('Rules.pdf');
-    expect(result.administratives![0].signatureRequired).toBe('1');
+    expect(result.administratifs).toBeDefined();
+    expect(result.administratifs![0].id).toBe(202);
+    expect(result.administratifs![0].libelle).toBe('Rules.pdf');
+    expect(result.administratifs![0].signatureDemandee).toBe('1');
   });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

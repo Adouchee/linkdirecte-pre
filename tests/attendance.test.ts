@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getAttendance, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -8,21 +8,21 @@ describe('Attendance Module', () => {
   let lastRequest: { url: string; method: string; body: any } | null = null;
 
   const mockAccount = {
-    loginId: 1234567,
+    idLogin: 1234567,
     id: 9876,
     uid: 'session_uid',
     identifiant: 'Test.user',
-    accountType: 'E' as const,
-    firstName: 'John',
-    lastName: 'Doe',
+    typeCompte: 'E' as const,
+    prenom: 'John',
+    nom: 'Doe',
     email: 'john.doe@example.com',
-    schoolName: 'Ecole Test',
+    nomEtablissement: 'Ecole Test',
     main: true,
     profile: {
       sexe: 'M' as const,
-      photoUrl: 'https://example.com/photo.jpg',
+      photo: 'https://example.com/photo.jpg',
     },
-    modules: [{ code: 'VIESCOLAIRE', enable: true, badge: 0, params: {} }],
+    modules: [{ code: 'VIE_SCOLAIRE', enable: true, badge: 0, params: {} }],
   };
 
   beforeEach(() => {
@@ -92,4 +92,3 @@ describe('Attendance Module', () => {
     expect(result.delays![0].id).toBe(2);
   });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

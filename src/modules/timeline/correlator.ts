@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { getGrades } from '../grades';
 import { getAttendance } from '../attendance';
 import dayjs from 'dayjs';
@@ -26,19 +26,32 @@ export async function correlate(): Promise<Correlation[]> {
   ]);
 
   const correlations: Correlation[] = [];
-  const grades = (gradesData as any).grades || [];
+  const grades = (gradesData as any).notes || [];
   const subjectGrades = groupGradesBySubject(grades);
 
   subjectGrades.forEach((gradeList, subject) => {
-    if (gradeList.length < 5) return;
+    const values: number[] = [];
+    const validGradeList: any[] = [];
 
-    const values = gradeList.map(
-      (g: any) =>
-        (parseFloat(g.value.replace(',', '.')) / parseFloat(g.outOf)) * 20,
-    );
+    for (const g of gradeList) {
+      if (g.valeur == null || g.noteSur == null) {
+        continue;
+      }
+      const parsedVal = parseFloat(String(g.valeur).replace(',', '.'));
+      const parsedSur = parseFloat(String(g.noteSur).replace(',', '.'));
 
-    correlations.push(analyzeGradeTrend(subject, values, gradeList.length));
-    correlations.push(analyzeDayOfWeekPattern(subject, gradeList, values));
+      if (isNaN(parsedVal) || isNaN(parsedSur) || parsedSur === 0) {
+        continue;
+      }
+
+      values.push((parsedVal / parsedSur) * 20);
+      validGradeList.push(g);
+    }
+
+    if (values.length < 5) return;
+
+    correlations.push(analyzeGradeTrend(subject, values, values.length));
+    correlations.push(analyzeDayOfWeekPattern(subject, validGradeList, values));
   });
 
   return correlations;
@@ -48,9 +61,9 @@ function groupGradesBySubject(grades: any[]): Map<string, any[]> {
   const map = new Map<string, any[]>();
 
   for (const grade of grades) {
-    const list = map.get(grade.subjectLabel) || [];
+    const list = map.get(grade.libelleMatiere) || [];
     list.push(grade);
-    map.set(grade.subjectLabel, list);
+    map.set(grade.libelleMatiere, list);
   }
 
   return map;
@@ -99,4 +112,3 @@ function analyzeDayOfWeekPattern(
     observations: gradeList.length,
   };
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

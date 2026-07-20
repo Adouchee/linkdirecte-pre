@@ -44,7 +44,6 @@ Fetches categorized folders of files made available to the student.
 
 ```typescript
 function getDocuments(options?: {
-  raw?: boolean;
   explain?: boolean;
 }): Promise<DocumentsResult>
 ```
@@ -52,61 +51,11 @@ function getDocuments(options?: {
 #### Parameters
 
 - `options` *(optional)*:
-  - `raw` *(boolean)*: Returns the original raw response from the server if `true`.
   - `explain` *(boolean)*: Includes debugging parameters under `_debug`.
 
 #### Returns
 
 A promise that resolves to a `DocumentsResult` object containing document lists grouped by categories.
-
----
-
-## 📋 Example Response
-
-Below is an example of the resolved `DocumentsResult` payload returned by `getDocuments()`:
-
-```typescript
-{
-  factures: [
-    {
-      id: 10485,
-      label: "Facture Scolarité Mars 2026",
-      date: new Date("2026-03-01T00:00:00.000Z"),
-      size: 145000, // 145KB
-      url: "https://api.ecoledirecte.com/v3/document.awp?id=10485",
-      studentId: "12345",
-      signatureRequired: false,
-      type: "Facture"
-    }
-  ],
-  grades: [
-    {
-      id: 10486,
-      label: "Bulletin du 1er Trimestre",
-      date: new Date("2026-02-15T00:00:00.000Z"),
-      size: 250000, // 250KB
-      url: "https://api.ecoledirecte.com/v3/document.awp?id=10486",
-      studentId: "12345",
-      signatureRequired: true, // Needs electronic signature!
-      type: "Bulletin"
-    }
-  ],
-  viescolaire: [],
-  administratives: [
-    {
-      id: 10487,
-      label: "Fiche d'inscription 2026-2027",
-      date: new Date("2026-03-10T00:00:00.000Z"),
-      size: 412000,
-      url: "https://api.ecoledirecte.com/v3/document.awp?id=10487",
-      studentId: "12345",
-      signatureRequired: false,
-      type: "Administratif"
-    }
-  ],
-  toUploadList: []
-}
-```
 
 ---
 
@@ -135,10 +84,10 @@ Provides all the metadata you need to describe and download a specific document:
 | `id` | `number` | Unique ID of the document. |
 | `label` | `string` | The title/label of the document (e.g., `"Bulletin du 1er Trimestre"`). |
 | `date` | `Date` | The official publication date of this document. |
-| `subjectLabel` | `string` *(optional)* | Subject label if related to a specific class. |
-| `teacherName` | `string` *(optional)* | Teacher related to the document. |
+| `libelleMatiere` | `string` *(optional)* | Subject label if related to a specific class. |
+| `nomProf` | `string` *(optional)* | Teacher related to the document. |
 | `size` | `number` *(optional)* | Size of the document file in bytes. |
 | `url` | `string` *(optional)* | The secure download URL. Pass this URL to `download()` to fetch the file! |
 | `studentId` | `string` *(optional)* | The ID of the student associated with the document. |
-| `signatureRequired` | `boolean` *(optional)* | Whether parents or students are required to electronically sign this document. |
+| `signatureDemandee` | `boolean` *(optional)* | Whether parents or students are required to electronically sign this document. |
 | `type` | `string` *(optional)* | Category code. |

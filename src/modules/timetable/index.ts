@@ -1,20 +1,18 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
 import dayjs from 'dayjs';
 
 export interface TimetableEntry {
   id: number;
-  subjectCode: string;
-  subjectLabel: string;
-  teacherName?: string;
-  room?: string;
-  group?: string;
-  startDate: Date;
-  endDate: Date;
-  isCancelled?: boolean;
-  isDetention?: boolean;
-  isExempted?: boolean;
+  codeMatiere: string;
+  matiere: string;
+  prof?: string;
+  salle?: string;
+  groupe?: string;
+  start_date: Date;
+  end_date: Date;
+  isAnnule?: boolean;
   color?: string;
   [key: string]: unknown;
 }
@@ -28,7 +26,6 @@ export async function getTimetable(
   options: {
     startDate?: string | Date;
     endDate?: string | Date;
-    raw?: boolean;
     explain?: boolean;
   } = {},
 ): Promise<TimetableResult> {
@@ -60,4 +57,3 @@ export async function getTimetableIcalUrl(): Promise<string> {
   });
   return `https://api.ecoledirecte.com/v3/${result.url}`;
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

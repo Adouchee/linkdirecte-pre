@@ -43,7 +43,6 @@ function getCloud(options?: GetCloudOptions): Promise<CloudEntry[]>
 
 - `options` *(optional)*:
   - `depth` *(number)*: How many folders deep the SDK should scan and build children arrays for. Defaults to `3`.
-  - `raw` *(boolean)*: Returns the original raw response from the server if `true`.
   - `explain` *(boolean)*: Includes request dumps, logs, and caching details in `_debug`.
 
 ---
@@ -56,7 +55,7 @@ Creates a new folder under a parent directory.
 function createFolder(
   name: string,
   parentNode: CloudNode,
-  options?: { raw?: boolean; explain?: boolean }
+  options?: { explain?: boolean }
 ): Promise<CloudNode>
 ```
 
@@ -64,7 +63,7 @@ function createFolder(
 
 - `name` *(string)*: The name for your new folder.
 - `parentNode` *(CloudNode)*: The folder node where your new folder should be created.
-- `options` *(optional)*: `{ raw?: boolean, explain?: boolean }`.
+- `options` *(optional)*: `{, explain?: boolean }`.
 
 #### Example
 
@@ -89,14 +88,14 @@ Moves files or folders to the Recycle Bin / Trash.
 ```typescript
 function deleteNodes(
   nodes: CloudNode[],
-  options?: { raw?: boolean; explain?: boolean }
+  options?: { explain?: boolean }
 ): Promise<{ success: boolean }>
 ```
 
 #### Parameters
 
 - `nodes` *(CloudNode[])*: An array of file or folder nodes to delete.
-- `options` *(optional)*: `{ raw?: boolean, explain?: boolean }`.
+- `options` *(optional)*: `{, explain?: boolean }`.
 
 #### Example
 
@@ -112,57 +111,6 @@ if (oldFile) {
     console.log("File successfully moved to trash!");
   }
 }
-```
-
----
-
-## 📋 Example Response
-
-Below is an example of the resolved list of `CloudEntry` items returned by `getCloud()`:
-
-```typescript
-[
-  {
-    id: "folder_112233",
-    type: "folder",
-    label: "Math Homework Documents",
-    date: "2026-03-12 11:22:33",
-    size: 2048576, // 2MB total folder size
-    isReadOnly: false,
-    isHidden: false,
-    isTrash: false,
-    isLoaded: true,
-    children: [
-      {
-        id: "file_445566",
-        type: "file",
-        label: "geometry_formulas.pdf",
-        date: "2026-03-12 11:23:10",
-        size: 512400, // 512KB
-        isReadOnly: false,
-        isHidden: false,
-        isTrash: false
-      }
-    ],
-    owner: {
-      id: 9988,
-      type: "E",
-      lastName: "Doe",
-      firstName: "Jane",
-      particule: ""
-    }
-  },
-  {
-    id: "file_778899",
-    type: "file",
-    label: "profile_backup.zip",
-    date: "2026-03-10 14:05:00",
-    size: 15432000, // 15.4MB
-    isReadOnly: false,
-    isHidden: false,
-    isTrash: false
-  }
-]
 ```
 
 ---
@@ -190,8 +138,8 @@ interface CloudNode {
   owner?: {
     id: number;
     type: string;
-    lastName: string;
-    firstName: string;
+    nom: string;
+    prenom: string;
     particule: string;
   };
 }

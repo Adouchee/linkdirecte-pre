@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getCloud, createFolder, deleteNodes, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -9,19 +9,19 @@ describe('Cloud Module', () => {
   let lastRequest: { url: string; method: string; body: any } | null = null;
 
   const mockAccount = {
-    loginId: 1234567,
+    idLogin: 1234567,
     id: 9876,
     uid: 'session_uid',
     identifiant: 'Test.user',
-    accountType: 'E' as const,
-    firstName: 'John',
-    lastName: 'Doe',
+    typeCompte: 'E' as const,
+    prenom: 'John',
+    nom: 'Doe',
     email: 'john.doe@example.com',
-    schoolName: 'Ecole Test',
+    nomEtablissement: 'Ecole Test',
     main: true,
     profile: {
       sexe: 'M' as const,
-      photoUrl: 'https://example.com/photo.jpg',
+      photo: 'https://example.com/photo.jpg',
     },
     modules: [{ code: 'CLOUD', enable: true, badge: 0, params: {} }],
   };
@@ -78,7 +78,7 @@ describe('Cloud Module', () => {
     expect(lastRequest!.url).toContain('verbe=get');
     expect(lastRequest!.body).toEqual({ profondeur: 4 });
     expect(result.length).toBe(1);
-    expect((result[0] as any).label).toBe('My Folder');
+    expect((result[0] as any).libelle).toBe('My Folder');
   });
 
   it('creates a new folder under a parent node', async () => {
@@ -169,4 +169,3 @@ describe('Cloud Module', () => {
     expect(result.success).toBe(true);
   });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

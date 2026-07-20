@@ -18,7 +18,12 @@ async function deriveKey(secret: string, salt: Uint8Array): Promise<CryptoKey> {
     ['deriveKey'],
   );
   return webCrypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt, iterations: KDF_ITERATIONS, hash: 'SHA-256' },
+    {
+      name: 'PBKDF2',
+      salt: salt as any,
+      iterations: KDF_ITERATIONS,
+      hash: 'SHA-256',
+    },
     keyMaterial,
     { name: ALGORITHM, length: KEY_LEN * 8 },
     false,

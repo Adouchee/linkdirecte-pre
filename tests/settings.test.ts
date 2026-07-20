@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getSettings, updateSettings, updateAccessibility, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -8,19 +8,19 @@ describe('Settings Module', () => {
   let requests: { url: string; method: string; body: any }[] = [];
 
   const mockAccount = {
-    loginId: 1234567,
+    idLogin: 1234567,
     id: 9876,
     uid: 'session_uid',
     identifiant: 'Test.user',
-    accountType: 'E' as const,
-    firstName: 'John',
-    lastName: 'Doe',
+    typeCompte: 'E' as const,
+    prenom: 'John',
+    nom: 'Doe',
     email: 'john.doe@example.com',
-    schoolName: 'Ecole Test',
+    nomEtablissement: 'Ecole Test',
     main: true,
     profile: {
       sexe: 'M' as const,
-      photoUrl: 'https://example.com/photo.jpg',
+      photo: 'https://example.com/photo.jpg',
     },
     modules: [{ code: 'MESSAGERIE', enable: true, badge: 0, params: {} }],
   };
@@ -59,7 +59,7 @@ describe('Settings Module', () => {
           message: '',
           data: {
             email: 'john.doe@example.com',
-            telPortable: '0600000000',
+            portable: '0600000000',
           },
         }),
         { status: 200, headers: { 'Content-Type': 'application/json' } },
@@ -71,7 +71,7 @@ describe('Settings Module', () => {
     expect(requests.length).toBe(1);
     expect(requests[0].url).toContain('/logins/1234567.awp');
     expect(result.email).toBe('john.doe@example.com');
-    expect(result.mobilePhone).toBe('0600000000');
+    expect(result.portable).toBe('0600000000');
   });
 
   it('updates settings successfully', async () => {
@@ -150,4 +150,3 @@ describe('Settings Module', () => {
     expect(result.success).toBe(true);
   });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

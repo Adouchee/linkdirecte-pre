@@ -1,22 +1,19 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
-import { decodeBase64Content } from '../../core/transform';
 
 export interface TimelineEntry {
   id: number;
-  elementType: string;
-  title?: string;
-  subtitle?: string;
-  content?: string;
-  creationDate: Date;
-  subjectLabel?: string;
-  teacherName?: string;
+  typeElement: string;
+  titre?: string;
+  soustitre?: string;
+  contenu?: string;
+  date: Date;
   [key: string]: unknown;
 }
 
 export async function getTimeline(
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<TimelineEntry[]> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/timeline.awp?v=7.14.3&verbe=get`;
@@ -28,26 +25,15 @@ export async function getTimeline(
 }
 
 export async function getCommonTimeline(
-  options: { raw?: boolean; explain?: boolean } = {},
-): Promise<TimelineEntry[]> {
+  options: { explain?: boolean } = {},
+): Promise<any> {
   const account = requireCurrentAccount();
   const endpoint = `/E/${account.id}/timelineAccueilCommun.awp?v=7.14.3&verbe=get`;
-  const result = await edFetch<any>(endpoint, {
+  return edFetch<any>(endpoint, {
     method: 'POST',
     body: {},
     ...options,
   });
-
-  if (!options.raw && result?.stickyNotes) {
-    for (const postit of result.stickyNotes) {
-      if (typeof postit.content === 'string') {
-        postit.content = decodeBase64Content(postit.content);
-      }
-    }
-  }
-
-  return result;
 }
 
 export * from './correlator';
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

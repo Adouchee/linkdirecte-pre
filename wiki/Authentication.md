@@ -18,7 +18,7 @@ Perfect for quick scripts!
 import { login } from "linkdirecte";
 
 const session = await login("your_username", "your_password");
-console.log(`Successfully logged in as ${session.user.firstName}!`);
+console.log(`Successfully logged in as ${session.user.prenom}!`);
 ```
 
 ### Option B: Unified Object Style (Recommended)
@@ -33,7 +33,7 @@ const session = await login({
   password: "your_password",
   rememberMe: true, // Automatically refreshes session securely for easy subsequent reconnects!
 });
-console.log(`Hello, ${session.user.firstName}!`);
+console.log(`Hello, ${session.user.prenom}!`);
 ```
 
 ---
@@ -64,7 +64,7 @@ const session = await login("username", "password", {
 
 ### 2. The Step-by-Step Response (Interactive)
 
-If no callback is provided, `login()` returns a special `LoginChallenge` object. You can present this to your user and call its `.answer()` method when they're ready!
+If no callback is provided, `login()` returns a special `LoginChallenge` object. You can present this to your user and call its `.reponse()` method when they're ready!
 
 ```typescript
 import { login } from "linkdirecte";
@@ -77,10 +77,10 @@ if ("question" in result) {
   console.log("Options:", result.choices);
 
   // Submit the selected choice index or option text:
-  const session = await result.answer("My Secret Answer");
-  console.log(`Logged in! Hello, ${session.user.firstName}`);
+  const session = await result.reponse("My Secret Answer");
+  console.log(`Logged in! Hello, ${session.user.prenom}`);
 } else {
-  console.log(`Logged in... without 2FA?! Hello, ${result.user.firstName}`);
+  console.log(`Logged in... without 2FA?! Hello, ${result.user.prenom}`);
 }
 ```
 
@@ -141,81 +141,11 @@ async function refreshToken(): Promise<string>
 
 ---
 
-## 📋 Example Response
-
-Below is an example of the resolved `LoginSuccess` payload returned upon a successful login:
-
-```typescript
-{
-  token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNDUsInVpZCI6IjY3ODkwIiwidXNlcm5hbWUiOiJqYW5lLmRvZSJ9...",
-  sessionId: "session_abc123xyz789",
-  user: {
-    loginId: 12345,
-    id: 12345,
-    uid: "student-uid-999",
-    identifiant: "jane.doe",
-    accountType: "E",
-    firstName: "Jane",
-    lastName: "Doe",
-    email: "jane.doe@scolup.edu",
-    schoolName: "Lycée Sainte-Marie",
-    main: true,
-    accessToken: "access-token-xyz-123",
-    profile: {
-      sexe: "F",
-      photoUrl: "https://api.ecoledirecte.com/v3/photo.awp?uid=student-uid-999",
-      classe: {
-        id: 456,
-        code: "TERM-G1",
-        label: "Terminale Générale 1"
-      }
-    },
-    modules: [
-      {
-        code: "NOTES",
-        enable: true,
-        badge: 0,
-        params: {}
-      },
-      {
-        code: "CAHIER_DE_TEXTES",
-        enable: true,
-        badge: 2,
-        params: {}
-      },
-      {
-        code: "MESSAGERIE",
-        enable: true,
-        badge: 5,
-        params: {}
-      }
-    ]
-  }
-}
-```
-
-If the login requires a 2FA challenge, the returned `LoginChallenge` object looks like this:
-
-```typescript
-{
-  type: "securityQuestion",
-  question: "What is your favorite animal?",
-  choices: [
-    "A) Dolphin",
-    "B) Lion",
-    "C) Eagle"
-  ],
-  answer: async (choiceIndexOrText) => { /* ... returns Promise<LoginSuccess> ... */ }
-}
-```
-
----
-
 ## 🗂️ Type Definitions
 
 ### `LoginResult`
 
-The return value of `login()` is a union:
+The return valeur of `login()` is a union:
 
 ```typescript
 type LoginResult = LoginSuccess | LoginChallenge;
@@ -242,7 +172,7 @@ interface LoginChallenge {
   type: "securityQuestion";
   question: string;
   choices: string[];
-  answer: (choiceIndexOrText: number | string) => Promise<LoginSuccess>;
+  reponse: (choiceIndexOrText: number | string) => Promise<LoginSuccess>;
 }
 ```
 
@@ -256,16 +186,16 @@ interface Account {
   id: number;
   uid: string;
   identifiant: string;
-  accountType: "E" | "P" | "A" | "F"; // "E" for student
-  firstName: string;
-  lastName: string;
+  typeCompte: "E" | "P" | "A" | "F"; // "E" for student
+  prenom: string;
+  nom: string;
   email: string;
-  schoolName: string;
+  nomEtablissement: string;
   main: boolean;
   accessToken?: string;
   profile: {
     sexe: "M" | "F";
-    photoUrl: string;
+    photo: string;
     classe?: {
       id: number;
       code: string;

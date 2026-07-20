@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getTimetable, getTimetableIcalUrl, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -8,19 +8,19 @@ describe('Timetable Module', () => {
   let requests: { url: string; method: string; body: any }[] = [];
 
   const mockAccount = {
-    loginId: 1234567,
+    idLogin: 1234567,
     id: 9876,
     uid: 'session_uid',
     identifiant: 'Test.user',
-    accountType: 'E' as const,
-    firstName: 'John',
-    lastName: 'Doe',
+    typeCompte: 'E' as const,
+    prenom: 'John',
+    nom: 'Doe',
     email: 'john.doe@example.com',
-    schoolName: 'Ecole Test',
+    nomEtablissement: 'Ecole Test',
     main: true,
     profile: {
       sexe: 'M' as const,
-      photoUrl: 'https://example.com/photo.jpg',
+      photo: 'https://example.com/photo.jpg',
     },
     modules: [{ code: 'EDT', enable: true, badge: 0, params: {} }],
   };
@@ -62,7 +62,7 @@ describe('Timetable Module', () => {
               {
                 id: 1,
                 codeMatiere: 'MATHS',
-                libelleMatiere: 'Mathematics',
+                matiere: 'Mathematics',
                 start_date: '2023-10-15 08:30',
                 end_date: '2023-10-15 10:30',
               },
@@ -87,8 +87,8 @@ describe('Timetable Module', () => {
     });
     expect(result.timetable).toBeDefined();
     expect(result.timetable[0].id).toBe(1);
-    expect(result.timetable[0].subjectCode).toBe('MATHS');
-    expect(result.timetable[0].subjectLabel).toBe('Mathematics');
+    expect(result.timetable[0].codeMatiere).toBe('MATHS');
+    expect(result.timetable[0].matiere).toBe('Mathematics');
   });
 
   it('retrieves ICAL timetable URL', async () => {
@@ -125,4 +125,3 @@ describe('Timetable Module', () => {
     expect(url).toBe('https://api.ecoledirecte.com/v3/ical_url_hash');
   });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

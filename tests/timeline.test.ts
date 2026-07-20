@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { getTimeline, getCommonTimeline, correlate, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -17,19 +17,19 @@ describe('Timeline Module', () => {
   let requests: { url: string; method: string; body: any }[] = [];
 
   const mockAccount = {
-    loginId: 1234567,
+    idLogin: 1234567,
     id: 9876,
     uid: 'session_uid',
     identifiant: 'Test.user',
-    accountType: 'E' as const,
-    firstName: 'John',
-    lastName: 'Doe',
+    typeCompte: 'E' as const,
+    prenom: 'John',
+    nom: 'Doe',
     email: 'john.doe@example.com',
-    schoolName: 'Ecole Test',
+    nomEtablissement: 'Ecole Test',
     main: true,
     profile: {
       sexe: 'M' as const,
-      photoUrl: 'https://example.com/photo.jpg',
+      photo: 'https://example.com/photo.jpg',
     },
     modules: [
       { code: 'TIMELINE', enable: true, badge: 0, params: {} },
@@ -88,8 +88,8 @@ describe('Timeline Module', () => {
     expect(requests[0].url).toContain('/eleves/9876/timeline.awp');
     expect(result.length).toBe(1);
     expect(result[0].id).toBe(111);
-    expect(result[0].elementType).toBe('MESSAGE');
-    expect(result[0].title).toBe('Class meeting');
+    expect(result[0].typeElement).toBe('MESSAGE');
+    expect(result[0].titre).toBe('Class meeting');
   });
 
   it('fetches common timeline and decodes sticky notes', async () => {
@@ -128,9 +128,9 @@ describe('Timeline Module', () => {
 
     expect(requests.length).toBe(1);
     expect(requests[0].url).toContain('/E/9876/timelineAccueilCommun.awp');
-    expect(result.stickyNotes).toBeDefined();
-    expect(result.stickyNotes[0].id).toBe(222);
-    expect(result.stickyNotes[0].content).toBe('Important reminder!');
+    expect(result.postits).toBeDefined();
+    expect(result.postits[0].id).toBe(222);
+    expect(result.postits[0].contenu).toBe('Important reminder!');
   });
 
   it('runs correlator analysis on grades and attendance', async () => {
@@ -232,4 +232,3 @@ describe('Timeline Module', () => {
     expect(dayPattern!.observations).toBe(5);
   });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

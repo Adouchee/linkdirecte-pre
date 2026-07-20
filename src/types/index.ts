@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 export interface EdResponse<T> {
   host: string;
   code: number;
@@ -10,24 +10,24 @@ export interface EdResponse<T> {
 export type AccountType = 'E' | 'P' | 'A' | 'F';
 
 export interface Account {
-  loginId: number;
+  idLogin: number;
   id: number;
   uid: string;
   identifiant: string;
-  accountType: AccountType;
-  firstName: string;
-  lastName: string;
+  typeCompte: AccountType;
+  prenom: string;
+  nom: string;
   email: string;
-  schoolName: string;
+  nomEtablissement: string;
   main: boolean;
   accessToken?: string;
   profile: {
     sexe: 'M' | 'F';
-    photoUrl: string;
+    photo: string;
     classe?: {
       id: number;
       code: string;
-      label: string;
+      libelle: string;
     };
   };
   modules: Array<{
@@ -60,9 +60,9 @@ export interface AccountSettings {
   id: number;
   identifiant: string;
   email: string;
-  mobilePhone: string;
-  secretQuestion: string;
-  answer: string;
+  portable: string;
+  questionSecrete: string;
+  reponse: string;
   accessToken: string;
   possibleQuestions: string[];
 }
@@ -137,21 +137,21 @@ export type WithDebug<T> = T & { _debug?: DebugInfo };
 export interface CloudNode {
   id: string;
   type: 'file' | 'folder';
-  label: string;
+  libelle: string;
   date: string;
-  size: number;
-  isReadOnly: boolean;
-  isHidden: boolean;
+  taille: number;
+  readonly: boolean;
+  hidden: boolean;
   isTrash: boolean;
   isLoaded?: boolean;
   quota?: number;
   displayText?: string;
   children?: CloudNode[];
-  owner?: {
+  proprietaire?: {
     id: number;
     type: string;
-    lastName: string;
-    firstName: string;
+    nom: string;
+    prenom: string;
     particule: string;
   };
 }
@@ -166,4 +166,3 @@ export interface CloudFileNode extends CloudNode {
 }
 
 export type CloudEntry = CloudFolderNode | CloudFileNode;
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

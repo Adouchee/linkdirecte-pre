@@ -1,6 +1,6 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect } from 'bun:test';
-import { transform, decodeBase64, decodeBase64Content } from '../src/core/transform';
+import { transform, decodeBase64, safeDecodeBase64 } from '../src/core/transform';
 
 describe('Transform Module', () => {
   describe('decodeBase64', () => {
@@ -14,68 +14,64 @@ describe('Transform Module', () => {
     });
   });
 
-  describe('decodeBase64Content', () => {
-    it('returns short strings as-is', () => {
-      expect(decodeBase64Content('hi')).toBe('hi');
+  describe('safeDecodeBase64', () => {
+    it('returns short strings as-is if not valid base64', () => {
+      expect(safeDecodeBase64('hi')).toBe('hi');
     });
-    it('decodes valid base64 strings longer than 20 chars', () => {
+    it('decodes valid base64 strings', () => {
       const long = 'a'.repeat(25);
       const encoded = btoa(long);
-      expect(decodeBase64Content(encoded)).toBe(long);
+      expect(safeDecodeBase64(encoded)).toBe(long);
     });
     it('returns invalid base64 as-is gracefully', () => {
-      expect(decodeBase64Content('!!!not-base64!!!')).toBe('!!!not-base64!!!');
+      expect(safeDecodeBase64('!!!not-base64!!!')).toBe('!!!not-base64!!!');
     });
   });
 
   describe('transform', () => {
-    it('renames French keys to English', () => {
+    it('preserves keys and does not rename them', () => {
       const result = transform({ valeur: '15', noteSur: '20' });
-      expect(result).toEqual({ value: '15', outOf: '20' });
+      expect(result).toEqual({ valeur: '15', noteSur: '20' });
     });
 
-    it('coerces boolean fields from 0/1 strings', () => {
+    it('does not coerce boolean fields from 0/1 strings', () => {
       const result = transform({
         interrogation: '1',
         enLettre: '0',
-        isModifie: '0',
       });
-      expect((result as any).isTest).toBe(true);
-      expect((result as any).isLetter).toBe(false);
-      expect((result as any).isModified).toBe(false);
+      expect(result.interrogation).toBe('1');
+      expect(result.enLettre).toBe('0');
     });
 
     it('converts date strings to Date objects', () => {
       const result = transform({ dateSaisie: '2023-10-15' } as any);
-      expect((result as any).entryDate).toBeInstanceOf(Date);
+      expect(result.dateSaisie).toBeInstanceOf(Date);
     });
 
     it('converts datetime strings to Date objects', () => {
       const result = transform({ start_date: '2023-10-15 08:30' } as any);
-      expect((result as any).startDate).toBeInstanceOf(Date);
+      expect(result.start_date).toBeInstanceOf(Date);
     });
 
-    it('keeps null for moyenne and valeur fields', () => {
+    it('preserves null for any fields', () => {
       const result = transform({
         moyenne: null,
         valeur: null,
         val: null,
+        foo: null,
       } as any);
-      expect((result as any).average).toBeNull();
-      expect((result as any).value).toBeNull();
-    });
-
-    it('drops null values for other fields', () => {
-      const result = transform({ foo: null, bar: 'hello' });
-      expect(result).toEqual({ bar: 'hello' });
+      expect(result.moyenne).toBeNull();
+      expect(result.valeur).toBeNull();
+      expect(result.val).toBeNull();
+      expect(result.foo).toBeNull();
     });
 
     it('transforms nested objects recursively', () => {
       const result = transform({
         notes: [{ valeur: '15', noteSur: '20' }],
       } as any);
-      expect((result as any).grades[0].value).toBe('15');
-      expect((result as any).grades[0].outOf).toBe('20');
+      expect(result.notes[0].valeur).toBe('15');
+      expect(result.notes[0].noteSur).toBe('20');
     });
 
     it('handles empty arrays', () => {
@@ -102,16 +98,28 @@ describe('Transform Module', () => {
       expect(transform(d)).toBe(d);
     });
 
-    it('renames Sexe to gender', () => {
-      const result = transform({ sexe: 'M' } as any);
-      expect((result as any).gender).toBe('M');
+    it('decodes specific keys automatically', () => {
+      const result = transform({
+        question: btoa('test question'),
+        enonce: btoa('test enonce'),
+        contenu: btoa('test contenu'),
+        content: btoa('test content'),
+        message: btoa('test message'),
+        libelleEval1: btoa('test libelleEval1'),
+      });
+      expect(result.question).toBe('test question');
+      expect(result.enonce).toBe('test enonce');
+      expect(result.contenu).toBe('test contenu');
+      expect(result.content).toBe('test content');
+      expect(result.message).toBe('test message');
+      expect(result.libelleEval1).toBe('test libelleEval1');
     });
 
-    it('filters null values from arrays', () => {
-      const result = transform([null, { valeur: '15', noteSur: '20' }, undefined] as any);
-      expect((result as any[]).length).toBe(1);
-      expect((result as any[])[0].value).toBe('15');
+    it('decodes propositions array of strings automatically', () => {
+      const result = transform({
+        propositions: [btoa('choice1'), btoa('choice2')],
+      });
+      expect(result.propositions).toEqual(['choice1', 'choice2']);
     });
   });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

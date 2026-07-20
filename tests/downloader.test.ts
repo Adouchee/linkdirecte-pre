@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { download, downloadPhoto, configure, clearSession } from '../src/index';
 import { setToken, setAccount } from '../src/core/store';
@@ -8,19 +8,19 @@ describe('Downloader Module', () => {
   let lastRequest: { url: string; method: string; body: any } | null = null;
 
   const mockAccount = {
-    loginId: 1234567,
+    idLogin: 1234567,
     id: 9876,
     uid: 'session_uid',
     identifiant: 'Test.user',
-    accountType: 'E' as const,
-    firstName: 'John',
-    lastName: 'Doe',
+    typeCompte: 'E' as const,
+    prenom: 'John',
+    nom: 'Doe',
     email: 'john.doe@example.com',
-    schoolName: 'Ecole Test',
+    nomEtablissement: 'Ecole Test',
     main: true,
     profile: {
       sexe: 'M' as const,
-      photoUrl: 'https://example.com/photo.jpg',
+      photo: 'https://example.com/photo.jpg',
     },
     modules: [],
   };
@@ -128,7 +128,7 @@ describe('Downloader Module', () => {
       ...mockAccount,
       profile: {
         ...mockAccount.profile,
-        photoUrl: '//doc1.ecoledirecte.com/PhotoEleves/photo.jpg',
+        photo: '//doc1.ecoledirecte.com/PhotoEleves/photo.jpg',
       }
     };
     setAccount(mockAccountProtocolRelative);
@@ -153,12 +153,12 @@ describe('Downloader Module', () => {
     expect(result).toBeInstanceOf(ArrayBuffer);
   });
 
-  it('returns null if active account has no photoUrl', async () => {
+  it('returns null if active account has no photo', async () => {
     const mockAccountNoPhoto = {
       ...mockAccount,
       profile: {
         ...mockAccount.profile,
-        photoUrl: '',
+        photo: '',
       }
     };
     setAccount(mockAccountNoPhoto);
@@ -167,4 +167,3 @@ describe('Downloader Module', () => {
     expect(result).toBeNull();
   });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

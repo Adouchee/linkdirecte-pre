@@ -337,7 +337,7 @@ export async function refreshToken(): Promise<string> {
           isReLogin: true,
           motdepasse: '???',
           accesstoken: accessToken,
-          typeCompte: account.accountType,
+          typeCompte: account.typeCompte,
           uuid: uuid || '',
         },
         gtk,

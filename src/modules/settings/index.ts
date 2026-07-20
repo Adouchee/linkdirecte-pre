@@ -1,13 +1,13 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
 import type { AccountSettings } from '../../types';
 
 export async function getSettings(
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<AccountSettings> {
   const account = requireCurrentAccount();
-  const endpoint = `/logins/${account.loginId}.awp?v=7.14.3&verbe=get`;
+  const endpoint = `/logins/${account.idLogin}.awp?v=7.14.3&verbe=get`;
   return edFetch<AccountSettings>(endpoint, {
     method: 'POST',
     body: {},
@@ -24,7 +24,7 @@ export async function updateSettings(
     nouveauMotDePasse?: string;
     identifiant?: string;
   },
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<AccountSettings> {
   const account = requireCurrentAccount();
   const payload: Record<string, string> = {
@@ -34,7 +34,7 @@ export async function updateSettings(
   if (data.nouveauMotDePasse) {
     payload.confirmationMotDePasse = data.nouveauMotDePasse;
   }
-  const endpoint = `/logins/${account.loginId}.awp?v=7.14.3&verbe=put`;
+  const endpoint = `/logins/${account.idLogin}.awp?v=7.14.3&verbe=put`;
   return edFetch<AccountSettings>(endpoint, {
     method: 'POST',
     body: payload,
@@ -44,7 +44,7 @@ export async function updateSettings(
 
 export async function updateAccessibility(
   enabled: boolean,
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<{ success: boolean }> {
   const account = requireCurrentAccount();
 
@@ -60,4 +60,3 @@ export async function updateAccessibility(
     },
   );
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

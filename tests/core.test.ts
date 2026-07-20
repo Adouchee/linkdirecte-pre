@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach, mock } from 'bun:test';
 import {
   login,
@@ -42,7 +42,6 @@ describe('Core Fetch Mechanism & Error Handling', () => {
     responseQueue = [];
     mockResponses.clear();
 
-    
     configure({
       storage: undefined,
       passkey: undefined,
@@ -84,7 +83,6 @@ describe('Core Fetch Mechanism & Error Handling', () => {
       const requestObj = { url: urlStr, method, headers, body: parsedBody };
       requests.push(requestObj);
 
-      
       const queuedHandler = responseQueue.shift();
       if (queuedHandler) {
         const { status, headers: resHeaders, body } = queuedHandler();
@@ -97,7 +95,6 @@ describe('Core Fetch Mechanism & Error Handling', () => {
         });
       }
 
-      
       let matchedHandler = null;
       for (const [pattern, handler] of mockResponses.entries()) {
         if (urlStr.includes(pattern)) {
@@ -125,7 +122,6 @@ describe('Core Fetch Mechanism & Error Handling', () => {
         }
       }
 
-      
       return new Response(JSON.stringify({ code: 404, message: 'Not found' }), {
         status: 404,
         headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -141,25 +137,24 @@ describe('Core Fetch Mechanism & Error Handling', () => {
   });
 
   const mockAccount = {
-    loginId: 1234567,
+    idLogin: 1234567,
     id: 9876,
     uid: 'session_uid',
     identifiant: 'Test.user',
-    accountType: 'E' as const,
-    firstName: 'John',
-    lastName: 'Doe',
+    typeCompte: 'E' as const,
+    prenom: 'John',
+    nom: 'Doe',
     email: 'john.doe@example.com',
-    schoolName: 'Ecole Test',
+    nomEtablissement: 'Ecole Test',
     main: true,
     profile: {
       sexe: 'M' as const,
-      photoUrl: 'https://example.com/photo.jpg',
+      photo: 'https://example.com/photo.jpg',
     },
     modules: [{ code: 'NOTES', enable: true, badge: 0, params: {} }],
   };
 
   it('fetches grades and applies transform correctly', async () => {
-    
     setAccount(mockAccount);
     setToken('valid_token');
 
@@ -176,7 +171,7 @@ describe('Core Fetch Mechanism & Error Handling', () => {
               {
                 valeur: '15,5',
                 noteSur: '20',
-                coef: 2, 
+                coef: '2',
                 enLettre: '0',
                 interrogation: '1',
                 dateSaisie: '2023-10-15',
@@ -200,24 +195,23 @@ describe('Core Fetch Mechanism & Error Handling', () => {
 
     const result = await getGrades();
 
-    expect(result.grades.length).toBe(1);
-    expect(result.grades[0].value).toBe('15,5');
-    expect(result.grades[0].coefficient).toBe(2);
-    expect(result.grades[0].isTest).toBe(true);
-    expect(result.grades[0].isLetter).toBe(false);
-    expect(result.grades[0].subjectCode).toBe('MATHS');
+    expect(result.notes.length).toBe(1);
+    expect(result.notes[0].valeur).toBe('15,5');
+    expect(result.notes[0].coef).toBe('2');
+    expect(result.notes[0].interrogation).toBe('1');
+    expect(result.notes[0].enLettre).toBe('0');
+    expect(result.notes[0].codeMatiere).toBe('MATHS');
 
-    expect(result.subjects.length).toBe(1);
-    expect(result.subjects[0].subjectCode).toBe('MATHS');
-    expect(result.subjects[0].coefficient).toBe(2);
-    expect(result.subjects[0].teacherName).toBe('M. Sévère');
+    expect((result as any).matieres.length).toBe(1);
+    expect((result as any).matieres[0].codeMatiere).toBe('MATHS');
+    expect((result as any).matieres[0].coef).toBe(2);
+    expect((result as any).matieres[0].nomProf).toBe('M. Sévère');
   });
 
   it('handles automatic retries on server errors (HTTP 500)', async () => {
     setAccount(mockAccount);
     setToken('valid_token');
 
-    
     responseQueue.push(() => ({
       status: 500,
       body: { code: 500, message: 'Internal Server Error', data: {} },
@@ -236,7 +230,7 @@ describe('Core Fetch Mechanism & Error Handling', () => {
             {
               valeur: '12',
               noteSur: '20',
-              coef: 2,
+              coef: '2',
               enLettre: '0',
               interrogation: '1',
               dateSaisie: '2023-10-15',
@@ -257,11 +251,10 @@ describe('Core Fetch Mechanism & Error Handling', () => {
       },
     }));
 
-    
     configure({ maxRetries: 3, retryDelay: 1 });
 
     const result = await getGrades();
-    expect(result.grades.length).toBe(1);
+    expect(result.notes.length).toBe(1);
     expect(requests.length).toBe(3); 
   });
 
@@ -269,7 +262,6 @@ describe('Core Fetch Mechanism & Error Handling', () => {
     setAccount(mockAccount);
     setToken('valid_token');
 
-    
     configure({ maxRetries: 0 });
 
     responseQueue.push(() => ({
@@ -298,12 +290,10 @@ describe('Core Fetch Mechanism & Error Handling', () => {
 
     configure({ offlineQueue: true, maxRetries: 0 });
 
-    
     globalThis.fetch = async () => {
       throw new Error('Connection refused');
     };
 
-    
     const { edFetch } = await import('../src/core/fetch');
 
     expect(
@@ -320,7 +310,6 @@ describe('Core Fetch Mechanism & Error Handling', () => {
   });
 
   it('handles automatic session refresh (re-login) on session expiry code 521', async () => {
-    
     const storageMock = {
       store: new Map<string, string>(),
       get(key: string) {
@@ -348,20 +337,17 @@ describe('Core Fetch Mechanism & Error Handling', () => {
     });
     setToken('expired_token');
 
-    
     responseQueue.push(() => ({
       status: 200,
       body: { code: 521, message: 'Session expirée', data: {} },
     }));
 
-    
     mockResponses.set('/login.awp?gtk=1', () => ({
       status: 200,
       headers: { 'set-cookie': 'GTK=refreshed_gtk_value; Path=/' },
       body: { code: 200, token: '', message: '', data: {} },
     }));
 
-    
     mockResponses.set('/login.awp?v=', (req) => {
       expect(req.body.accesstoken).toBe('saved_access_token');
       expect(req.body.isReLogin).toBe(true);
@@ -379,7 +365,6 @@ describe('Core Fetch Mechanism & Error Handling', () => {
       };
     });
 
-    
     mockResponses.set('/notes.awp', (req) => {
       expect(req.headers['X-Token']).toBe('new_valid_token');
       return {
@@ -392,7 +377,7 @@ describe('Core Fetch Mechanism & Error Handling', () => {
               {
                 valeur: '12',
                 noteSur: '20',
-                coef: 2,
+                coef: '2',
                 enLettre: '0',
                 interrogation: '1',
                 dateSaisie: '2023-10-15',
@@ -415,7 +400,7 @@ describe('Core Fetch Mechanism & Error Handling', () => {
     });
 
     const result = await getGrades();
-    expect(result.grades.length).toBe(1);
+    expect(result.notes.length).toBe(1);
   });
 
   it('verifies that errors construct clean, descriptive, formatted messages', async () => {
@@ -431,16 +416,13 @@ describe('Core Fetch Mechanism & Error Handling', () => {
 
       await encrypted.set('test_key', 'plain_text_value');
 
-      
       const encryptedValue = await base.get('test_key');
       expect(encryptedValue).not.toBeNull();
       expect(encryptedValue).not.toBe('plain_text_value');
 
-      
       const decryptedValue = await encrypted.get('test_key');
       expect(decryptedValue).toBe('plain_text_value');
 
-      
       const wrongEncrypted = encryptedStorage(base, 'wrong-key');
       const wrongValue = await wrongEncrypted.get('test_key');
       expect(wrongValue).toBeNull();
@@ -450,7 +432,6 @@ describe('Core Fetch Mechanism & Error Handling', () => {
       configure({ storage: undefined });
       const config = getConfig();
       expect(config.storage).toBeDefined();
-      
       expect(config.storage!.get).toBeDefined();
     });
 
@@ -459,15 +440,12 @@ describe('Core Fetch Mechanism & Error Handling', () => {
       configure({ storage: base, passkey: 'auto-key' });
 
       const config = getConfig();
-      
       await config.storage!.set('ed_tk', 'my-secret-token');
 
-      
       const baseValue = await base.get('ed_tk');
       expect(baseValue).not.toBeNull();
       expect(baseValue).not.toBe('my-secret-token');
 
-      
       const decrypted = await config.storage!.get('ed_tk');
       expect(decrypted).toBe('my-secret-token');
     });
@@ -481,8 +459,6 @@ describe('Core Fetch Mechanism & Error Handling', () => {
           return fileContents[key] || null;
         },
         async set(key: string, value: string) {
-          
-          
           await new Promise((r) => setTimeout(r, 2));
           const current = { ...fileContents };
           current[key] = value;
@@ -512,4 +488,3 @@ describe('Core Fetch Mechanism & Error Handling', () => {
     });
   });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

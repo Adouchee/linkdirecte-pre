@@ -32,7 +32,6 @@ export interface FetchOptions {
   method?: HttpMethod;
   body?: unknown;
   params?: QueryParams;
-  raw?: boolean;
   explain?: boolean;
   skipAuth?: boolean;
   useGtk?: string;
@@ -103,7 +102,7 @@ export async function edFetch<T>(
       : undefined;
     const ttl = cacheModule ? getCacheTtl(cacheModule) : 0;
     const isCacheable =
-      ttl > 0 && !options.raw && !options.isDownload && !options.returnEnvelope;
+      ttl > 0 && !options.isDownload && !options.returnEnvelope;
 
     if (isCacheable && cacheKey) {
       const cached = getFromCache<T>(cacheKey);
@@ -189,7 +188,7 @@ export async function edFetch<T>(
       return data as unknown as T;
     }
 
-    let result = options.raw ? data.data : transform(data.data);
+    let result = transform(data.data);
 
     if (options.explain) {
       result = {

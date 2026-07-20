@@ -1,50 +1,48 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
 
 export interface GradeEntry {
-  value: string;
-  outOf: string;
-  coefficient: number;
-  isLetter: boolean;
-  isTest: boolean;
+  valeur: string;
+  noteSur: string;
+  coef: string;
+  enLettre: boolean;
   date: Date;
-  subjectCode: string;
-  subjectLabel: string;
-  periodCode: string;
-  entryDate: Date;
-  teacherName?: string;
-  testType?: string;
-  subSubjectCode?: string;
-  subSubjectLabel?: string;
+  codeMatiere: string;
+  libelleMatiere: string;
+  codePeriode: string;
+  dateSaisie: Date;
+  commentaire?: string;
+  typeDevoir?: string;
+  codeSousMatiere?: string;
+  libelleSousMatiere?: string;
   [key: string]: unknown;
 }
 
 export interface SubjectEntry {
-  subjectCode: string;
-  subjectLabel: string;
-  coefficient: number;
-  teacherName?: string;
-  grades: GradeEntry[];
-  average?: number;
-  classAverage?: number;
+  codeMatiere: string;
+  libelleMatiere: string;
+  coef: number;
+  nomProf?: string;
+  notes: GradeEntry[];
+  moyenne?: string;
+  moyenneClasse?: string;
   [key: string]: unknown;
 }
 
 export interface GradesResult {
-  grades: GradeEntry[];
-  subjects: SubjectEntry[];
-  averages?: Array<{
-    subjectCode: string;
-    average: number;
-    classAverage?: number;
+  notes: GradeEntry[];
+  periodes?: Array<{
+    idPeriode: string;
+    codePeriode: string;
+    periode: string;
+    annuel: boolean;
   }>;
-  periods?: Array<{ code: string; label: string }>;
   [key: string]: unknown;
 }
 
 export async function getGrades(
-  options: { periodId?: string; raw?: boolean; explain?: boolean } = {},
+  options: { periodId?: string; explain?: boolean } = {},
 ): Promise<GradesResult> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/notes.awp?v=7.14.3&verbe=get`;
@@ -54,4 +52,3 @@ export async function getGrades(
     ...options,
   });
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

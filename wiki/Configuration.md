@@ -126,7 +126,7 @@ export default {
 ```
 
 ### `asyncStorage` (Custom Wrappers)
-Allows you to wrap any asynchronous key-value storage engine. Here's how to wrap React Native's `@react-native-async-storage/async-storage`:
+Allows you to wrap any asynchronous key-valeur storage engine. Here's how to wrap React Native's `@react-native-async-storage/async-storage`:
 ```typescript
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { configure, asyncStorage } from "linkdirecte";
@@ -134,7 +134,7 @@ import { configure, asyncStorage } from "linkdirecte";
 configure({
   storage: asyncStorage({
     getItem: (key) => AsyncStorage.getItem(key),
-    setItem: (key, value) => AsyncStorage.setItem(key, value),
+    setItem: (key, valeur) => AsyncStorage.setItem(key, valeur),
     removeItem: (key) => AsyncStorage.removeItem(key),
   }),
 });
@@ -301,7 +301,7 @@ The standard interface for defining custom data storage persistence.
 ```typescript
 interface StorageAdapter {
   get(key: string): string | null | Promise<string | null>;
-  set(key: string, value: string): void | Promise<void>;
+  set(key: string, valeur: string): void | Promise<void>;
   delete(key: string): void | Promise<void>;
 }
 ```

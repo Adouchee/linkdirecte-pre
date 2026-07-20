@@ -1,32 +1,28 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from '../../core/fetch';
 import { postOptions } from '../../core/request';
 
 export interface DocumentEntry {
   id: number;
-  name: string;
-  subjectLabel?: string;
-  teacherName?: string;
+  libelle: string;
+  idEleve: number;
   date: Date;
-  size?: number;
-  url?: string;
-  studentId?: string;
-  signatureRequired?: boolean;
-  type?: string;
+  type: string;
+  signatureDemandee?: boolean;
   [key: string]: unknown;
 }
 
 export interface DocumentsResult {
   factures: DocumentEntry[];
-  grades?: DocumentEntry[];
+  notes?: DocumentEntry[];
   viescolaire?: DocumentEntry[];
-  administratives?: DocumentEntry[];
-  toUploadList?: DocumentEntry[];
+  administratifs?: DocumentEntry[];
+  listesPiecesAVerser?: any;
   [key: string]: unknown;
 }
 
 export async function getDocuments(
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<DocumentsResult> {
   const request = {
     endpoint: '/elevesDocuments.awp?v=7.14.3&verbe=get',
@@ -35,4 +31,3 @@ export async function getDocuments(
 
   return edFetch<DocumentsResult>(request.endpoint, request.options);
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

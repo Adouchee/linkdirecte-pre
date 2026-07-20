@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach, mock } from 'bun:test';
 import {
   login,
@@ -45,7 +45,6 @@ describe('Authentication Flow', () => {
     requests = [];
     mockResponses.clear();
 
-    
     configure({
       storage: undefined, 
       on2faRequired: undefined,
@@ -87,7 +86,6 @@ describe('Authentication Flow', () => {
 
       requests.push({ url: urlStr, method, headers, body: parsedBody });
 
-      
       let matchedHandler = null;
       for (const [pattern, handler] of mockResponses.entries()) {
         if (urlStr.includes(pattern)) {
@@ -111,7 +109,6 @@ describe('Authentication Flow', () => {
         });
       }
 
-      
       return new Response(JSON.stringify({ code: 404, message: 'Not found' }), {
         status: 404,
         headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -140,7 +137,7 @@ describe('Authentication Flow', () => {
     photo: 'https://example.com/photo.jpg',
     profile: {
       sexe: 'M',
-      photoUrl: 'https://example.com/photo.jpg',
+      photo: 'https://example.com/photo.jpg',
     },
     modules: [{ code: 'NOTES', enable: 1, badge: 0, params: {} }],
   };
@@ -160,20 +157,18 @@ describe('Authentication Flow', () => {
     photo: 'https://example.com/photo2.jpg',
     profile: {
       sexe: 'F',
-      photoUrl: 'https://example.com/photo2.jpg',
+      photo: 'https://example.com/photo2.jpg',
     },
     modules: [{ code: 'NOTES', enable: 1, badge: 0, params: {} }],
   };
 
   it('performs a standard successful login', async () => {
-    
     mockResponses.set('/login.awp?gtk=1', () => ({
       status: 200,
       headers: { 'set-cookie': 'GTK=mocked_gtk_value; Path=/' },
       body: { code: 200, token: '', message: '', data: {} },
     }));
 
-    
     mockResponses.set('/login.awp?v=', (req) => {
       expect(req.headers['X-GTK']).toBe('mocked_gtk_value');
       expect(req.body.identifiant).toBe('testuser');
@@ -194,27 +189,24 @@ describe('Authentication Flow', () => {
 
     const result = await login('testuser', 'testpass');
 
-    expect(result.user.firstName).toBe('John');
-    expect(result.user.lastName).toBe('Doe');
+    expect(result.user.prenom).toBe('John');
+    expect(result.user.nom).toBe('Doe');
     expect(result.token).toBe('mocked_session_token');
     expect(getAccount()?.id).toBe(9876);
     expect(getLastTokenRefresh()).toBeDefined();
 
-    
     expect(requests.length).toBe(2);
     expect(requests[0].url).toContain('gtk=1');
     expect(requests[1].url).toContain('login.awp?v=');
   });
 
   it('handles 2FA challenge flow successfully', async () => {
-    
     mockResponses.set('/login.awp?gtk=1', () => ({
       status: 200,
       headers: { 'set-cookie': 'GTK=mocked_gtk_value; Path=/' },
       body: { code: 200, token: '', message: '', data: {} },
     }));
 
-    
     mockResponses.set('/login.awp?v=', (req) => {
       if (
         req.body &&
@@ -241,7 +233,6 @@ describe('Authentication Flow', () => {
       };
     });
 
-    
     mockResponses.set('/connexion/doubleauth.awp?verbe=get', () => ({
       status: 200,
       headers: { '2fa-token': 't2', 'x-token': 'x2' },
@@ -260,7 +251,6 @@ describe('Authentication Flow', () => {
       },
     }));
 
-    
     mockResponses.set('/connexion/doubleauth.awp?verbe=post', () => ({
       status: 200,
       headers: { '2fa-token': 't3', 'x-token': 'x3' },
@@ -275,7 +265,6 @@ describe('Authentication Flow', () => {
       },
     }));
 
-    
     const on2faRequired = mock((question, choices) => {
       expect(question).toBe('What is your favorite color?');
       expect(choices).toEqual(['Blue', 'Red', 'Green']);
@@ -286,7 +275,7 @@ describe('Authentication Flow', () => {
 
     expect(on2faRequired).toHaveBeenCalled();
     expect(result.token).toBe('final_session_token');
-    expect(result.user.firstName).toBe('John');
+    expect(result.user.prenom).toBe('John');
   });
 
   it('performs login using the unified options object format', async () => {
@@ -318,7 +307,7 @@ describe('Authentication Flow', () => {
       password: 'testpass_opt',
     });
 
-    expect(result.user.firstName).toBe('John');
+    expect(result.user.prenom).toBe('John');
     expect(result.token).toBe('mocked_session_token');
   });
 
@@ -486,20 +475,18 @@ describe('Authentication Flow', () => {
 
     await switchAccount(5555);
     expect(getAccount()?.id).toBe(5555);
-    expect(getAccount()?.firstName).toBe('Jane');
+    expect(getAccount()?.prenom).toBe('Jane');
 
     expect(switchAccount(9999)).rejects.toThrow();
   });
 
   it('handles logout successfully', async () => {
-    
     mockResponses.set('/login.awp?gtk=1', () => ({
       status: 200,
       headers: { 'set-cookie': 'GTK=mocked_gtk_value; Path=/' },
       body: { code: 200, token: '', message: '', data: {} },
     }));
 
-    
     mockResponses.set('/login.awp?v=', () => ({
       status: 200,
       headers: { 'X-Token': 'mocked_session_token' },
@@ -520,4 +507,3 @@ describe('Authentication Flow', () => {
     expect(getAccount()).toBeUndefined();
   });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

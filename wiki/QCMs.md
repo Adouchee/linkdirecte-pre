@@ -44,7 +44,6 @@ Retrieves a list of all assigned questionnaires/QCMs.
 
 ```typescript
 function getQcms(options?: {
-  raw?: boolean;
   explain?: boolean;
 }): Promise<QcmsResult>
 ```
@@ -59,7 +58,7 @@ Retrieves the question set and candidate choices for a specific QCM.
 function getQcmDetail(
   idQcm: number,
   idAssociation: number,
-  options?: { raw?: boolean; explain?: boolean }
+  options?: { explain?: boolean }
 ): Promise<QcmDetailResult>
 ```
 
@@ -75,7 +74,7 @@ function updateQcmStatus(
   idAssociation: number,
   idParticipant: number,
   action: "updateStartDate" | "updateEndDate",
-  options?: { raw?: boolean; explain?: boolean }
+  options?: { explain?: boolean }
 ): Promise<{ success: boolean }>
 ```
 
@@ -98,61 +97,11 @@ function submitQcmAnswer(
     idQuestion: number;
     choiceIds: number[];
   },
-  options?: { raw?: boolean; explain?: boolean }
+  options?: { explain?: boolean }
 ): Promise<{ success: boolean }>
 ```
 
 - `choiceIds`: An array of numeric choice IDs the student selected for this question.
-
----
-
-## 📋 Example Response
-
-Below is an example of the resolved `QcmsResult` payload returned by `getQcms()`:
-
-```typescript
-{
-  associations: [
-    {
-      id: 48572,
-      qcmId: 1042,
-      title: "Quiz de Révision - Les fractions",
-      subjectLabel: "Mathématiques",
-      teacherName: "Mme. Dupont",
-      date: new Date("2026-03-12T00:00:00.000Z"),
-      status: "Not Started"
-    }
-  ]
-}
-```
-
-Below is an example of the resolved `QcmDetailResult` payload returned by `getQcmDetail(qcmId, associationId)`:
-
-```typescript
-{
-  qcmId: 1042,
-  questions: [
-    {
-      id: 9001,
-      label: "Quelle est la valeur de 1/2 + 1/4 ?",
-      choices: [
-        { id: 301, label: "a) 1/6" },
-        { id: 302, label: "b) 3/4" },
-        { id: 303, label: "c) 2/3" }
-      ]
-    },
-    {
-      id: 9002,
-      label: "Une fraction dont le numérateur est supérieur au dénominateur est une fraction :",
-      choices: [
-        { id: 304, label: "a) Propre" },
-        { id: 305, label: "b) Impropre" },
-        { id: 306, label: "c) Équivalente" }
-      ]
-    }
-  ]
-}
-```
 
 ---
 
@@ -173,8 +122,8 @@ interface QcmsResult {
 | `id` | `number` | The association ID. |
 | `qcmId` | `number` | The questionnaire ID. |
 | `title` | `string` *(optional)* | Title of the test. |
-| `subjectLabel` | `string` *(optional)* | Subject label. |
-| `teacherName` | `string` *(optional)* | Teacher who assigned the QCM. |
+| `libelleMatiere` | `string` *(optional)* | Subject label. |
+| `nomProf` | `string` *(optional)* | Teacher who assigned the QCM. |
 | `date` | `Date` *(optional)* | The date when the quiz was assigned. |
 | `status` | `string` *(optional)* | Quiz state (e.g. `"Not Started"`, `"In Progress"`). |
 

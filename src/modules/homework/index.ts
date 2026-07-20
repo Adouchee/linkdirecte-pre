@@ -1,22 +1,24 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from '../../core/fetch';
 import { postOptions, requireCurrentAccount } from '../../core/request';
-import { decodeBase64Content } from '../../core/transform';
+import { encodeBase64 } from '../../core/transform';
 import { EdApiError } from '../../core/errors';
-import { assertNonEmptyArray } from '../../core/validate';
+import {
+  assertNonEmptyArray,
+  assertNonEmptyString,
+  assertPositiveNumber,
+} from '../../core/validate';
 import dayjs from 'dayjs';
 
 export interface HomeworkEntry {
-  id: number;
-  subjectCode: string;
-  subjectLabel: string;
-  teacherName?: string;
-  givenOn: Date;
+  idDevoir: number;
+  codeMatiere: string;
+  matiere: string;
+  nomProf?: string;
+  donneLe: Date;
   forDate: Date;
-  content: string;
-  isDone: boolean;
-  submitOnline?: boolean;
-  documentsToDo?: Array<{ id: number; label: string; url?: string }>;
+  effectue: boolean;
+  rendreEnLigne?: boolean;
   [key: string]: unknown;
 }
 
@@ -25,7 +27,7 @@ export interface HomeworkResult {
 }
 
 export async function getHomework(
-  options: { withContent?: boolean; raw?: boolean; explain?: boolean } = {},
+  options: { withContent?: boolean; explain?: boolean } = {},
 ): Promise<HomeworkResult> {
   const account = requireCurrentAccount();
   const result = await edFetch<HomeworkResult>(
@@ -37,10 +39,9 @@ export async function getHomework(
     await Promise.all(
       Object.keys(result).map(async (date) => {
         const detail = (await getHomeworkForDate(date, {
-          raw: options.raw,
           explain: options.explain,
         })) as any;
-        result[date] = detail.subjects || detail;
+        result[date] = detail.matieres || detail.subjects || detail;
       }),
     );
   }
@@ -50,7 +51,7 @@ export async function getHomework(
 
 export async function getHomeworkForDate(
   date: string | Date,
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<HomeworkEntry[]> {
   const account = requireCurrentAccount();
   const formattedDate = dayjs(date).format('YYYY-MM-DD');
@@ -65,27 +66,7 @@ export async function getHomeworkForDate(
     options: postOptions({}, options),
   };
 
-  const rawResult = await edFetch<any>(request.endpoint, request.options);
-
-  if (!options.raw && rawResult?.subjects) {
-    for (const subject of rawResult.subjects) {
-      if (subject.toDo?.content) {
-        subject.toDo.content = decodeBase64Content(subject.toDo.content);
-      }
-      if (subject.toDo?.sessionContent?.content) {
-        subject.toDo.sessionContent.content = decodeBase64Content(
-          subject.toDo.sessionContent.content,
-        );
-      }
-      if (subject.sessionContent?.content) {
-        subject.sessionContent.content = decodeBase64Content(
-          subject.sessionContent.content,
-        );
-      }
-    }
-  }
-
-  return rawResult as any;
+  return edFetch<any>(request.endpoint, request.options);
 }
 
 export interface MarkAsDoneResult {
@@ -95,7 +76,7 @@ export interface MarkAsDoneResult {
 
 export async function markAsDone(
   homeworkIds: number[],
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<MarkAsDoneResult> {
   assertNonEmptyArray(homeworkIds, 'homeworkIds');
   const account = requireCurrentAccount();
@@ -112,4 +93,22 @@ export async function markAsDone(
 
   return edFetch<MarkAsDoneResult>(request.endpoint, request.options);
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+
+export async function sendHomeworkComment(
+  idContenu: number,
+  message: string,
+  options: { explain?: boolean } = {},
+): Promise<{ id: number }> {
+  assertPositiveNumber(idContenu, 'idContenu');
+  assertNonEmptyString(message, 'message');
+  const account = requireCurrentAccount();
+  const endpoint = `/eleves/${account.id}/afaire/commentaires.awp?v=7.14.3&verbe=post`;
+  return edFetch<{ id: number }>(endpoint, {
+    method: 'POST',
+    body: {
+      idContenu,
+      message: encodeBase64(message),
+    },
+    ...options,
+  });
+}

@@ -1,13 +1,13 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
 
 export interface QcmEntry {
   id: number;
-  qcmId: number;
-  subjectLabel?: string;
-  title?: string;
-  teacherName?: string;
+  idQcm: number;
+  libelleMatiere?: string;
+  titre?: string;
+  nomProf?: string;
   date?: Date;
   status?: string;
   [key: string]: unknown;
@@ -19,7 +19,7 @@ export interface QcmsResult {
 }
 
 export async function getQcms(
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<QcmsResult> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/qcms/0/associations.awp?v=7.14.3&verbe=get`;
@@ -31,11 +31,11 @@ export async function getQcms(
 }
 
 export interface QcmDetailResult {
-  qcmId: number;
+  idQcm: number;
   questions: Array<{
     id: number;
-    label: string;
-    choices: Array<{ id: number; label: string }>;
+    libelle: string;
+    choices: Array<{ id: number; libelle: string }>;
   }>;
   [key: string]: unknown;
 }
@@ -43,7 +43,7 @@ export interface QcmDetailResult {
 export async function getQcmDetail(
   idQcm: number,
   idAssociation: number,
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<QcmDetailResult> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/qcms/${idQcm}/associations/${idAssociation}.awp?v=7.14.3&verbe=get`;
@@ -59,7 +59,7 @@ export async function updateQcmStatus(
   idAssociation: number,
   idParticipant: number,
   action: 'updateStartDate' | 'updateEndDate',
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<{ success: boolean }> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/qcms/${idQcm}/associations/${idAssociation}/participants/${idParticipant}.awp?v=7.14.3&verbe=patch`;
@@ -79,7 +79,7 @@ export async function submitQcmAnswer(
     idQuestion: number;
     choiceIds: number[];
   },
-  options: { raw?: boolean; explain?: boolean } = {},
+  options: { explain?: boolean } = {},
 ): Promise<{ success: boolean }> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/qcms/${params.idQcm}/associations/${params.idAssociation}/participants/${params.idParticipant}/reponse/${params.idReponse}.awp?v=7.14.3&verbe=patch`;
@@ -96,4 +96,3 @@ export async function submitQcmAnswer(
     ...options,
   });
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

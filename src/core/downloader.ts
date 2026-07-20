@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { edFetch } from './fetch';
 import { getToken, getConfig } from './store';
 import { requireCurrentAccount } from './request';
@@ -33,7 +33,7 @@ export async function downloadPhoto(
   options: { as?: DownloadFormat } = {},
 ): Promise<ArrayBuffer | Blob | ReadableStream | null> {
   const account = requireCurrentAccount();
-  const photoUrl = account.profile?.photoUrl;
+  const photoUrl = account.profile?.photo;
   if (!photoUrl) {
     return null;
   }
@@ -73,4 +73,3 @@ function formatDownloadResponse(
       return response.arrayBuffer();
   }
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
