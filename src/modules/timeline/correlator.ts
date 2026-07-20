@@ -34,11 +34,11 @@ export async function correlate(): Promise<Correlation[]> {
     const validGradeList: any[] = [];
 
     for (const g of gradeList) {
-      if (typeof g.valeur !== 'string' || typeof g.noteSur !== 'string') {
+      if (g.valeur == null || g.noteSur == null) {
         continue;
       }
-      const parsedVal = parseFloat(g.valeur.replace(',', '.'));
-      const parsedSur = parseFloat(g.noteSur.replace(',', '.'));
+      const parsedVal = parseFloat(String(g.valeur).replace(',', '.'));
+      const parsedSur = parseFloat(String(g.noteSur).replace(',', '.'));
 
       if (isNaN(parsedVal) || isNaN(parsedSur) || parsedSur === 0) {
         continue;
