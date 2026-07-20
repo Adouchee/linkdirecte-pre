@@ -18,14 +18,14 @@ const result = await getGrades();
 console.log(`Successfully loaded ${result.grades.length} grades!`);
 
 result.subjects.forEach(subject => {
-  console.log(`--- ${subject.subjectLabel} ---`);
+  console.log(`--- ${subject.libelleMatiere} ---`);
   console.log(`Student Average: ${subject.average ?? "N/A"}`);
   console.log(`Class Average: ${subject.classAverage ?? "N/A"}`);
 
   if (subject.grades.length > 0) {
     console.log("Recent Grades:");
     subject.grades.slice(0, 3).forEach(grade => {
-      console.log(`  • ${grade.value}/${grade.outOf} (Coeff: ${grade.coefficient})`);
+      console.log(`  • ${grade.valeur}/${grade.noteSur} (Coeff: ${grade.coef})`);
     });
   }
 });
@@ -58,113 +58,6 @@ A promise that resolves to a unified `GradesResult` object.
 
 ---
 
-## 📋 Example Response
-
-Below is an example of the resolved `GradesResult` payload returned by `getGrades()`:
-
-```typescript
-{
-  grades: [
-    {
-      value: "16.5",
-      outOf: "20",
-      coefficient: 1,
-      isLetter: false,
-      isTest: true,
-      date: new Date("2026-03-01T00:00:00.000Z"),
-      subjectCode: "MATH",
-      subjectLabel: "Mathématiques",
-      periodCode: "A001",
-      entryDate: new Date("2026-03-02T10:15:00.000Z"),
-      teacherName: "Mme. Dupont",
-      testType: "Devoir Écrit"
-    },
-    {
-      value: "14.0",
-      outOf: "20",
-      coefficient: 2,
-      isLetter: false,
-      isTest: true,
-      date: new Date("2026-02-15T00:00:00.000Z"),
-      subjectCode: "FRAN",
-      subjectLabel: "Français",
-      periodCode: "A001",
-      entryDate: new Date("2026-02-16T09:00:00.000Z"),
-      teacherName: "M. Martin",
-      testType: "Contrôle Continu"
-    }
-  ],
-  subjects: [
-    {
-      subjectCode: "MATH",
-      subjectLabel: "Mathématiques",
-      coefficient: 4,
-      grades: [
-        {
-          value: "16.5",
-          outOf: "20",
-          coefficient: 1,
-          isLetter: false,
-          isTest: true,
-          date: new Date("2026-03-01T00:00:00.000Z"),
-          subjectCode: "MATH",
-          subjectLabel: "Mathématiques",
-          periodCode: "A001",
-          entryDate: new Date("2026-03-02T10:15:00.000Z"),
-          teacherName: "Mme. Dupont"
-        }
-      ],
-      average: 16.5,
-      classAverage: 12.8,
-      teacherName: "Mme. Dupont"
-    },
-    {
-      subjectCode: "FRAN",
-      subjectLabel: "Français",
-      coefficient: 3,
-      grades: [
-        {
-          value: "14.0",
-          outOf: "20",
-          coefficient: 2,
-          isLetter: false,
-          isTest: true,
-          date: new Date("2026-02-15T00:00:00.000Z"),
-          subjectCode: "FRAN",
-          subjectLabel: "Français",
-          periodCode: "A001",
-          entryDate: new Date("2026-02-16T09:00:00.000Z"),
-          teacherName: "M. Martin"
-        }
-      ],
-      average: 14.0,
-      classAverage: 11.5,
-      teacherName: "M. Martin"
-    }
-  ],
-  averages: [
-    {
-      subjectCode: "MATH",
-      average: 16.5,
-      classAverage: 12.8
-    },
-    {
-      subjectCode: "FRAN",
-      average: 14.0,
-      classAverage: 11.5
-    }
-  ],
-  periods: [
-    {
-      code: "A001",
-      label: "Trimestre 1"
-    }
-  ]
-}
-```
-
----
-
 ## 🗂️ Type Definitions
 
 ### `GradesResult`
@@ -174,7 +67,7 @@ interface GradesResult {
   grades: GradeEntry[];               // Flat list of every single grade
   subjects: SubjectEntry[];           // Grades grouped by subject with computed averages
   averages?: Array<{                  // Overall statistical summaries
-    subjectCode: string;
+    codeMatiere: string;
     average: number;
     classAverage?: number;
   }>;
@@ -189,17 +82,17 @@ interface GradesResult {
 
 | Property | Type | Description |
 | :--- | :--- | :--- |
-| `value` | `string` | The grade value (e.g. `"18.5"`, or `"Abs"` for absent). |
-| `outOf` | `string` | The scale of the grade (e.g. `"20"`). |
-| `coefficient` | `number` | Weight of this grade in overall averages. |
-| `isLetter` | `boolean` | `true` if this grade is marked with a letter grade (like A, B, C) instead of a number. |
-| `isTest` | `boolean` | Indicates whether the entry represents a formal test. |
+| `valeur` | `string` | The grade valeur (e.g. `"18.5"`, or `"Abs"` for absent). |
+| `noteSur` | `string` | The scale of the grade (e.g. `"20"`). |
+| `coef` | `number` | Weight of this grade in overall averages. |
+| `enLettre` | `boolean` | `true` if this grade is marked with a letter grade (like A, B, C) instead of a number. |
+| `interrogation` | `boolean` | Indicates whether the entry represents a formal test. |
 | `date` | `Date` | The date when the test/assignment was taken. |
-| `subjectCode` | `string` | Unique code of the subject. |
-| `subjectLabel` | `string` | The title of the subject (e.g., `"Mathématiques"`). |
+| `codeMatiere` | `string` | Unique code of the subject. |
+| `libelleMatiere` | `string` | The title of the subject (e.g., `"Mathématiques"`). |
 | `periodCode` | `string` | The term/period this grade belongs to. |
 | `entryDate` | `Date` | The exact day the grade was posted online. |
-| `teacherName` | `string` *(optional)* | Name of the teacher who graded this test. |
+| `nomProf` | `string` *(optional)* | Name of the teacher who graded this test. |
 | `testType` | `string` *(optional)* | Type category of the exam. |
 | `subSubjectCode` | `string` *(optional)* | Sub-category code. |
 | `subSubjectLabel` | `string` *(optional)* | Sub-category label. |
@@ -210,12 +103,12 @@ Grouped summary of performance for a specific class:
 
 ```typescript
 interface SubjectEntry {
-  subjectCode: string;               // Unique subject code
-  subjectLabel: string;              // Name of the class
-  coefficient: number;               // Subject weight
+  codeMatiere: string;               // Unique subject code
+  libelleMatiere: string;              // Name of the class
+  coef: number;               // Subject weight
   grades: GradeEntry[];              // Array of grades within this subject
   average?: number;                  // Computed average for the active student
   classAverage?: number;             // Class average for comparison
-  teacherName?: string;              // Name of the main teacher
+  nomProf?: string;              // Name of the main teacher
 }
 ```

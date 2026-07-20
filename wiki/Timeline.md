@@ -82,67 +82,6 @@ function correlate(): Promise<Correlation[]>
 
 ---
 
-## 📋 Example Response
-
-Below is an example of the resolved list of `TimelineEntry` items returned by `getTimeline()`:
-
-```typescript
-[
-  {
-    id: 12233,
-    elementType: "Note",
-    creationDate: new Date("2026-03-12T10:15:00.000Z"),
-    title: "Note de Mathématiques",
-    subtitle: "Jane Doe a obtenu un 16.5/20 (Coeff. 1)",
-    subjectLabel: "Mathématiques",
-    teacherName: "Mme. Dupont"
-  },
-  {
-    id: 12234,
-    elementType: "Devoir",
-    creationDate: new Date("2026-03-11T16:00:00.000Z"),
-    title: "Nouveau devoir de Français",
-    subtitle: "Pour le 2026-03-18 : Lecture analytique",
-    subjectLabel: "Français",
-    teacherName: "M. Martin"
-  }
-]
-```
-
-Below is an example of the resolved `Correlation` results array returned by `correlate()`:
-
-```typescript
-[
-  {
-    type: "gradeTrend",
-    subject: "Mathématiques",
-    finding: "Your grade trend is positive. Average increased by 1.2 points over the last 3 tests.",
-    data: {
-      average: 15.8,
-      slope: 0.4
-    },
-    confidence: 0.85,
-    observations: 6
-  },
-  {
-    type: "gradeVsDayOfWeek",
-    subject: "Français",
-    finding: "You tend to get higher grades on assignments due or returned on Tuesdays.",
-    data: {
-      "Monday": 12.0,
-      "Tuesday": 15.5,
-      "Wednesday": 11.0,
-      "Thursday": 13.0,
-      "Friday": 12.5
-    },
-    confidence: 0.72,
-    observations: 8
-  }
-]
-```
-
----
-
 ## 🗂️ Type Definitions
 
 ### `TimelineEntry`
@@ -155,8 +94,8 @@ Below is an example of the resolved `Correlation` results array returned by `cor
 | `title` | `string` *(optional)* | Primary description of the event. |
 | `subtitle` | `string` *(optional)* | Supporting description or sub-label. |
 | `content` | `string` *(optional)* | Extended body text. |
-| `subjectLabel` | `string` *(optional)* | Classroom subject associated with this update. |
-| `teacherName` | `string` *(optional)* | Teacher related to this item. |
+| `libelleMatiere` | `string` *(optional)* | Classroom subject associated with this update. |
+| `nomProf` | `string` *(optional)* | Teacher related to this item. |
 
 ### `Correlation`
 
@@ -165,7 +104,7 @@ interface Correlation {
   type: CorrelationType;             // Category of correlation analysis
   subject: string;                   // Subject name being analyzed
   finding: string;                   // Brief summary of findings
-  data: Record<string, number>;      // Key-value statistics map (averages, days, etc.)
+  data: Record<string, number>;      // Key-valeur statistics map (averages, days, etc.)
   confidence: number;                // Statistical confidence score (from 0 to 1)
   observations: number;              // Number of entries/data-points analyzed
 }

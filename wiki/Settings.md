@@ -18,7 +18,7 @@ const preferences = await getSettings();
 
 console.log(`Identifier: ${preferences.identifiant}`);
 console.log(`Registered Email: ${preferences.email}`);
-console.log(`Mobile Phone: ${preferences.mobilePhone || "None specified"}`);
+console.log(`Mobile Phone: ${preferences.portable || "None specified"}`);
 
 // Update user details (for example, setting a new email)
 const updated = await updateSettings({
@@ -54,7 +54,7 @@ function updateSettings(
     email?: string;
     portable?: string;              // French alias for mobile phone (mapped under the hood)
     questionSecrete?: string;       // French alias for secret question
-    reponse?: string;               // French alias for answer
+    reponse?: string;               // French alias for reponse
     nouveauMotDePasse?: string;     // French alias for new password
     identifiant?: string;           // Username identifier
   },
@@ -92,30 +92,6 @@ if (result.success) {
 
 ---
 
-## 📋 Example Response
-
-Below is an example of the resolved `AccountSettings` payload returned by `getSettings()` or `updateSettings()`:
-
-```typescript
-{
-  id: 12345,
-  identifiant: "jane.doe",
-  email: "jane.doe@scolup.edu",
-  mobilePhone: "+33612345678",
-  secretQuestion: "What was the name of your first pet?",
-  answer: "Fluffy",
-  accessToken: "secure-access-token-9988",
-  possibleQuestions: [
-    "What was the name of your first pet?",
-    "What is your mother's maiden name?",
-    "In which city were you born?",
-    "What was the model of your first car?"
-  ]
-}
-```
-
----
-
 ## 🗂️ Type Definitions
 
 ### `AccountSettings`
@@ -127,8 +103,8 @@ The properties of `AccountSettings` are mapped to clean English keys by the Link
 | `id` | `number` | Unique ID of the login profile. |
 | `identifiant` | `string` | Account username. |
 | `email` | `string` | Registered contact email address. |
-| `mobilePhone` | `string` | Registered mobile telephone number. |
-| `secretQuestion` | `string` | The active security challenge question. |
-| `answer` | `string` | Decoded answer for the security question. |
+| `portable` | `string` | Registered mobile telephone number. |
+| `questionSecrete` | `string` | The active security challenge question. |
+| `reponse` | `string` | Decoded reponse for the security question. |
 | `accessToken` | `string` | Secure session access token. |
 | `possibleQuestions` | `string[]` | Pre-defined questions available to choose from for your security question. |

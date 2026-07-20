@@ -54,67 +54,6 @@ A promise that resolves to an `AttendanceResult` object.
 
 ---
 
-## 📋 Example Response
-
-Below is an example of the resolved `AttendanceResult` payload returned by `getAttendance()` in a real environment (reflecting exact transformed keys):
-
-```typescript
-{
-  attendance: [
-    {
-      id: 3367,
-      studentId: 1234,
-      elementType: "Absence",
-      date: new Date("2025-11-04T00:00:00.000Z"),
-      displayDate: "le mardi 04 novembre 2025 de 16:30 à 17:30",
-      label: "2 cours",
-      reason: "Consultation médicale",
-      isJustified: true,
-      licensePoints: 0,
-      comment: "Rendez-vous médical urgent",
-      justificationType: "",
-      justifiedOnline: false,
-      dontNeedJustification: false,
-      subjectName: "",
-      day: 0
-    },
-    {
-      id: 2876,
-      studentId: 1234,
-      elementType: "Retard",
-      date: new Date("2025-10-13T00:00:00.000Z"),
-      displayDate: "le lundi 13 octobre 2025 de 09:00 à 09:55",
-      label: "00:55",
-      reason: "Panne de reveil ",
-      isJustified: true,
-      licensePoints: 0,
-      comment: "Panne de réveil",
-      justificationType: "Justifiée sur Internet",
-      justifiedOnline: true,
-      dontNeedJustification: false,
-      subjectName: "",
-      day: 0
-    }
-  ],
-  sanctionsEncouragements: [],
-  dispenses: [],
-  settings: {
-    justificationEnLigne: true,
-    absenceCommentaire: true,
-    retardCommentaire: true,
-    sanctionsVisible: true,
-    sanctionParQui: true,
-    sanctionCommentaire: true,
-    encouragementsVisible: true,
-    encouragementParQui: true,
-    encouragementCommentaire: true,
-    afficherPermisPoint: true
-  }
-}
-```
-
----
-
 ## 🗂️ Type Definitions
 
 ### `AttendanceResult`
@@ -140,11 +79,11 @@ Each entry provides detailed context about a specific school life event:
 | `id` | `number` | A unique identifier for this record. |
 | `date` | `Date` | The exact date and time the event occurred. |
 | `type` | `string` | The type of event (for example, `"Absence"`, `"Retard"`, `"Punition"`). |
-| `subjectLabel` | `string` *(optional)* | The name of the class subject if the event occurred during a class. |
+| `libelleMatiere` | `string` *(optional)* | The name of the class subject if the event occurred during a class. |
 | `isJustified` | `boolean` *(optional)* | Whether the absence or delay has been officially justified. |
 | `justificationType` | `string` *(optional)* | The category/type of the justification. |
 | `reason` | `string` *(optional)* | The explained reason for the delay or absence. |
-| `teacherName` | `string` *(optional)* | The teacher who reported or is related to the event. |
+| `nomProf` | `string` *(optional)* | The teacher who reported or is related to the event. |
 | `licensePoints` | `number` *(optional)* | If points were deducted from a conduct license. |
 | `studentId` | `number` *(optional)* | The identifier of the student. |
 | `justifiedOnline` | `boolean` *(optional)* | Whether the justification was submitted through the online portal. |

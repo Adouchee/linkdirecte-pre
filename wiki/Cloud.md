@@ -115,57 +115,6 @@ if (oldFile) {
 
 ---
 
-## 📋 Example Response
-
-Below is an example of the resolved list of `CloudEntry` items returned by `getCloud()`:
-
-```typescript
-[
-  {
-    id: "folder_112233",
-    type: "folder",
-    label: "Math Homework Documents",
-    date: "2026-03-12 11:22:33",
-    size: 2048576, // 2MB total folder size
-    isReadOnly: false,
-    isHidden: false,
-    isTrash: false,
-    isLoaded: true,
-    children: [
-      {
-        id: "file_445566",
-        type: "file",
-        label: "geometry_formulas.pdf",
-        date: "2026-03-12 11:23:10",
-        size: 512400, // 512KB
-        isReadOnly: false,
-        isHidden: false,
-        isTrash: false
-      }
-    ],
-    owner: {
-      id: 9988,
-      type: "E",
-      lastName: "Doe",
-      firstName: "Jane",
-      particule: ""
-    }
-  },
-  {
-    id: "file_778899",
-    type: "file",
-    label: "profile_backup.zip",
-    date: "2026-03-10 14:05:00",
-    size: 15432000, // 15.4MB
-    isReadOnly: false,
-    isHidden: false,
-    isTrash: false
-  }
-]
-```
-
----
-
 ## 🗂️ Type Definitions
 
 ### `CloudNode`
@@ -189,8 +138,8 @@ interface CloudNode {
   owner?: {
     id: number;
     type: string;
-    lastName: string;
-    firstName: string;
+    nom: string;
+    prenom: string;
     particule: string;
   };
 }

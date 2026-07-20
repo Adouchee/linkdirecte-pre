@@ -117,42 +117,6 @@ console.log(`Comment posted successfully with ID: ${result.id}`);
 
 ---
 
-## 📋 Example Response
-
-Below is an example of the resolved `HomeworkResult` payload returned by `getHomework()`:
-
-```typescript
-{
-  "2026-03-16": [
-    {
-      idDevoir: 55442,
-      codeMatiere: "MATH",
-      matiere: "Mathématiques",
-      nomProf: "Mme. Dupont",
-      donneLe: new Date("2026-03-10T00:00:00.000Z"),
-      effectue: "1",
-      rendreEnLigne: false,
-      aFaire: {
-        idDevoir: 55442,
-        contenu: "<h3>Exercices 12 et 15 page 150</h3><p>Faire les exercices de géométrie dans le cahier.</p>",
-        rendreEnLigne: false,
-        donneLe: "2026-03-10",
-        effectue: true,
-        documents: [
-          {
-            id: 112233,
-            libelle: "Consignes de géométrie.pdf",
-            taille: 12345
-          }
-        ]
-      }
-    }
-  ]
-}
-```
-
----
-
 ## 🗂️ Type Definitions
 
 ### `HomeworkResult`

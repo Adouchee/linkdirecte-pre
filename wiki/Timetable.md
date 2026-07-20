@@ -22,10 +22,10 @@ console.log(`Loaded ${schedule.timetable.length} timetable events.`);
 
 schedule.timetable.forEach(classSession => {
   const status = classSession.isCancelled ? "❌ CANCELLED" : "✅ ACTIVE";
-  console.log(`\n[${status}] Subject: ${classSession.subjectLabel}`);
+  console.log(`\n[${status}] Subject: ${classSession.libelleMatiere}`);
   console.log(`  Time: ${classSession.startDate.toLocaleTimeString()} - ${classSession.endDate.toLocaleTimeString()}`);
   console.log(`  Room: ${classSession.room || "No room assigned"}`);
-  console.log(`  Teacher: ${classSession.teacherName || "Unspecified teacher"}`);
+  console.log(`  Teacher: ${classSession.nomProf || "Unspecified teacher"}`);
 });
 ```
 
@@ -59,7 +59,7 @@ function getTimetable(options?: {
 
 - `options` *(optional)*:
   - `startDate` *(string | Date)*: The beginning of the timetable window. Can be a standard JavaScript `Date` object or an ISO-style date string (`"YYYY-MM-DD"`). Defaults to today.
-  - `endDate` *(string | Date)*: The end of the timetable window. Defaults to the same value as `startDate`.
+  - `endDate` *(string | Date)*: The end of the timetable window. Defaults to the same valeur as `startDate`.
   - `explain` *(boolean)*: Includes networking and caching metrics under a `_debug` property.
 
 ---
@@ -70,46 +70,6 @@ Retrieves the URL for the student's timetable in iCal format for integration wit
 
 ```typescript
 function getTimetableIcalUrl(): Promise<string>
-```
-
----
-
-## 📋 Example Response
-
-Below is an example of the resolved `TimetableResult` payload returned by `getTimetable()`:
-
-```typescript
-{
-  timetable: [
-    {
-      id: 998811,
-      subjectCode: "MATH",
-      subjectLabel: "Mathématiques",
-      teacherName: "Mme. Dupont",
-      room: "Salle 204",
-      group: "Groupe A",
-      startDate: new Date("2026-03-16T08:00:00.000Z"),
-      endDate: new Date("2026-03-16T09:55:00.000Z"),
-      isCancelled: false,
-      isDetention: false,
-      isExempted: false,
-      color: "#FF5733"
-    },
-    {
-      id: 998812,
-      subjectCode: "HIST",
-      subjectLabel: "Histoire-Géographie",
-      teacherName: "M. Bertrand",
-      room: "Salle 102",
-      startDate: new Date("2026-03-16T10:10:00.000Z"),
-      endDate: new Date("2026-03-16T12:00:00.000Z"),
-      isCancelled: true, // This class is cancelled!
-      isDetention: false,
-      isExempted: false,
-      color: "#33C1FF"
-    }
-  ]
-}
 ```
 
 ---
@@ -131,11 +91,11 @@ Provides a standardized structure for school calendar classes:
 | Property | Type | Description |
 | :--- | :--- | :--- |
 | `id` | `number` | Unique ID of the schedule slot. |
-| `subjectCode` | `string` | Short identifying code of the subject. |
-| `subjectLabel` | `string` | Full display name of the subject (e.g. `"Mathématiques"`). |
+| `codeMatiere` | `string` | Short identifying code of the subject. |
+| `libelleMatiere` | `string` | Full display name of the subject (e.g. `"Mathématiques"`). |
 | `startDate` | `Date` | Start date and time of the class. |
 | `endDate` | `Date` | End date and time of the class. |
-| `teacherName` | `string` *(optional)* | Name of the teacher hosting this class session. |
+| `nomProf` | `string` *(optional)* | Name of the teacher hosting this class session. |
 | `room` | `string` *(optional)* | Classroom label or number. |
 | `group` | `string` *(optional)* | Specific classroom group assigned. |
 | `isCancelled` | `boolean` *(optional)* | `true` if the session has been cancelled. |
