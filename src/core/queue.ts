@@ -15,9 +15,6 @@ export class OfflineQueue {
   private queue: QueuedMutation[] = [];
   private storage?: StorageAdapter;
   private isFlushing = false;
-  private hydrationPromises = new Map<StorageAdapter, Promise<void>>();
-  private saveMutex = Promise.resolve();
-  private activeFlushPromise: Promise<void> | null = null;
 
   constructor() {
     this.load();
@@ -31,15 +28,6 @@ export class OfflineQueue {
     const storage = this.activeStorage;
     if (!storage) return;
 
-    if (!this.hydrationPromises.has(storage)) {
-      const hydrationPromise = this.performLoad(storage);
-      this.hydrationPromises.set(storage, hydrationPromise);
-    }
-
-    await this.hydrationPromises.get(storage);
-  }
-
-  private async performLoad(storage: StorageAdapter): Promise<void> {
     try {
       const saved = await storage.get('ed_offline_queue');
       if (saved) {
@@ -53,18 +41,10 @@ export class OfflineQueue {
   private async save(): Promise<void> {
     const storage = this.activeStorage;
     if (!storage) return;
-
-    this.saveMutex = this.saveMutex.then(async () => {
-      const snapshot = JSON.stringify(this.queue);
-      await storage.set('ed_offline_queue', snapshot);
-    });
-
-    await this.saveMutex;
+    await storage.set('ed_offline_queue', JSON.stringify(this.queue));
   }
 
   async push(endpoint: string, options: Record<string, unknown>): Promise<void> {
-    await this.load();
-
     const mutation: QueuedMutation = {
       id: randomUUID(),
       endpoint,
@@ -76,25 +56,9 @@ export class OfflineQueue {
   }
 
   async flush(): Promise<void> {
-    await this.load();
-
-    if (this.isFlushing) {
-      return this.activeFlushPromise || Promise.resolve();
-    }
-
-    if (this.queue.length === 0) return;
-
+    if (this.isFlushing || this.queue.length === 0) return;
     this.isFlushing = true;
-    this.activeFlushPromise = this.performFlush();
 
-    try {
-      await this.activeFlushPromise;
-    } finally {
-      this.activeFlushPromise = null;
-    }
-  }
-
-  private async performFlush(): Promise<void> {
     try {
       const remainingQueue: QueuedMutation[] = [];
 

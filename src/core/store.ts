@@ -20,7 +20,6 @@ export interface EdState {
   lastTokenRefresh?: Date;
   rawStorage?: StorageAdapter;
   hasDetectedStorage?: boolean;
-  sessionGeneration: number;
 }
 
 const state: EdState = {
@@ -32,7 +31,6 @@ const state: EdState = {
     offlineQueue: false,
     userAgent: DEFAULT_USER_AGENT,
   },
-  sessionGeneration: 0,
 };
 
 export function getConfig(): EdConfig {
@@ -137,17 +135,12 @@ export async function persistSession(): Promise<void> {
     await storage.set(STORAGE_KEYS.lastRefresh, state.lastTokenRefresh.toISOString());
 }
 
-export function getSessionGeneration(): number {
-  return state.sessionGeneration;
-}
-
 export async function clearSession(): Promise<void> {
   state.token = undefined;
   state.twofaToken = undefined;
   state.account = undefined;
   state.accounts = undefined;
   state.lastTokenRefresh = undefined;
-  state.sessionGeneration++;
 
   try {
     const { clearCache } = await import('./cache');
