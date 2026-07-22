@@ -158,5 +158,117 @@ describe('Listen Module (Polling & Events)', () => {
 
     expect(errorCallback).toHaveBeenCalled();
   });
+
+  it('emits pollingError for rejected requests while still emitting diff events for fulfilled responses', async () => {
+    const errorCallback = mock((err) => {
+      expect(err).toBeDefined();
+    });
+
+    const newGradeCallback = mock((data) => {
+      expect(data.id).toBe(100);
+    });
+
+    const newMessageCallback = mock((data) => {
+      expect(data.id).toBe(200);
+    });
+
+    const newTimelineCallback = mock((data) => {
+      expect(data.id).toBe(300);
+    });
+
+    globalThis.fetch = async (input) => {
+      const urlStr = input.toString();
+
+      if (urlStr.includes('notes.awp')) {
+        return new Response(
+          JSON.stringify({
+            code: 200,
+            message: '',
+            data: {
+              grades: [{ id: 100, valeur: '18' }],
+            },
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        );
+      } else if (urlStr.includes('messages.awp')) {
+        return new Response(
+          JSON.stringify({
+            code: 200,
+            message: '',
+            data: {
+              messages: {
+                received: [{ id: 200, subject: 'Test Message' }],
+              },
+            },
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        );
+      } else if (urlStr.includes('cahierdetexte.awp')) {
+        return new Response(JSON.stringify({ code: 500, message: 'Homework error' }), { status: 500 });
+      } else if (urlStr.includes('timeline.awp')) {
+        return new Response(
+          JSON.stringify({
+            code: 200,
+            message: '',
+            data: [{ id: 300, typeElement: 'NEWS' }],
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        );
+      }
+
+      return new Response(JSON.stringify({ code: 404 }), { status: 404 });
+    };
+
+    on('pollingError', errorCallback);
+    on('newGrade', newGradeCallback);
+    on('newMessage', newMessageCallback);
+    on('newTimelineEntry', newTimelineCallback);
+
+    startPolling({ interval: 5000 });
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    expect(errorCallback).toHaveBeenCalled();
+    expect(newGradeCallback).toHaveBeenCalled();
+    expect(newMessageCallback).toHaveBeenCalled();
+    expect(newTimelineCallback).toHaveBeenCalled();
+  });
+
+  it('emits multiple pollingError events when multiple requests reject', async () => {
+    const errorCallback = mock((err) => {
+      expect(err).toBeDefined();
+    });
+
+    let errorCount = 0;
+    const countingErrorCallback = () => {
+      errorCount++;
+    };
+
+    globalThis.fetch = async (input) => {
+      const urlStr = input.toString();
+
+      if (urlStr.includes('notes.awp')) {
+        return new Response(JSON.stringify({ code: 500, message: 'Grades error' }), { status: 500 });
+      } else if (urlStr.includes('messages.awp')) {
+        return new Response(JSON.stringify({ code: 500, message: 'Messages error' }), { status: 500 });
+      } else if (urlStr.includes('cahierdetexte.awp')) {
+        return new Response(JSON.stringify({ code: 500, message: 'Homework error' }), { status: 500 });
+      } else if (urlStr.includes('timeline.awp')) {
+        return new Response(JSON.stringify({ code: 500, message: 'Timeline error' }), { status: 500 });
+      }
+
+      return new Response(JSON.stringify({ code: 404 }), { status: 404 });
+    };
+
+    on('pollingError', errorCallback);
+    on('pollingError', countingErrorCallback);
+
+    startPolling({ interval: 5000 });
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    expect(errorCallback).toHaveBeenCalled();
+    expect(errorCount).toBeGreaterThanOrEqual(4);
+  });
 });
 // © 2026 typeof (Scolup) | Licensed under AGPL 3.

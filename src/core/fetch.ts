@@ -1,5 +1,5 @@
 // © 2026 typeof (Scolup) | Licensed under AGPL 3.0
-import { getConfig, setToken } from './store';
+import { getConfig, setToken, getSessionGeneration } from './store';
 import {
   DEFAULT_CONCURRENCY,
   DEFAULT_MAX_RETRIES,
@@ -95,6 +95,7 @@ export async function edFetch<T>(endpoint: string, options: FetchOptions = {}): 
       if (cached !== undefined) return cached;
     }
 
+    const sessionGenerationBeforeRequest = getSessionGeneration();
     const req = prepareRequest(endpoint, options);
     let response: Response;
 
@@ -172,7 +173,10 @@ export async function edFetch<T>(endpoint: string, options: FetchOptions = {}): 
     let result = transform(data.data);
 
     if (isCacheable && cacheKey) {
-      setInCache(cacheKey, result, ttl);
+      const sessionGenerationAfterRequest = getSessionGeneration();
+      if (sessionGenerationBeforeRequest === sessionGenerationAfterRequest) {
+        setInCache(cacheKey, result, ttl);
+      }
     }
 
     return result;

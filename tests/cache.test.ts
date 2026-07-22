@@ -82,4 +82,70 @@ describe('Cache Core Module', () => {
 
     expect(getFromCache('temp')).toBeUndefined();
   });
+
+  it('prevents in-flight requests from populating cache after clearSession', async () => {
+    const { clearSession, setToken, setAccount } = await import('../src/core/store');
+    const { edFetch } = await import('../src/core/fetch');
+
+    let resolveRequest: (() => void) | null = null;
+
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = async (input, init) => {
+      await new Promise<void>((resolve) => {
+        resolveRequest = resolve;
+      });
+      return new Response(
+        JSON.stringify({
+          code: 200,
+          message: '',
+          data: {
+            grades: [{ id: 1, valeur: '15' }],
+          },
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+    };
+
+    setToken('test_token');
+    setAccount({
+      loginId: 1234567,
+      id: 9876,
+      uid: 'session_uid',
+      identifiant: 'Test.user',
+      accountType: 'E',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      schoolName: 'Ecole Test',
+      main: true,
+      profile: {
+        sexe: 'M',
+        photoUrl: 'https://example.com/photo.jpg',
+      },
+      modules: [],
+    });
+
+    setConfig({ cache: { grades: '10m' }, maxRetries: 0 });
+
+    const fetchPromise = edFetch('/eleves/9876/notes.awp', { method: 'POST' });
+
+    await new Promise((r) => setTimeout(r, 5));
+
+    await clearSession();
+
+    resolveRequest!();
+
+    try {
+      await fetchPromise;
+    } catch {}
+
+    const cachedKey = buildCacheKey('/eleves/9876/notes.awp', undefined);
+    const cached = getFromCache(cachedKey);
+    expect(cached).toBeUndefined();
+
+    globalThis.fetch = originalFetch;
+  });
 });
