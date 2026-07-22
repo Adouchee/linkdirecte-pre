@@ -38,9 +38,7 @@ export function safeSetInterval(
   }
 }
 
-export function safeClearInterval(
-  handle: ReturnType<typeof setInterval> | undefined,
-): void {
+export function safeClearInterval(handle: ReturnType<typeof setInterval> | undefined): void {
   if (handle != null) {
     try {
       clearInterval(handle);

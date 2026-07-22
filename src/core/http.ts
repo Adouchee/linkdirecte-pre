@@ -13,19 +13,14 @@ export const DEFAULT_CONCURRENCY = 3;
 export const SUCCESS_CODES = new Set([200, 250]);
 export const SESSION_EXPIRED_CODES = new Set([520, 521, 525]);
 
-export const DOWNLOAD_ENDPOINTS = [
-  'telechargement.awp',
-  'televersement.awp',
-] as const;
+export const DOWNLOAD_ENDPOINTS = ['telechargement.awp', 'televersement.awp'] as const;
 
 export type QueryParams = Record<string, string | number>;
 
 export function buildApiUrl(endpoint: string): URL {
   const config = getConfig();
   const baseUrl = config.proxyUrl || BASE_API_URL;
-  const fullUrl = endpoint.startsWith('http')
-    ? endpoint
-    : `${baseUrl}${endpoint}`;
+  const fullUrl = endpoint.startsWith('http') ? endpoint : `${baseUrl}${endpoint}`;
 
   return new URL(fullUrl);
 }
@@ -39,9 +34,7 @@ export function appendQueryParams(url: URL, params?: QueryParams): void {
 }
 
 export function isDownloadEndpoint(endpoint: string): boolean {
-  return DOWNLOAD_ENDPOINTS.some((downloadEndpoint) =>
-    endpoint.includes(downloadEndpoint),
-  );
+  return DOWNLOAD_ENDPOINTS.some((downloadEndpoint) => endpoint.includes(downloadEndpoint));
 }
 
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
@@ -61,9 +54,7 @@ export interface SendRequestOptions {
   timeoutMs?: number;
 }
 
-export function buildHeaders(
-  options: RequestHeaderOptions = {},
-): Record<string, string> {
+export function buildHeaders(options: RequestHeaderOptions = {}): Record<string, string> {
   const config = getConfig();
 
   const headers: Record<string, string> = {
@@ -95,10 +86,7 @@ export function buildHeaders(
   return headers;
 }
 
-export function buildRequestBody(
-  endpoint: string,
-  body?: unknown,
-): string | undefined {
+export function buildRequestBody(endpoint: string, body?: unknown): string | undefined {
   if (!hasBody(body)) return undefined;
 
   if (isDownloadEndpoint(endpoint)) {
@@ -108,9 +96,7 @@ export function buildRequestBody(
   return `data=${encodeURIComponent(JSON.stringify(body))}`;
 }
 
-export async function sendRequest(
-  options: SendRequestOptions,
-): Promise<Response> {
+export async function sendRequest(options: SendRequestOptions): Promise<Response> {
   try {
     return await fetch(options.url, {
       method: options.method,
@@ -129,11 +115,7 @@ export async function parseJsonResponse(response: Response): Promise<any> {
   }
 
   if (response.status >= 500) {
-    throw new EdNetworkError(
-      `Server error: ${response.status}`,
-      'SERVER_ERROR',
-      response.status,
-    );
+    throw new EdNetworkError(`Server error: ${response.status}`, 'SERVER_ERROR', response.status);
   }
 
   try {
@@ -153,9 +135,7 @@ function buildFormBody(body: unknown): string | undefined {
   if (typeof body === 'string') return body;
   if (isPlainObject(body)) {
     return new URLSearchParams(
-      Object.entries(body).map(
-        ([key, value]) => [key, String(value)] as [string, string],
-      ),
+      Object.entries(body).map(([key, value]) => [key, String(value)] as [string, string]),
     ).toString();
   }
 

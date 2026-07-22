@@ -11,12 +11,7 @@ export function decodeBase64(value: string): string {
 }
 
 export function safeDecodeBase64(value: string): string {
-  if (
-    typeof value !== 'string' ||
-    value.trim() === '' ||
-    value.length < 4 ||
-    /\s/.test(value)
-  ) {
+  if (typeof value !== 'string' || value.trim() === '' || value.length < 4 || /\s/.test(value)) {
     return value;
   }
   try {
@@ -78,9 +73,7 @@ export function transform(data: any): any {
           value = transform(value);
         }
       } else if (key === 'propositions' && Array.isArray(value)) {
-        value = value.map((v) =>
-          typeof v === 'string' ? safeDecodeBase64(v) : v,
-        );
+        value = value.map((v) => (typeof v === 'string' ? safeDecodeBase64(v) : v));
       } else {
         value = transform(value);
       }

@@ -20,10 +20,7 @@ export interface Correlation {
 }
 
 export async function correlate(): Promise<Correlation[]> {
-  const [gradesData, attendanceData] = await Promise.all([
-    getGrades(),
-    getAttendance(),
-  ]);
+  const [gradesData, attendanceData] = await Promise.all([getGrades(), getAttendance()]);
 
   const correlations: Correlation[] = [];
   const grades = (gradesData as any).notes || [];
@@ -69,11 +66,7 @@ function groupGradesBySubject(grades: any[]): Map<string, any[]> {
   return map;
 }
 
-function analyzeGradeTrend(
-  subject: string,
-  values: number[],
-  count: number,
-): Correlation {
+function analyzeGradeTrend(subject: string, values: number[], count: number): Correlation {
   return {
     type: 'gradeTrend',
     subject,
@@ -84,11 +77,7 @@ function analyzeGradeTrend(
   };
 }
 
-function analyzeDayOfWeekPattern(
-  subject: string,
-  gradeList: any[],
-  values: number[],
-): Correlation {
+function analyzeDayOfWeekPattern(subject: string, gradeList: any[], values: number[]): Correlation {
   const dowGrades: Record<string, number[]> = {};
 
   gradeList.forEach((grade, i) => {

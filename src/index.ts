@@ -17,18 +17,10 @@ export {
   asyncStorage,
   encryptedStorage,
 } from './core/storage';
-export {
-  checkTokenHealth,
-  startTokenKeepalive,
-  stopTokenKeepalive,
-} from './core/health';
+export { checkTokenHealth, startTokenKeepalive, stopTokenKeepalive } from './core/health';
 export { download, downloadPhoto } from './core/downloader';
 export { offlineQueue } from './core/queue';
-export {
-  prefetchAll,
-  startAutoPrefetch,
-  stopAutoPrefetch,
-} from './core/prefetch';
+export { prefetchAll, startAutoPrefetch, stopAutoPrefetch } from './core/prefetch';
 
 export { login, logout, refreshToken } from './auth';
 

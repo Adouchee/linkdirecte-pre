@@ -1,11 +1,6 @@
 // © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { getConfig, getToken } from './store';
-import {
-  buildApiUrl,
-  buildHeaders,
-  sendRequest,
-  parseJsonResponse,
-} from './http';
+import { buildApiUrl, buildHeaders, sendRequest, parseJsonResponse } from './http';
 import { safeSetInterval, safeClearInterval } from './env';
 
 const TOKEN_CHECK_ENDPOINT = '/rdt/sondages.awp?verbe=get&v=4.96.3';

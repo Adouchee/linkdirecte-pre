@@ -24,7 +24,7 @@ describe('Offline Queue Module', () => {
     originalFetch = globalThis.fetch;
     requests = [];
     mockStorage.store.clear();
-    offlineQueue.getQueue().length = 0; 
+    offlineQueue.getQueue().length = 0;
     configure({
       storage: mockStorage,
       maxRetries: 0,
@@ -45,7 +45,6 @@ describe('Offline Queue Module', () => {
     expect(queue[0].endpoint).toBe('/some-endpoint.awp');
     expect(queue[0].options).toEqual({ body: 'data' });
 
-    
     const savedStr = mockStorage.get('ed_offline_queue');
     expect(savedStr).toBeDefined();
     expect(JSON.parse(savedStr!)[0].endpoint).toBe('/some-endpoint.awp');
@@ -67,12 +66,10 @@ describe('Offline Queue Module', () => {
 
     await offlineQueue.flush();
 
-    
     expect(requests.length).toBe(2);
     expect(requests[0]).toContain('/mutation-1.awp');
     expect(requests[1]).toContain('/mutation-2.awp');
 
-    
     expect(offlineQueue.getQueue().length).toBe(0);
     const saved = JSON.parse(mockStorage.get('ed_offline_queue') || '[]');
     expect(saved.length).toBe(0);

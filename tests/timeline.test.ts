@@ -224,7 +224,7 @@ describe('Timeline Module', () => {
     const trend = correlations.find((c) => c.type === 'gradeTrend');
     expect(trend).toBeDefined();
     expect(trend!.subject).toBe('Mathematics');
-    expect(trend!.data.average).toBe(17); 
+    expect(trend!.data.average).toBe(17);
 
     const dayPattern = correlations.find((c) => c.type === 'gradeVsDayOfWeek');
     expect(dayPattern).toBeDefined();

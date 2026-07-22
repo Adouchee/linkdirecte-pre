@@ -105,11 +105,7 @@ describe('Core Fetch Mechanism & Error Handling', () => {
 
       if (matchedHandler) {
         try {
-          const {
-            status,
-            headers: resHeaders,
-            body,
-          } = matchedHandler(requestObj);
+          const { status, headers: resHeaders, body } = matchedHandler(requestObj);
           return new Response(JSON.stringify(body), {
             status,
             headers: new Headers({
@@ -133,7 +129,7 @@ describe('Core Fetch Mechanism & Error Handling', () => {
     globalThis.fetch = originalFetch;
     stopTokenKeepalive();
     await clearSession();
-    offlineQueue.getQueue().length = 0; 
+    offlineQueue.getQueue().length = 0;
   });
 
   const mockAccount = {
@@ -184,7 +180,7 @@ describe('Core Fetch Mechanism & Error Handling', () => {
               {
                 codeMatiere: 'MATHS',
                 libelleMatiere: 'Mathématiques',
-                coef: 2, 
+                coef: 2,
                 nomProf: 'M. Sévère',
               },
             ],
@@ -255,7 +251,7 @@ describe('Core Fetch Mechanism & Error Handling', () => {
 
     const result = await getGrades();
     expect(result.notes.length).toBe(1);
-    expect(requests.length).toBe(3); 
+    expect(requests.length).toBe(3);
   });
 
   it('stops retrying and throws error when maxRetries is exceeded', async () => {

@@ -41,9 +41,7 @@ export interface MessagesResult {
   [key: string]: unknown;
 }
 
-export async function getMessages(
-  options: GetMessagesOptions = {},
-): Promise<MessagesResult> {
+export async function getMessages(options: GetMessagesOptions = {}): Promise<MessagesResult> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/messages.awp?v=7.14.3&verbe=get`;
 
@@ -79,9 +77,7 @@ export async function getMessage(id: number): Promise<MessageEntry> {
   });
 }
 
-export async function sendMessage(
-  data: SendMessageData,
-): Promise<{ success: boolean }> {
+export async function sendMessage(data: SendMessageData): Promise<{ success: boolean }> {
   assertNonEmptyString(data.subject, 'subject');
   assertNonEmptyString(data.content, 'content');
   assertNonEmptyArray(data.destinataires, 'destinataires');

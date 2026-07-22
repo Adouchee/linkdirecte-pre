@@ -1,7 +1,7 @@
 name: "\U0001F41B Bug report"
 description: "Something isn't working? Let us know so we can fix it."
 title: "[\U0001F41B] "
-labels: ["bug"]
+labels: ['bug']
 assignees:
   - Adouchee
 
@@ -29,7 +29,7 @@ body:
     attributes:
       label: Expected behavior
       description: What did you expect to happen instead?
-      placeholder: "e.g. It should return an array of grades."
+      placeholder: 'e.g. It should return an array of grades.'
     validations:
       required: true
 
@@ -49,7 +49,7 @@ body:
     attributes:
       label: Additional context
       description: Anything else that might help? Logs, code snippets...
-      placeholder: "e.g. Screenshot of the error, console output, related issues..."
+      placeholder: 'e.g. Screenshot of the error, console output, related issues...'
     validations:
       required: false
 

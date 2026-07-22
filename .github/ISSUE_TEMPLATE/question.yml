@@ -1,7 +1,7 @@
 name: "\u2753 Question"
 description: "Have a question about Linkdirecte? We'll answer it."
 title: "[\u2753] "
-labels: ["question"]
+labels: ['question']
 assignees:
   - Adouchee
 
@@ -20,7 +20,7 @@ body:
     attributes:
       label: What would you like to know?
       description: Describe your question.
-      placeholder: "e.g. When will you add support for teacher accounts?"
+      placeholder: 'e.g. When will you add support for teacher accounts?'
     validations:
       required: true
 
@@ -29,7 +29,7 @@ body:
     attributes:
       label: Additional context
       description: Code snippets, examples from other tools, related issues, links... Anything that helps us understand your question.
-      placeholder: "e.g. Docsdirecte (docsdirecte.scolup.qzz.io) documents it well."
+      placeholder: 'e.g. Docsdirecte (docsdirecte.scolup.qzz.io) documents it well.'
     validations:
       required: false
 

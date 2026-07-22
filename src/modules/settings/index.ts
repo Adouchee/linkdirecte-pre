@@ -36,19 +36,14 @@ export async function updateSettings(data: {
   });
 }
 
-export async function updateAccessibility(
-  enabled: boolean,
-): Promise<{ success: boolean }> {
+export async function updateAccessibility(enabled: boolean): Promise<{ success: boolean }> {
   const account = requireCurrentAccount();
 
-  return edFetch<{ success: boolean }>(
-    `/parametreIndividuel.awp?v=7.14.3&verbe=put`,
-    {
-      method: 'POST',
-      body: {
-        path: `Préférences/Elèves/accessibiliteVisuelle/${account.id}`,
-        value: enabled ? '1' : '0',
-      },
+  return edFetch<{ success: boolean }>(`/parametreIndividuel.awp?v=7.14.3&verbe=put`, {
+    method: 'POST',
+    body: {
+      path: `Préférences/Elèves/accessibiliteVisuelle/${account.id}`,
+      value: enabled ? '1' : '0',
     },
-  );
+  });
 }

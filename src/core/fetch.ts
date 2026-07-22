@@ -19,13 +19,7 @@ import {
 import { EdApiError, EdAuthError } from './errors';
 import { transform } from './transform';
 import { offlineQueue } from './queue';
-import {
-  resolveModule,
-  getCacheTtl,
-  buildCacheKey,
-  getFromCache,
-  setInCache,
-} from './cache';
+import { resolveModule, getCacheTtl, buildCacheKey, getFromCache, setInCache } from './cache';
 export interface FetchOptions {
   method?: HttpMethod;
   body?: unknown;
@@ -86,21 +80,15 @@ function getLimiter(concurrency: number) {
   return limiter;
 }
 
-export async function edFetch<T>(
-  endpoint: string,
-  options: FetchOptions = {},
-): Promise<T> {
+export async function edFetch<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
   const config = getConfig();
   const limiter = getLimiter(config.concurrency ?? DEFAULT_CONCURRENCY);
 
   const run = async (attempts = 0): Promise<T> => {
     const cacheModule = resolveModule(endpoint);
-    const cacheKey = cacheModule
-      ? buildCacheKey(endpoint, options.body)
-      : undefined;
+    const cacheKey = cacheModule ? buildCacheKey(endpoint, options.body) : undefined;
     const ttl = cacheModule ? getCacheTtl(cacheModule) : 0;
-    const isCacheable =
-      ttl > 0 && !options.isDownload && !options.returnEnvelope;
+    const isCacheable = ttl > 0 && !options.isDownload && !options.returnEnvelope;
 
     if (isCacheable && cacheKey) {
       const cached = getFromCache<T>(cacheKey);
@@ -170,12 +158,7 @@ export async function edFetch<T>(
     }
 
     if (!SUCCESS_CODES.has(data.code)) {
-      throw new EdApiError(
-        data.message || 'API error',
-        String(data.code),
-        response.status,
-        data,
-      );
+      throw new EdApiError(data.message || 'API error', String(data.code), response.status, data);
     }
 
     if (data.token) {
@@ -207,9 +190,7 @@ export async function edFetch<T>(
         return await run(0);
       } catch (error: any) {
         currentAttempt++;
-        const isRetryable = !(
-          error instanceof EdAuthError || error instanceof EdApiError
-        );
+        const isRetryable = !(error instanceof EdAuthError || error instanceof EdApiError);
         if (currentAttempt > retries || !isRetryable) {
           throw error;
         }
@@ -227,10 +208,7 @@ export async function edFetch<T>(
   return limiter(execute);
 }
 
-function prepareRequest(
-  endpoint: string,
-  options: FetchOptions,
-): PreparedRequest {
+function prepareRequest(endpoint: string, options: FetchOptions): PreparedRequest {
   const url = buildApiUrl(endpoint);
   appendQueryParams(url, options.params);
   return {

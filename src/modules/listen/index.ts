@@ -48,11 +48,7 @@ async function poll(): Promise<void> {
   }
 }
 
-function checkDiff(
-  event: string,
-  current: unknown[] | undefined,
-  idKey: string,
-): void {
+function checkDiff(event: string, current: unknown[] | undefined, idKey: string): void {
   if (!current) return;
 
   const previous = snapshots[event] || [];

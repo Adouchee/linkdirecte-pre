@@ -38,10 +38,7 @@ export class OfflineQueue {
     await this.storage.set('ed_offline_queue', JSON.stringify(this.queue));
   }
 
-  async push(
-    endpoint: string,
-    options: Record<string, unknown>,
-  ): Promise<void> {
+  async push(endpoint: string, options: Record<string, unknown>): Promise<void> {
     const mutation: QueuedMutation = {
       id: randomUUID(),
       endpoint,

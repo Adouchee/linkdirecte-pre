@@ -1,7 +1,7 @@
 name: "\u2795 Feature request/idea"
 description: "Have an idea to make Linkdirecte better? We'd love to hear it."
 title: "[\u2795] "
-labels: ["enhancement", "feature request"]
+labels: ['enhancement', 'feature request']
 assignees:
   - Adouchee
 
@@ -20,7 +20,7 @@ body:
     attributes:
       label: What would you like to see?
       description: Describe the feature or improvement you have in mind.
-      placeholder: "e.g. Automatic caculation of current average if not sent by EcoleDirecte."
+      placeholder: 'e.g. Automatic caculation of current average if not sent by EcoleDirecte.'
     validations:
       required: true
 
@@ -38,7 +38,7 @@ body:
     attributes:
       label: Additional context
       description: Code snippets, examples from other tools, related issues...Anything that helps us understand your vision.
-      placeholder: "e.g. Similar to how Blocksnote populates the averages alone."
+      placeholder: 'e.g. Similar to how Blocksnote populates the averages alone.'
     validations:
       required: false
 

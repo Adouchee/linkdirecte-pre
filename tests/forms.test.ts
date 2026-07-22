@@ -1,6 +1,13 @@
 // © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
-import { getQcms, getQcmDetail, updateQcmStatus, submitQcmAnswer, configure, clearSession } from '../src/index';
+import {
+  getQcms,
+  getQcmDetail,
+  updateQcmStatus,
+  submitQcmAnswer,
+  configure,
+  clearSession,
+} from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
 
 describe('Forms Module', () => {
@@ -196,7 +203,9 @@ describe('Forms Module', () => {
     });
 
     expect(lastRequest).toBeDefined();
-    expect(lastRequest!.url).toContain('/eleves/9876/qcms/22/associations/11/participants/444/reponse/555.awp');
+    expect(lastRequest!.url).toContain(
+      '/eleves/9876/qcms/22/associations/11/participants/444/reponse/555.awp',
+    );
     expect(lastRequest!.body).toEqual({
       reponse: {
         id: 555,

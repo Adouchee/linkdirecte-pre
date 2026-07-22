@@ -1,6 +1,12 @@
 // © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
-import { prefetchAll, startAutoPrefetch, stopAutoPrefetch, configure, clearSession } from '../src/index';
+import {
+  prefetchAll,
+  startAutoPrefetch,
+  stopAutoPrefetch,
+  configure,
+  clearSession,
+} from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
 
 describe('Prefetch Module', () => {
@@ -48,7 +54,6 @@ describe('Prefetch Module', () => {
       });
     };
 
-    
     await prefetchAll({
       enabled: true,
       modules: ['grades', 'messages'],
@@ -71,11 +76,10 @@ describe('Prefetch Module', () => {
   });
 
   it('can start and stop auto-prefetch based on config interval', async () => {
-    
     configure({
       prefetch: {
         enabled: true,
-        interval: '5s', 
+        interval: '5s',
         modules: ['grades'],
       },
     });
@@ -92,7 +96,7 @@ describe('Prefetch Module', () => {
     startAutoPrefetch();
     stopAutoPrefetch();
 
-    expect(calls).toBe(0); 
+    expect(calls).toBe(0);
   });
 });
 // © 2026 typeof (Scolup) | Licensed under AGPL 3.

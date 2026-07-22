@@ -65,8 +65,7 @@ const ENDPOINT_TO_MODULE: Array<{
 ];
 
 export function resolveModule(endpoint: string): keyof CacheConfig | undefined {
-  return ENDPOINT_TO_MODULE.find(({ pattern }) => pattern.test(endpoint))
-    ?.module;
+  return ENDPOINT_TO_MODULE.find(({ pattern }) => pattern.test(endpoint))?.module;
 }
 
 export function parseDuration(str: string | false | undefined): number {

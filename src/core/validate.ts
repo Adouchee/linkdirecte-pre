@@ -1,10 +1,7 @@
 // © 2026 typeof (Scolup) | Licensed under AGPL 3.
 import { EdApiError } from './errors';
 
-export function assertNonEmptyString(
-  value: unknown,
-  name: string,
-): asserts value is string {
+export function assertNonEmptyString(value: unknown, name: string): asserts value is string {
   if (typeof value !== 'string' || value.trim().length === 0) {
     throw new EdApiError(
       `${name} must be a non-empty string, got ${typeof value}`,
@@ -13,10 +10,7 @@ export function assertNonEmptyString(
   }
 }
 
-export function assertPositiveNumber(
-  value: unknown,
-  name: string,
-): asserts value is number {
+export function assertPositiveNumber(value: unknown, name: string): asserts value is number {
   if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
     throw new EdApiError(
       `${name} must be a positive number, got ${JSON.stringify(value)}`,
@@ -25,10 +19,7 @@ export function assertPositiveNumber(
   }
 }
 
-export function assertNonEmptyArray(
-  value: unknown,
-  name: string,
-): asserts value is unknown[] {
+export function assertNonEmptyArray(value: unknown, name: string): asserts value is unknown[] {
   if (!Array.isArray(value) || value.length === 0) {
     throw new EdApiError(
       `${name} must be a non-empty array, got ${JSON.stringify(value)}`,

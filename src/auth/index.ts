@@ -67,8 +67,7 @@ export async function login(
       identifiantOrParams.username ||
       identifiantOrParams.identifier ||
       '';
-    password =
-      identifiantOrParams.motdepasse || identifiantOrParams.password || '';
+    password = identifiantOrParams.motdepasse || identifiantOrParams.password || '';
     const {
       identifiant: _,
       username: __,
@@ -124,15 +123,7 @@ export async function login(
   );
 
   if (initRes.code === 250) {
-    return handleTwoFactor(
-      identifiant,
-      password,
-      uuid,
-      finalOpts,
-      gtk,
-      twofaToken,
-      xToken,
-    );
+    return handleTwoFactor(identifiant, password, uuid, finalOpts, gtk, twofaToken, xToken);
   }
 
   if (xToken) setToken(xToken);

@@ -53,9 +53,7 @@ describe('Validate Module', () => {
       expect(() => assertNonEmptyArray([], 'test')).toThrow(EdApiError);
     });
     it('throws for non-array', () => {
-      expect(() => assertNonEmptyArray('not an array', 'test')).toThrow(
-        EdApiError,
-      );
+      expect(() => assertNonEmptyArray('not an array', 'test')).toThrow(EdApiError);
     });
   });
 });

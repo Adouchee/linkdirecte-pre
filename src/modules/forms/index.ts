@@ -37,10 +37,7 @@ export interface QcmDetailResult {
   [key: string]: unknown;
 }
 
-export async function getQcmDetail(
-  idQcm: number,
-  idAssociation: number,
-): Promise<QcmDetailResult> {
+export async function getQcmDetail(idQcm: number, idAssociation: number): Promise<QcmDetailResult> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/qcms/${idQcm}/associations/${idAssociation}.awp?v=7.14.3&verbe=get`;
   return edFetch<QcmDetailResult>(endpoint, {

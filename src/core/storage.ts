@@ -66,11 +66,7 @@ async function decrypt(data: string, secret: string): Promise<string> {
   const iv = buf.subarray(SALT_LEN, SALT_LEN + IV_LEN);
   const ciphertext = buf.subarray(SALT_LEN + IV_LEN);
   const key = await deriveKey(secret, salt);
-  const decrypted = await webCrypto.subtle.decrypt(
-    { name: ALGORITHM, iv },
-    key,
-    ciphertext,
-  );
+  const decrypted = await webCrypto.subtle.decrypt({ name: ALGORITHM, iv }, key, ciphertext);
   return new TextDecoder().decode(decrypted);
 }
 
@@ -162,9 +158,7 @@ export const indexedDBStorage: StorageAdapter = (() => {
   };
 })();
 
-export function nodeStorage(
-  filePath = './linkdirecte-session.json',
-): StorageAdapter {
+export function nodeStorage(filePath = './linkdirecte-session.json'): StorageAdapter {
   const readAll = async (): Promise<Record<string, string>> => {
     const { readFile } = await import('node:fs/promises');
     try {
@@ -218,10 +212,7 @@ export function asyncStorage(backend: {
   };
 }
 
-export function encryptedStorage(
-  backend: StorageAdapter,
-  secret: string,
-): StorageAdapter {
+export function encryptedStorage(backend: StorageAdapter, secret: string): StorageAdapter {
   const adapter: StorageAdapter = {
     get: async (key) => {
       const val = await backend.get(key);

@@ -46,7 +46,7 @@ describe('Authentication Flow', () => {
     mockResponses.clear();
 
     configure({
-      storage: undefined, 
+      storage: undefined,
       on2faRequired: undefined,
       onCredentialsRequired: undefined,
     });
@@ -208,11 +208,7 @@ describe('Authentication Flow', () => {
     }));
 
     mockResponses.set('/login.awp?v=', (req) => {
-      if (
-        req.body &&
-        req.body.cn === 'mocked_cn' &&
-        req.body.cv === 'mocked_cv'
-      ) {
+      if (req.body && req.body.cn === 'mocked_cn' && req.body.cv === 'mocked_cv') {
         return {
           status: 200,
           headers: { 'X-Token': 'final_session_token' },
@@ -242,11 +238,7 @@ describe('Authentication Flow', () => {
         message: '',
         data: {
           question: encodeBase64('What is your favorite color?'),
-          propositions: [
-            encodeBase64('Blue'),
-            encodeBase64('Red'),
-            encodeBase64('Green'),
-          ],
+          propositions: [encodeBase64('Blue'), encodeBase64('Red'), encodeBase64('Green')],
         },
       },
     }));
@@ -268,7 +260,7 @@ describe('Authentication Flow', () => {
     const on2faRequired = mock((question, choices) => {
       expect(question).toBe('What is your favorite color?');
       expect(choices).toEqual(['Blue', 'Red', 'Green']);
-      return 1; 
+      return 1;
     });
 
     const result = await login('testuser', 'testpass', { on2faRequired });
@@ -319,11 +311,7 @@ describe('Authentication Flow', () => {
     }));
 
     mockResponses.set('/login.awp?v=', (req) => {
-      if (
-        req.body &&
-        req.body.cn === 'mocked_cn' &&
-        req.body.cv === 'mocked_cv'
-      ) {
+      if (req.body && req.body.cn === 'mocked_cn' && req.body.cv === 'mocked_cv') {
         return {
           status: 200,
           headers: { 'X-Token': 'final_session_token' },
@@ -353,11 +341,7 @@ describe('Authentication Flow', () => {
         message: '',
         data: {
           question: encodeBase64('What is your favorite color?'),
-          propositions: [
-            encodeBase64('Blue'),
-            encodeBase64('Red'),
-            encodeBase64('Green'),
-          ],
+          propositions: [encodeBase64('Blue'), encodeBase64('Red'), encodeBase64('Green')],
         },
       },
     }));
@@ -380,7 +364,7 @@ describe('Authentication Flow', () => {
     });
 
     const on2faRequired = mock((question, choices) => {
-      return 'red'; 
+      return 'red';
     });
 
     const result = await login('testuser', 'testpass', { on2faRequired });
@@ -411,11 +395,7 @@ describe('Authentication Flow', () => {
         message: '',
         data: {
           question: encodeBase64('What is your favorite color?'),
-          propositions: [
-            encodeBase64('Blue'),
-            encodeBase64('Red'),
-            encodeBase64('Green'),
-          ],
+          propositions: [encodeBase64('Blue'), encodeBase64('Red'), encodeBase64('Green')],
         },
       },
     }));

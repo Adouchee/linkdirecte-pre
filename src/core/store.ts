@@ -44,11 +44,7 @@ export function setConfig(config: Partial<EdConfig>): void {
   if ('storage' in config) {
     state.rawStorage = config.storage;
     state.hasDetectedStorage = config.storage !== undefined;
-  } else if (
-    !state.hasDetectedStorage &&
-    !state.rawStorage &&
-    !state.config.storage
-  ) {
+  } else if (!state.hasDetectedStorage && !state.rawStorage && !state.config.storage) {
     state.hasDetectedStorage = true;
     const proc = (globalThis as any).process;
     state.rawStorage =
@@ -56,9 +52,7 @@ export function setConfig(config: Partial<EdConfig>): void {
         ? indexedDBStorage
         : typeof (globalThis as any).localStorage !== 'undefined'
           ? localStorageStorage
-          : proc &&
-              proc.versions &&
-              (proc.versions.node != null || proc.versions.bun != null)
+          : proc && proc.versions && (proc.versions.node != null || proc.versions.bun != null)
             ? nodeStorage()
             : memoryStorage;
   }
@@ -134,17 +128,11 @@ export async function persistSession(): Promise<void> {
   if (!storage) return;
 
   if (state.token) await storage.set(STORAGE_KEYS.token, state.token);
-  if (state.twofaToken)
-    await storage.set(STORAGE_KEYS.twofaToken, state.twofaToken);
-  if (state.account)
-    await storage.set(STORAGE_KEYS.account, JSON.stringify(state.account));
-  if (state.accounts)
-    await storage.set(STORAGE_KEYS.accounts, JSON.stringify(state.accounts));
+  if (state.twofaToken) await storage.set(STORAGE_KEYS.twofaToken, state.twofaToken);
+  if (state.account) await storage.set(STORAGE_KEYS.account, JSON.stringify(state.account));
+  if (state.accounts) await storage.set(STORAGE_KEYS.accounts, JSON.stringify(state.accounts));
   if (state.lastTokenRefresh)
-    await storage.set(
-      STORAGE_KEYS.lastRefresh,
-      state.lastTokenRefresh.toISOString(),
-    );
+    await storage.set(STORAGE_KEYS.lastRefresh, state.lastTokenRefresh.toISOString());
 }
 
 export async function clearSession(): Promise<void> {
@@ -169,14 +157,13 @@ export async function loadSession(): Promise<boolean> {
   if (!storage) return false;
 
   try {
-    const [token, twofaToken, accountStr, accountsStr, lastRefreshStr] =
-      await Promise.all([
-        storage.get(STORAGE_KEYS.token),
-        storage.get(STORAGE_KEYS.twofaToken),
-        storage.get(STORAGE_KEYS.account),
-        storage.get(STORAGE_KEYS.accounts),
-        storage.get(STORAGE_KEYS.lastRefresh),
-      ]);
+    const [token, twofaToken, accountStr, accountsStr, lastRefreshStr] = await Promise.all([
+      storage.get(STORAGE_KEYS.token),
+      storage.get(STORAGE_KEYS.twofaToken),
+      storage.get(STORAGE_KEYS.account),
+      storage.get(STORAGE_KEYS.accounts),
+      storage.get(STORAGE_KEYS.lastRefresh),
+    ]);
 
     let loaded = false;
     if (token) {

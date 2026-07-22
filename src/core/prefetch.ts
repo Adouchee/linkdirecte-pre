@@ -9,13 +9,7 @@ import { getHomework } from '../modules/homework';
 import { getTimetable } from '../modules/timetable';
 import { getTimeline } from '../modules/timeline';
 
-const DEFAULT_MODULES = [
-  'grades',
-  'messages',
-  'homework',
-  'timetable',
-  'timeline',
-] as const;
+const DEFAULT_MODULES = ['grades', 'messages', 'homework', 'timetable', 'timeline'] as const;
 
 export async function prefetchAll(config?: PrefetchConfig): Promise<void> {
   const finalConfig = { ...getConfig().prefetch, ...config };

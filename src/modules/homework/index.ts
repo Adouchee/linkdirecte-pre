@@ -30,9 +30,7 @@ export interface GetHomeworkOptions extends FetchOptions {
   withContent?: boolean;
 }
 
-export async function getHomework(
-  options: GetHomeworkOptions = {},
-): Promise<HomeworkResult> {
+export async function getHomework(options: GetHomeworkOptions = {}): Promise<HomeworkResult> {
   const { withContent, ...fetchOptions } = options;
   const account = requireCurrentAccount();
   const result = await edFetch<HomeworkResult>(
@@ -52,16 +50,11 @@ export async function getHomework(
   return result;
 }
 
-export async function getHomeworkForDate(
-  date: string | Date,
-): Promise<HomeworkEntry[]> {
+export async function getHomeworkForDate(date: string | Date): Promise<HomeworkEntry[]> {
   const account = requireCurrentAccount();
   const formattedDate = dayjs(date).format('YYYY-MM-DD');
   if (formattedDate === 'Invalid Date') {
-    throw new EdApiError(
-      `Invalid date parameter: ${JSON.stringify(date)}`,
-      'INVALID_ARGUMENT',
-    );
+    throw new EdApiError(`Invalid date parameter: ${JSON.stringify(date)}`, 'INVALID_ARGUMENT');
   }
   return edFetch<any>(
     `/Eleves/${account.id}/cahierdetexte/${formattedDate}.awp?v=7.14.3&verbe=get`,
@@ -77,22 +70,17 @@ export interface MarkAsDoneResult {
   [key: string]: unknown;
 }
 
-export async function markAsDone(
-  homeworkIds: number[],
-): Promise<MarkAsDoneResult> {
+export async function markAsDone(homeworkIds: number[]): Promise<MarkAsDoneResult> {
   assertNonEmptyArray(homeworkIds, 'homeworkIds');
   const account = requireCurrentAccount();
-  return edFetch<MarkAsDoneResult>(
-    `/Eleves/${account.id}/cahierdetexte.awp?v=7.14.3&verbe=put`,
-    {
-      method: 'POST',
-      queued: true,
-      body: {
-        idDevoirsEffectues: homeworkIds,
-        idDevoirsNonEffectues: [],
-      },
+  return edFetch<MarkAsDoneResult>(`/Eleves/${account.id}/cahierdetexte.awp?v=7.14.3&verbe=put`, {
+    method: 'POST',
+    queued: true,
+    body: {
+      idDevoirsEffectues: homeworkIds,
+      idDevoirsNonEffectues: [],
     },
-  );
+  });
 }
 
 export async function sendHomeworkComment(

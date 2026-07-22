@@ -30,9 +30,7 @@ export async function getTimetable(
 ): Promise<TimetableResult> {
   const account = requireCurrentAccount();
   const start = dayjs(options.startDate || new Date()).format('YYYY-MM-DD');
-  const end = dayjs(options.endDate || options.startDate || new Date()).format(
-    'YYYY-MM-DD',
-  );
+  const end = dayjs(options.endDate || options.startDate || new Date()).format('YYYY-MM-DD');
 
   const endpoint = `/E/${account.id}/emploidutemps.awp?v=7.14.3&verbe=get`;
   return edFetch<TimetableResult>(endpoint, {

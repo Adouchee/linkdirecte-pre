@@ -41,9 +41,7 @@ export interface GradesResult {
   [key: string]: unknown;
 }
 
-export async function getGrades(
-  options: { periodId?: string } = {},
-): Promise<GradesResult> {
+export async function getGrades(options: { periodId?: string } = {}): Promise<GradesResult> {
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/notes.awp?v=7.14.3&verbe=get`;
   return edFetch<GradesResult>(endpoint, {

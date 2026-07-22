@@ -1,6 +1,13 @@
 // © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
-import { getHomework, getHomeworkForDate, markAsDone, sendHomeworkComment, configure, clearSession } from '../src/index';
+import {
+  getHomework,
+  getHomeworkForDate,
+  markAsDone,
+  sendHomeworkComment,
+  configure,
+  clearSession,
+} from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
 
 function encodeBase64(str: string): string {
@@ -114,7 +121,7 @@ describe('Homework Module', () => {
                 {
                   idDevoir: 1,
                   matiere: 'Maths',
-                }
+                },
               ],
             },
           }),

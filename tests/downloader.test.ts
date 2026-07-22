@@ -129,7 +129,7 @@ describe('Downloader Module', () => {
       profile: {
         ...mockAccount.profile,
         photo: '//doc1.ecoledirecte.com/PhotoEleves/photo.jpg',
-      }
+      },
     };
     setAccount(mockAccountProtocolRelative);
     const rawBuffer = new TextEncoder().encode('photo_content_pr').buffer;
@@ -159,7 +159,7 @@ describe('Downloader Module', () => {
       profile: {
         ...mockAccount.profile,
         photo: '',
-      }
+      },
     };
     setAccount(mockAccountNoPhoto);
 

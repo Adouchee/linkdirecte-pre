@@ -54,7 +54,7 @@ describe('Listen Module (Polling & Events)', () => {
             data: {
               grades: [
                 {
-                  id: callCount === 0 ? 10 : 11, 
+                  id: callCount === 0 ? 10 : 11,
                   valeur: '15',
                 },
               ],
@@ -126,7 +126,6 @@ describe('Listen Module (Polling & Events)', () => {
 
     startPolling({ interval: 5000 });
 
-    
     await new Promise((resolve) => setTimeout(resolve, 50));
 
     expect(requests.some((url) => url.includes('notes.awp'))).toBe(true);
@@ -137,7 +136,6 @@ describe('Listen Module (Polling & Events)', () => {
     expect(newMessageCallback).toHaveBeenCalled();
     expect(newTimelineCallback).toHaveBeenCalled();
 
-    
     removeGradeListener();
     removeMessageListener();
     removeTimelineListener();

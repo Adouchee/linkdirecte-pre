@@ -13,7 +13,7 @@ import { setConfig } from '../src/core/store';
 describe('Cache Core Module', () => {
   beforeEach(() => {
     clearCache();
-    setConfig({ cacheMaxEntries: 3 }); 
+    setConfig({ cacheMaxEntries: 3 });
   });
 
   afterEach(() => {
@@ -38,7 +38,6 @@ describe('Cache Core Module', () => {
     const key = buildCacheKey('/test-endpoint', { foo: 'bar', baz: 123 });
     const key2 = buildCacheKey('/test-endpoint', { baz: 123, foo: 'bar' });
 
-    
     expect(key).toBe(key2);
 
     setInCache(key, { data: 'my_data' }, 10_000);
@@ -47,13 +46,12 @@ describe('Cache Core Module', () => {
     expect(cached).toBeDefined();
     expect(cached.data).toBe('my_data');
 
-    
     expect(getFromCache('another-key')).toBeUndefined();
   });
 
   it('expires entries properly', async () => {
     const key = 'expiring-key';
-    setInCache(key, 'value', 2); 
+    setInCache(key, 'value', 2);
 
     await new Promise((r) => setTimeout(r, 10));
 
@@ -61,16 +59,15 @@ describe('Cache Core Module', () => {
   });
 
   it('evicts old entries when max size limit is exceeded', () => {
-    
     setInCache('k1', 'v1', 50_000);
     setInCache('k2', 'v2', 50_000);
     setInCache('k3', 'v3', 50_000);
 
     expect(getFromCache('k1')).toBe('v1');
 
-    setInCache('k4', 'v4', 50_000); 
+    setInCache('k4', 'v4', 50_000);
 
-    expect(getFromCache('k1')).toBeUndefined(); 
+    expect(getFromCache('k1')).toBeUndefined();
     expect(getFromCache('k2')).toBe('v2');
     expect(getFromCache('k3')).toBe('v3');
     expect(getFromCache('k4')).toBe('v4');
