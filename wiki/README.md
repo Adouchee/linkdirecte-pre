@@ -29,7 +29,7 @@ Welcome to the guide for **Linkdirecte**! Linkdirecte is _the best_ SDK for inte
 - [🔔 Event listening](Event%20listen.md) | Hook up real-time event listeners for grades, messages, or activities.
 
 > [!NOTE]
-> We won't document responses here, but you can check out [Docsdirecte](https://docsdirecte.scolup.qzz.io) ([for LLMs here](https://docs.directe.scolup.qzz.io)) for a full doc of EcoleDirecte's responses. _Note that dates are normalized by the SDK and you don't have to handle Base64 encoding/decoding._
+> We won't document responses here, but you can check out [Docsdirecte](https://docsdirecte.scolup.qzz.io) ([for LLMs here](https://docsdirecte.scolup.qzz.io/llms.md)) for a full doc of EcoleDirecte's responses. _Note that dates are normalized by the SDK and you don't have to handle Base64 encoding/decoding._
 
 ---
 
