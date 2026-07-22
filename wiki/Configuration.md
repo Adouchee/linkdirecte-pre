@@ -160,7 +160,7 @@ configure({
 Retrieves documents and other resources from EcoleDirecte.
 
 ```typescript
-function download(url: string, options?: DownloadOptions): Promise<ArrayBuffer | Blob | ReadableStream>
+function download(options?: DownloadOptions): Promise<ArrayBuffer | Blob | ReadableStream>
 ```
 
 #### Options (`DownloadOptions`)
@@ -172,7 +172,13 @@ function download(url: string, options?: DownloadOptions): Promise<ArrayBuffer |
 import { download } from "linkdirecte";
 import { writeFile } from "node:fs/promises";
 
-const fileArrayBuffer = await download("https://api.ecoledirecte.com/file.pdf");
+const fileArrayBuffer = await download({
+  params: {
+    forceDownload: 0,
+    id: 12345,
+    type: "bulletin",
+  },
+});
 
 await writeFile("./report-card.pdf", Buffer.from(fileArrayBuffer));
 console.log("PDF written to disk!");

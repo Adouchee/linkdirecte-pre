@@ -11,12 +11,11 @@ export interface DownloadOptions {
 }
 
 export async function download(
-  url: string,
   options: DownloadOptions = {},
 ): Promise<ArrayBuffer | Blob | ReadableStream> {
   const token = getToken();
 
-  const response = await edFetch<Response>(url, {
+  const response = await edFetch<Response>('/telechargement.awp?verbe=get', {
     method: 'POST',
     body: {
       ...options.params,
