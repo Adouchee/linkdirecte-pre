@@ -1,6 +1,5 @@
 // © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { getGrades } from '../grades';
-import { getAttendance } from '../attendance';
 import dayjs from 'dayjs';
 
 export type CorrelationType =
@@ -20,7 +19,7 @@ export interface Correlation {
 }
 
 export async function correlate(): Promise<Correlation[]> {
-  const [gradesData, attendanceData] = await Promise.all([getGrades(), getAttendance()]);
+  const gradesData = await getGrades();
 
   const correlations: Correlation[] = [];
   const grades = (gradesData as any).notes || [];

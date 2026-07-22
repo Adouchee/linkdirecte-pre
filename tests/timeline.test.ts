@@ -218,7 +218,7 @@ describe('Timeline Module', () => {
 
     const correlations = await correlate();
 
-    expect(requests.length).toBe(2);
+    expect(requests.length).toBe(1);
     expect(correlations.length).toBe(2);
 
     const trend = correlations.find((c) => c.type === 'gradeTrend');

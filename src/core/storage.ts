@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import type { StorageAdapter } from '../types';
 import { getWebCrypto } from './env';
 
@@ -237,4 +237,3 @@ export function encryptedStorage(backend: StorageAdapter, secret: string): Stora
   });
   return adapter;
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

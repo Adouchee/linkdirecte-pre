@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 let _polyfill: Crypto | null = null;
 
 export async function getWebCrypto(): Promise<Crypto> {
@@ -53,4 +53,3 @@ export function isFormData(value: unknown): value is FormData {
     return false;
   }
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

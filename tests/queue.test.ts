@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { offlineQueue } from '../src/core/queue';
 import { configure, clearSession } from '../src/index';
@@ -74,5 +74,22 @@ describe('Offline Queue Module', () => {
     const saved = JSON.parse(mockStorage.get('ed_offline_queue') || '[]');
     expect(saved.length).toBe(0);
   });
+
+  it('prevents concurrent flushes from executing in parallel and duplicating calls', async () => {
+    let callCount = 0;
+    globalThis.fetch = async (input) => {
+      callCount++;
+      await new Promise((r) => setTimeout(r, 10));
+      return new Response(JSON.stringify({ code: 200, message: '', data: {} }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    };
+
+    await offlineQueue.push('/mutation-concurrent.awp', { method: 'POST', body: { x: 1 } });
+
+    await Promise.all([offlineQueue.flush(), offlineQueue.flush()]);
+
+    expect(callCount).toBe(1);
+  });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

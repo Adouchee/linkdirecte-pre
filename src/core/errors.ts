@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 export class EdError extends Error {
   constructor(
     message: string,
@@ -33,4 +33,3 @@ export class EdApiError extends EdError {
 export class EdTransformError extends EdError {
   name = 'EdTransformError';
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

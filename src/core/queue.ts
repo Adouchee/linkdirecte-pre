@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { getConfig } from './store';
 import { edFetch } from './fetch';
 import { randomUUID } from './env';
@@ -14,17 +14,22 @@ interface QueuedMutation {
 export class OfflineQueue {
   private queue: QueuedMutation[] = [];
   private storage?: StorageAdapter;
+  private isFlushing = false;
 
   constructor() {
-    this.storage = getConfig().storage;
     this.load();
   }
 
+  private get activeStorage(): StorageAdapter | undefined {
+    return this.storage || getConfig().storage;
+  }
+
   private async load(): Promise<void> {
-    if (!this.storage) return;
+    const storage = this.activeStorage;
+    if (!storage) return;
 
     try {
-      const saved = await this.storage.get('ed_offline_queue');
+      const saved = await storage.get('ed_offline_queue');
       if (saved) {
         this.queue = JSON.parse(saved);
       }
@@ -34,8 +39,9 @@ export class OfflineQueue {
   }
 
   private async save(): Promise<void> {
-    if (!this.storage) return;
-    await this.storage.set('ed_offline_queue', JSON.stringify(this.queue));
+    const storage = this.activeStorage;
+    if (!storage) return;
+    await storage.set('ed_offline_queue', JSON.stringify(this.queue));
   }
 
   async push(endpoint: string, options: Record<string, unknown>): Promise<void> {
@@ -50,23 +56,28 @@ export class OfflineQueue {
   }
 
   async flush(): Promise<void> {
-    if (this.queue.length === 0) return;
+    if (this.isFlushing || this.queue.length === 0) return;
+    this.isFlushing = true;
 
-    const remainingQueue: QueuedMutation[] = [];
+    try {
+      const remainingQueue: QueuedMutation[] = [];
 
-    for (const mutation of this.queue) {
-      try {
-        await edFetch(mutation.endpoint, {
-          ...mutation.options,
-          skipQueue: true,
-        });
-      } catch {
-        remainingQueue.push(mutation);
+      for (const mutation of this.queue) {
+        try {
+          await edFetch(mutation.endpoint, {
+            ...mutation.options,
+            skipQueue: true,
+          });
+        } catch {
+          remainingQueue.push(mutation);
+        }
       }
-    }
 
-    this.queue = remainingQueue;
-    await this.save();
+      this.queue = remainingQueue;
+      await this.save();
+    } finally {
+      this.isFlushing = false;
+    }
   }
 
   getQueue(): QueuedMutation[] {
@@ -75,4 +86,3 @@ export class OfflineQueue {
 }
 
 export const offlineQueue = new OfflineQueue();
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

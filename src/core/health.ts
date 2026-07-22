@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { getConfig, getToken } from './store';
 import { buildApiUrl, buildHeaders, sendRequest, parseJsonResponse } from './http';
 import { safeSetInterval, safeClearInterval } from './env';
@@ -50,4 +50,3 @@ export function stopTokenKeepalive(): void {
   safeClearInterval(keepaliveTimer ?? undefined);
   keepaliveTimer = null;
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

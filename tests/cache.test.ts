@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import {
   parseDuration,
@@ -72,5 +72,14 @@ describe('Cache Core Module', () => {
     expect(getFromCache('k3')).toBe('v3');
     expect(getFromCache('k4')).toBe('v4');
   });
+
+  it('clears cache when clearSession is called', async () => {
+    const { clearSession } = await import('../src/core/store');
+    setInCache('temp', 'val', 50_000);
+    expect(getFromCache('temp')).toBe('val');
+
+    await clearSession();
+
+    expect(getFromCache('temp')).toBeUndefined();
+  });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

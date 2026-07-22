@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { EdConfig, StorageAdapter, Account } from '../types';
 import {
   indexedDBStorage,
@@ -142,6 +142,11 @@ export async function clearSession(): Promise<void> {
   state.accounts = undefined;
   state.lastTokenRefresh = undefined;
 
+  try {
+    const { clearCache } = await import('./cache');
+    clearCache();
+  } catch {}
+
   const storage = getConfig().storage;
   if (!storage) return;
 
@@ -199,4 +204,3 @@ export async function loadSession(): Promise<boolean> {
     return false;
   }
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
