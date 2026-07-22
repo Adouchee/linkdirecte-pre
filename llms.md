@@ -184,9 +184,14 @@ import { getDocuments, download } from 'linkdirecte';
 const docs = await getDocuments();
 const reportCard = docs.grades?.[0];
 
-if (reportCard?.url) {
+if (reportCard) {
   // Downloads document as ArrayBuffer
-  const buffer = await download(reportCard.url);
+  const buffer = await download({
+    params: {
+      id: reportCard.id,
+      type: reportCard.type,
+    },
+  });
 }
 ```
 

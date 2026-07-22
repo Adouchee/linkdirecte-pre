@@ -60,12 +60,12 @@ describe('Downloader Module', () => {
       });
     };
 
-    const result = await download('telechargement.awp', {
+    const result = await download({
       params: { fileId: 123 },
     });
 
     expect(lastRequest).toBeDefined();
-    expect(lastRequest!.url).toContain('telechargement.awp');
+    expect(lastRequest!.url).toContain('telechargement.awp?verbe=get');
     expect(lastRequest!.body).toEqual('fileId=123&token=test_token');
     expect(result).toBeInstanceOf(ArrayBuffer);
     expect(new Uint8Array(result as ArrayBuffer)).toEqual(new Uint8Array(rawBuffer));
@@ -79,7 +79,7 @@ describe('Downloader Module', () => {
       });
     };
 
-    const result = await download('telechargement.awp', { as: 'blob' });
+    const result = await download({ as: 'blob' });
 
     expect(result).toBeInstanceOf(Blob);
     const text = await (result as Blob).text();
@@ -94,7 +94,7 @@ describe('Downloader Module', () => {
       });
     };
 
-    const result = await download('telechargement.awp', { as: 'stream' });
+    const result = await download({ as: 'stream' });
 
     expect(result).toBeInstanceOf(ReadableStream);
   });

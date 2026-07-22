@@ -24,7 +24,7 @@ if (latestReportCard) {
   console.log(`Downloading report card: ${latestReportCard.libelle}...`);
 
   // To download documents, send a post request to the download endpoint using the document ID and type
-  const fileData = await download(`https://api.ecoledirecte.com/v3/telechargement.awp`, {
+  const fileData = await download({
     as: "buffer",
     params: {
       forceDownload: 0,
