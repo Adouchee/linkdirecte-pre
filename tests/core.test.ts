@@ -406,6 +406,42 @@ describe('Core Fetch Mechanism & Error Handling', () => {
     expect(error.name).toBe('EdRateLimitError');
   });
 
+  describe('Centralized API Version and User-Agent Behavior', () => {
+    it('verifies relative URLs receive version v', () => {
+      const { buildApiUrl, ED_VERSION } = require('../src/core/http');
+      const url = buildApiUrl('/some/endpoint.awp');
+      expect(url.searchParams.get('v')).toBe(ED_VERSION);
+    });
+
+    it('verifies explicit v values are preserved', () => {
+      const { buildApiUrl } = require('../src/core/http');
+      const url = buildApiUrl('/some/endpoint.awp?v=custom-version');
+      expect(url.searchParams.get('v')).toBe('custom-version');
+    });
+
+    it('verifies absolute URLs bypass injection', () => {
+      const { buildApiUrl } = require('../src/core/http');
+      const url = buildApiUrl('https://example.com/photo.jpg');
+      expect(url.searchParams.has('v')).toBe(false);
+    });
+
+    it('verifies lazy default user-agent initialization and preservation of a custom userAgent', () => {
+      const { getConfig, setConfig, DEFAULT_USER_AGENT } = require('../src/core/store');
+      const { ED_VERSION } = require('../src/core/http');
+
+      setConfig({ userAgent: '' });
+      const config1 = getConfig();
+      expect(DEFAULT_USER_AGENT).toBe(
+        `Linkdirecte/1.0 (iPhone; CPU OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5.2 Mobile/15E148 EDMOBILE v${ED_VERSION}`,
+      );
+      expect(config1.userAgent).toBe(DEFAULT_USER_AGENT);
+
+      setConfig({ userAgent: 'CustomAgent/1.0' });
+      const config2 = getConfig();
+      expect(config2.userAgent).toBe('CustomAgent/1.0');
+    });
+  });
+
   describe('Storage Enhancements & Encryption', () => {
     it('manually wraps a storage adapter with encryptedStorage and encrypts/decrypts correctly', async () => {
       const base = memoryStorage;
