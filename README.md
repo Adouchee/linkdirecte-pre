@@ -8,19 +8,19 @@
 
 **Linkdirecte** is a fast, easy-to-use, complete and fully tree-shakable TypeScript/JavaScript SDK for interacting with the private **EcoleDirecte API**.
 
-Whether you are building Discord bots, native mobile apps, web apps, or others, Linkdirecte handles all the messy protocol details so you can focus on building what matters.
+Whether you are building Discord bots, native mobile apps, web apps, or others, Linkdirecte handles all the messy stuff so you can focus on building what matters.
 
 ---
 
 ## ⭐️ Key Features
 
 - 🌳 **Tree-shakeable** | Import only what you use.
-- 🚪 **Fully auto auth** | Session cookies, tokens, Two-Factor Challenges (2FA), double auth states, and token refreshes are fully managed silently.
-- 🛣️ **Built-in proxy support** | Perfect for running directly in browsers (bypass CORS).
-- 🛜 **Offline** | Local caches and built-in offline action queues.
-- 🎓 **Rich feature set** | Supports Grades, Timetable, Homework, Messages, Attendance, Cloud, QCM and more. _Parent account support coming this year!_
-- 🌐 **Available everywhere** | Works flawlessly on Node.js 18+, Bun, Deno, modern Web Browsers, Cloudflare Workers, React Native, Capacitor, Electron, etc.
-- 🔒 **Secure** | Absolutely zero credentials or passwords stored; supports transparent local AES-GCM data encryption.
+- 🚪 **Fully auto auth** | GTK cookies, tokens, 2FA, and token refreshes are fully managed silently.
+- 🛣️ **Built-in proxy support** | Perfect for running directly in browsers (bypassing CORS).
+- 🛜 **Offline** | Local cache and built-in offline action queues.
+- 🎓 **Rich feature set** | Fully supports grades, timetable, homework, messages, attendance, cloud, QCM and more. _Parent account support coming this year!_
+- 🌐 **Available everywhere** | Works flawlessly on Node.js 18+, Bun, Deno, modern browsers, Cloudflare Workers, React Native, Capacitor, Electron, etc.
+- 🔒 **Secure** | Zero password stored; supports AES-GCM data encryption.
 
 ---
 
