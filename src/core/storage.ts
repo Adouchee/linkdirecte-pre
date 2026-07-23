@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import type { StorageAdapter } from '../types';
 import { getWebCrypto } from './env';
 
@@ -212,29 +212,39 @@ export function asyncStorage(backend: {
   };
 }
 
+const encryptedCache = new WeakMap<StorageAdapter, Map<string, StorageAdapter>>();
+
 export function encryptedStorage(backend: StorageAdapter, secret: string): StorageAdapter {
-  const adapter: StorageAdapter = {
-    get: async (key) => {
-      const val = await backend.get(key);
-      if (!val) return null;
-      try {
-        return await decrypt(val, secret);
-      } catch {
-        return null;
-      }
-    },
-    set: async (key, value) => {
-      const encrypted = await encrypt(value, secret);
-      await backend.set(key, encrypted);
-    },
-    delete: async (key) => {
-      await backend.delete(key);
-    },
-  };
-  Object.defineProperties(adapter, {
-    __encryptedWithSecret: { value: secret, writable: true },
-    __rawStorage: { value: backend, writable: true },
-  });
-  return adapter;
+  let backendMap = encryptedCache.get(backend);
+  if (!backendMap) {
+    backendMap = new Map();
+    encryptedCache.set(backend, backendMap);
+  }
+  let cached = backendMap.get(secret);
+  if (!cached) {
+    cached = {
+      get: async (key) => {
+        const val = await backend.get(key);
+        if (!val) return null;
+        try {
+          return await decrypt(val, secret);
+        } catch {
+          return null;
+        }
+      },
+      set: async (key, value) => {
+        const encrypted = await encrypt(value, secret);
+        await backend.set(key, encrypted);
+      },
+      delete: async (key) => {
+        await backend.delete(key);
+      },
+    };
+    Object.defineProperties(cached, {
+      __encryptedWithSecret: { value: secret, writable: true },
+      __rawStorage: { value: backend, writable: true },
+    });
+    backendMap.set(secret, cached);
+  }
+  return cached;
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

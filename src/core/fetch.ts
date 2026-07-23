@@ -1,5 +1,5 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
-import { getConfig, setToken } from './store';
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
+import { getConfig, setToken, getSessionGeneration } from './store';
 import {
   DEFAULT_CONCURRENCY,
   DEFAULT_MAX_RETRIES,
@@ -81,6 +81,7 @@ function getLimiter(concurrency: number) {
 }
 
 export async function edFetch<T>(endpoint: string, options: FetchOptions = {}): Promise<T> {
+  const startGen = getSessionGeneration();
   const config = getConfig();
   const limiter = getLimiter(config.concurrency ?? DEFAULT_CONCURRENCY);
 
@@ -124,8 +125,10 @@ export async function edFetch<T>(endpoint: string, options: FetchOptions = {}): 
     const data = await parseJsonResponse(response);
 
     if (headerToken) {
-      setToken(headerToken);
-      data.token = headerToken;
+      if (startGen === getSessionGeneration()) {
+        setToken(headerToken);
+        data.token = headerToken;
+      }
     }
 
     if (SESSION_EXPIRED_CODES.has(data.code)) {
@@ -162,7 +165,9 @@ export async function edFetch<T>(endpoint: string, options: FetchOptions = {}): 
     }
 
     if (data.token) {
-      setToken(data.token);
+      if (startGen === getSessionGeneration()) {
+        setToken(data.token);
+      }
     }
 
     if (options.returnEnvelope) {
@@ -172,7 +177,9 @@ export async function edFetch<T>(endpoint: string, options: FetchOptions = {}): 
     let result = transform(data.data);
 
     if (isCacheable && cacheKey) {
-      setInCache(cacheKey, result, ttl);
+      if (startGen === getSessionGeneration()) {
+        setInCache(cacheKey, result, ttl);
+      }
     }
 
     return result;
@@ -235,4 +242,3 @@ async function refreshSession(): Promise<string | undefined> {
     return undefined;
   }
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

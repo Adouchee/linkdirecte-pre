@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach, mock } from 'bun:test';
 import { startPolling, stopPolling, on, off, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -6,6 +6,7 @@ import { setAccount, setToken } from '../src/core/store';
 describe('Listen Module (Polling & Events)', () => {
   let originalFetch: typeof globalThis.fetch;
   let requests: string[] = [];
+  let unsubscribes: (() => void)[] = [];
 
   const mockAccount = {
     loginId: 1234567,
@@ -28,6 +29,7 @@ describe('Listen Module (Polling & Events)', () => {
   beforeEach(() => {
     originalFetch = globalThis.fetch;
     requests = [];
+    unsubscribes = [];
     setAccount(mockAccount);
     setToken('test_token');
     configure({ maxRetries: 0 });
@@ -36,6 +38,12 @@ describe('Listen Module (Polling & Events)', () => {
   afterEach(async () => {
     globalThis.fetch = originalFetch;
     stopPolling();
+    unsubscribes.forEach((unsub) => {
+      try {
+        unsub();
+      } catch {}
+    });
+    unsubscribes = [];
     await clearSession();
   });
 
@@ -120,9 +128,9 @@ describe('Listen Module (Polling & Events)', () => {
       expect(data.id).toBe(30);
     });
 
-    const removeGradeListener = on('newGrade', newGradeCallback);
-    const removeMessageListener = on('newMessage', newMessageCallback);
-    const removeTimelineListener = on('newTimelineEntry', newTimelineCallback);
+    unsubscribes.push(on('newGrade', newGradeCallback));
+    unsubscribes.push(on('newMessage', newMessageCallback));
+    unsubscribes.push(on('newTimelineEntry', newTimelineCallback));
 
     startPolling({ interval: 5000 });
 
@@ -135,10 +143,6 @@ describe('Listen Module (Polling & Events)', () => {
     expect(newGradeCallback).toHaveBeenCalled();
     expect(newMessageCallback).toHaveBeenCalled();
     expect(newTimelineCallback).toHaveBeenCalled();
-
-    removeGradeListener();
-    removeMessageListener();
-    removeTimelineListener();
   });
 
   it('emits pollingError event when a poll task fails', async () => {
@@ -150,7 +154,7 @@ describe('Listen Module (Polling & Events)', () => {
       expect(err).toBeDefined();
     });
 
-    on('pollingError', errorCallback);
+    unsubscribes.push(on('pollingError', errorCallback));
 
     startPolling({ interval: 5000 });
 
@@ -158,5 +162,74 @@ describe('Listen Module (Polling & Events)', () => {
 
     expect(errorCallback).toHaveBeenCalled();
   });
+
+  it('handles partial failures: emits pollingError on rejections while still processing successful event diffs', async () => {
+    globalThis.fetch = async (input, init) => {
+      const urlStr = input.toString();
+      requests.push(urlStr);
+
+      if (urlStr.includes('notes.awp')) {
+        return new Response(
+          JSON.stringify({
+            code: 200,
+            message: '',
+            data: {
+              grades: [
+                {
+                  id: 101,
+                  valeur: '18',
+                },
+              ],
+            },
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        );
+      } else if (urlStr.includes('messages.awp')) {
+        return new Response(
+          JSON.stringify({
+            code: 500,
+            message: 'Message server down',
+          }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } },
+        );
+      } else if (urlStr.includes('cahierdetexte.awp')) {
+        return new Response(
+          JSON.stringify({
+            code: 200,
+            message: '',
+            data: {},
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        );
+      } else if (urlStr.includes('timeline.awp')) {
+        return new Response(
+          JSON.stringify({
+            code: 500,
+            message: 'Timeline server down',
+          }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } },
+        );
+      }
+
+      return new Response(JSON.stringify({ code: 404 }), { status: 404 });
+    };
+
+    const newGradeCallback = mock((data) => {
+      expect(data.id).toBe(101);
+    });
+
+    const errorCallback = mock((err) => {
+      expect(err).toBeDefined();
+    });
+
+    unsubscribes.push(on('newGrade', newGradeCallback));
+    unsubscribes.push(on('pollingError', errorCallback));
+
+    startPolling({ interval: 5000 });
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    expect(newGradeCallback).toHaveBeenCalled();
+    expect(errorCallback).toHaveBeenCalledTimes(2);
+  });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

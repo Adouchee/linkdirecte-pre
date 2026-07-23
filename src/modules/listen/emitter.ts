@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 type Handler = (data: any) => void;
 
 class EventEmitter {
@@ -28,4 +28,3 @@ class EventEmitter {
 }
 
 export const emitter = new EventEmitter();
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

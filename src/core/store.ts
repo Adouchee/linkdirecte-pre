@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { EdConfig, StorageAdapter, Account } from '../types';
 import {
   indexedDBStorage,
@@ -20,6 +20,16 @@ export interface EdState {
   lastTokenRefresh?: Date;
   rawStorage?: StorageAdapter;
   hasDetectedStorage?: boolean;
+}
+
+let sessionGen = 0;
+
+export function getSessionGeneration(): number {
+  return sessionGen;
+}
+
+export function incrementSessionGeneration(): void {
+  sessionGen++;
 }
 
 const state: EdState = {
@@ -142,6 +152,18 @@ export async function clearSession(): Promise<void> {
   state.accounts = undefined;
   state.lastTokenRefresh = undefined;
 
+  incrementSessionGeneration();
+
+  try {
+    const { clearCache } = await import('./cache');
+    clearCache();
+  } catch {}
+
+  try {
+    const { offlineQueue } = await import('./queue');
+    offlineQueue.clear();
+  } catch {}
+
   const storage = getConfig().storage;
   if (!storage) return;
 
@@ -150,6 +172,7 @@ export async function clearSession(): Promise<void> {
   await storage.delete(STORAGE_KEYS.account);
   await storage.delete(STORAGE_KEYS.accounts);
   await storage.delete(STORAGE_KEYS.lastRefresh);
+  await storage.delete('ed_offline_queue');
 }
 
 export async function loadSession(): Promise<boolean> {
@@ -199,4 +222,3 @@ export async function loadSession(): Promise<boolean> {
     return false;
   }
 }
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

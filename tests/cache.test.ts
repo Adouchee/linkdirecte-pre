@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import {
   parseDuration,
@@ -72,5 +72,53 @@ describe('Cache Core Module', () => {
     expect(getFromCache('k3')).toBe('v3');
     expect(getFromCache('k4')).toBe('v4');
   });
+
+  it('clears cache when clearSession is called', async () => {
+    const { clearSession } = await import('../src/core/store');
+    setInCache('temp', 'val', 50_000);
+    expect(getFromCache('temp')).toBe('val');
+
+    await clearSession();
+
+    expect(getFromCache('temp')).toBeUndefined();
+  });
+
+  it('prevents pre-logout in-flight requests from repopulating cache after logout (deferred-fetch test)', async () => {
+    const { edFetch } = await import('../src/core/fetch');
+    const { clearSession } = await import('../src/core/store');
+
+    let resolveFetch: (res: any) => void = () => {};
+    const fetchPromise = new Promise<any>((resolve) => {
+      resolveFetch = resolve;
+    });
+
+    globalThis.fetch = async () => {
+      await fetchPromise;
+      return new Response(
+        JSON.stringify({
+          code: 200,
+          message: '',
+          data: { notes: [] },
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+    };
+
+    setConfig({
+      cache: { grades: '10m' },
+    });
+
+    const gradesPromise = edFetch('/notes.awp');
+
+    await clearSession();
+
+    resolveFetch(null);
+    await gradesPromise;
+
+    const key = buildCacheKey('/notes.awp');
+    expect(getFromCache(key)).toBeUndefined();
+  });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.

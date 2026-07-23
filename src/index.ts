@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 export {
   setConfig as configure,
   loadSession,
@@ -38,4 +38,3 @@ export { startPolling, stopPolling, on, off } from './modules/listen';
 
 export * from './types';
 export * from './core/errors';
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
