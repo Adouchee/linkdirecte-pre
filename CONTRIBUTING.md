@@ -25,7 +25,7 @@ src/
 ├── modules/    # API endpoints (grades, absences, etc.)
 └── types/      # TypeScript type definitions
 tests/          # Bun test files
-docs/           # Documentation
+wiki/           # Documentation (auto-published to gh wiki on push)
 ```
 
 ## 🧪 Running tests
