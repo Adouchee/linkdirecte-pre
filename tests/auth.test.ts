@@ -189,9 +189,12 @@ describe('Authentication Flow', () => {
 
     const result = await login('testuser', 'testpass');
 
-    expect(result.user.prenom).toBe('John');
-    expect(result.user.nom).toBe('Doe');
-    expect(result.token).toBe('mocked_session_token');
+    expect(result.type).toBe('success');
+    if (result.type === 'success') {
+      expect(result.user.prenom).toBe('John');
+      expect(result.user.nom).toBe('Doe');
+      expect(result.token).toBe('mocked_session_token');
+    }
     expect(getAccount()?.id).toBe(9876);
     expect(getLastTokenRefresh()).toBeDefined();
 
@@ -266,8 +269,11 @@ describe('Authentication Flow', () => {
     const result = await login('testuser', 'testpass', { on2faRequired });
 
     expect(on2faRequired).toHaveBeenCalled();
-    expect(result.token).toBe('final_session_token');
-    expect(result.user.prenom).toBe('John');
+    expect(result.type).toBe('success');
+    if (result.type === 'success') {
+      expect(result.token).toBe('final_session_token');
+      expect(result.user.prenom).toBe('John');
+    }
   });
 
   it('performs login using the unified options object format', async () => {
@@ -299,8 +305,11 @@ describe('Authentication Flow', () => {
       password: 'testpass_opt',
     });
 
-    expect(result.user.prenom).toBe('John');
-    expect(result.token).toBe('mocked_session_token');
+    expect(result.type).toBe('success');
+    if (result.type === 'success') {
+      expect(result.user.prenom).toBe('John');
+      expect(result.token).toBe('mocked_session_token');
+    }
   });
 
   it('handles 2FA choice selection by string option (case-insensitive)', async () => {
@@ -370,7 +379,10 @@ describe('Authentication Flow', () => {
     const result = await login('testuser', 'testpass', { on2faRequired });
 
     expect(on2faRequired).toHaveBeenCalled();
-    expect(result.token).toBe('final_session_token');
+    expect(result.type).toBe('success');
+    if (result.type === 'success') {
+      expect(result.token).toBe('final_session_token');
+    }
   });
 
   it('throws an error on invalid 2FA selection option', async () => {

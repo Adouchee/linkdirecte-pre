@@ -58,7 +58,7 @@ const result = await login("your_username", "your_password", {
   }
 });
 
-if ("user" in result) {
+if (result.type === "success") {
   console.log(`Success! Logged in as ${result.user.prenom} ${result.user.nom}`);
 }
 ```

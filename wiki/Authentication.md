@@ -71,7 +71,7 @@ import { login } from "linkdirecte";
 
 const result = await login("username", "password");
 
-if ("question" in result) {
+if (result.type === "securityQuestion") {
   console.log("2FA incoming!");
   console.log("Question:", result.question);
   console.log("Options:", result.choices);
@@ -79,7 +79,7 @@ if ("question" in result) {
   // Submit the selected choice index or option text:
   const session = await result.answer("My Secret Answer");
   console.log(`Logged in! Hello, ${session.user.prenom}`);
-} else {
+} else if (result.type === "success") {
   console.log(`Logged in... without 2FA?! Hello, ${result.user.prenom}`);
 }
 ```
@@ -157,6 +157,7 @@ Returned when the user is successfully logged in.
 
 ```typescript
 interface LoginSuccess {
+  type: "success";     // Discriminator type
   user: Account;       // The active student account details
   token: string;       // Current API session token
   sessionId: string;   // Unique session ID

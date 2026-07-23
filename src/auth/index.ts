@@ -286,6 +286,7 @@ async function handleLoginSuccess(
   }
 
   return {
+    type: 'success',
     user: main,
     token: result.token || getToken() || '',
     sessionId: main.uid,

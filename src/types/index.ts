@@ -51,6 +51,7 @@ export interface LoginChallenge {
 }
 
 export interface LoginSuccess {
+  type: 'success';
   user: Account;
   token: string;
   sessionId: string;
