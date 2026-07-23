@@ -22,6 +22,16 @@ export interface EdState {
   hasDetectedStorage?: boolean;
 }
 
+let sessionGen = 0;
+
+export function getSessionGeneration(): number {
+  return sessionGen;
+}
+
+export function incrementSessionGeneration(): void {
+  sessionGen++;
+}
+
 const state: EdState = {
   config: {
     maxRetries: 3,
@@ -142,6 +152,8 @@ export async function clearSession(): Promise<void> {
   state.accounts = undefined;
   state.lastTokenRefresh = undefined;
 
+  incrementSessionGeneration();
+
   try {
     const { clearCache } = await import('./cache');
     clearCache();
@@ -155,6 +167,7 @@ export async function clearSession(): Promise<void> {
   await storage.delete(STORAGE_KEYS.account);
   await storage.delete(STORAGE_KEYS.accounts);
   await storage.delete(STORAGE_KEYS.lastRefresh);
+  await storage.delete('ed_offline_queue');
 }
 
 export async function loadSession(): Promise<boolean> {

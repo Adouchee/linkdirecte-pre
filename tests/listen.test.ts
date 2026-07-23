@@ -1,4 +1,4 @@
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
+// © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { describe, it, expect, beforeEach, afterEach, mock } from 'bun:test';
 import { startPolling, stopPolling, on, off, configure, clearSession } from '../src/index';
 import { setAccount, setToken } from '../src/core/store';
@@ -158,5 +158,77 @@ describe('Listen Module (Polling & Events)', () => {
 
     expect(errorCallback).toHaveBeenCalled();
   });
+
+  it('handles partial failures: emits pollingError on rejections while still processing successful event diffs', async () => {
+    globalThis.fetch = async (input, init) => {
+      const urlStr = input.toString();
+      requests.push(urlStr);
+
+      if (urlStr.includes('notes.awp')) {
+        return new Response(
+          JSON.stringify({
+            code: 200,
+            message: '',
+            data: {
+              grades: [
+                {
+                  id: 101,
+                  valeur: '18',
+                },
+              ],
+            },
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        );
+      } else if (urlStr.includes('messages.awp')) {
+        return new Response(
+          JSON.stringify({
+            code: 500,
+            message: 'Message server down',
+          }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } },
+        );
+      } else if (urlStr.includes('cahierdetexte.awp')) {
+        return new Response(
+          JSON.stringify({
+            code: 200,
+            message: '',
+            data: {},
+          }),
+          { status: 200, headers: { 'Content-Type': 'application/json' } },
+        );
+      } else if (urlStr.includes('timeline.awp')) {
+        return new Response(
+          JSON.stringify({
+            code: 500,
+            message: 'Timeline server down',
+          }),
+          { status: 500, headers: { 'Content-Type': 'application/json' } },
+        );
+      }
+
+      return new Response(JSON.stringify({ code: 404 }), { status: 404 });
+    };
+
+    const newGradeCallback = mock((data) => {
+      expect(data.id).toBe(101);
+    });
+
+    const errorCallback = mock((err) => {
+      expect(err).toBeDefined();
+    });
+
+    const removeGradeListener = on('newGrade', newGradeCallback);
+    const removeErrorListener = on('pollingError', errorCallback);
+
+    startPolling({ interval: 5000 });
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    expect(newGradeCallback).toHaveBeenCalled();
+    expect(errorCallback).toHaveBeenCalledTimes(2);
+
+    removeGradeListener();
+    removeErrorListener();
+  });
 });
-// © 2026 typeof (Scolup) | Licensed under AGPL 3.
