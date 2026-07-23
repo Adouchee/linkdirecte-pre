@@ -16,7 +16,7 @@ import {
   type HttpMethod,
   type QueryParams,
 } from './http';
-import { EdApiError, EdAuthError } from './errors';
+import { EdApiError, EdAuthError, getFriendlyErrorMessage } from './errors';
 import { transform } from './transform';
 import { offlineQueue } from './queue';
 import { resolveModule, getCacheTtl, buildCacheKey, getFromCache, setInCache } from './cache';
@@ -133,8 +133,10 @@ export async function edFetch<T>(endpoint: string, options: FetchOptions = {}): 
 
     if (SESSION_EXPIRED_CODES.has(data.code)) {
       if (attempts >= 1) {
+        const rawMsg = data.message || 'Session expired after refresh attempt';
+        const friendlyMsg = getFriendlyErrorMessage(String(data.code), rawMsg);
         throw new EdAuthError(
-          data.message || 'Session expired after refresh attempt',
+          friendlyMsg,
           String(data.code),
           response.status,
           data,
@@ -149,8 +151,10 @@ export async function edFetch<T>(endpoint: string, options: FetchOptions = {}): 
 
       const refreshed = await refreshPromise;
       if (!refreshed) {
+        const rawMsg = data.message || 'Session expired';
+        const friendlyMsg = getFriendlyErrorMessage(String(data.code), rawMsg);
         throw new EdAuthError(
-          data.message || 'Session expired',
+          friendlyMsg,
           String(data.code),
           response.status,
           data,
@@ -161,7 +165,9 @@ export async function edFetch<T>(endpoint: string, options: FetchOptions = {}): 
     }
 
     if (!SUCCESS_CODES.has(data.code)) {
-      throw new EdApiError(data.message || 'API error', String(data.code), response.status, data);
+      const rawMsg = data.message || 'API error';
+      const friendlyMsg = getFriendlyErrorMessage(String(data.code), rawMsg);
+      throw new EdApiError(friendlyMsg, String(data.code), response.status, data);
     }
 
     if (data.token) {

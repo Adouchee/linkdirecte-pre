@@ -520,4 +520,114 @@ describe('Core Fetch Mechanism & Error Handling', () => {
       expect(storedAccount).toContain('1111');
     });
   });
+
+  describe('Granular Error Taxonomy & Code Mapping', () => {
+    it('verifies EdValidationError properties', () => {
+      const { assertNonEmptyString } = require('../src/core/validate');
+      const { EdValidationError } = require('../src/core/errors');
+
+      try {
+        assertNonEmptyString('', 'identifiant');
+      } catch (err: any) {
+        expect(err).toBeInstanceOf(EdValidationError);
+        expect(err.name).toBe('EdValidationError');
+        expect(err.code).toBe('INVALID_ARGUMENT');
+        expect(err.message).toContain('identifiant must be a non-empty string');
+      }
+    });
+
+    it('verifies EdServerError properties', async () => {
+      const { getGrades } = require('../src/index');
+      const { EdServerError } = require('../src/core/errors');
+
+      setAccount(mockAccount);
+      setToken('valid_token');
+
+      responseQueue.push(() => ({
+        status: 502,
+        body: { code: 502, message: 'Bad Gateway', data: {} },
+      }));
+
+      configure({ maxRetries: 0 });
+
+      expect(getGrades()).rejects.toThrow(EdServerError);
+    });
+
+    it('verifies EdParseError properties', async () => {
+      const { getGrades } = require('../src/index');
+      const { EdParseError } = require('../src/core/errors');
+
+      setAccount(mockAccount);
+      setToken('valid_token');
+
+      globalThis.fetch = async () => {
+        return new Response('Not valid JSON', {
+          status: 200,
+          headers: new Headers({ 'Content-Type': 'application/json' }),
+        });
+      };
+
+      configure({ maxRetries: 0 });
+
+      expect(getGrades()).rejects.toThrow(EdParseError);
+    });
+
+    it('verifies EdTimeoutError properties', async () => {
+      const { getGrades } = require('../src/index');
+      const { EdTimeoutError } = require('../src/core/errors');
+
+      setAccount(mockAccount);
+      setToken('valid_token');
+
+      globalThis.fetch = async () => {
+        const err = new Error('The request timed out');
+        err.name = 'AbortError';
+        throw err;
+      };
+
+      configure({ maxRetries: 0, timeout: 100 });
+
+      expect(getGrades()).rejects.toThrow(EdTimeoutError);
+    });
+
+    it('verifies toJSON representation of EdError subclasses', () => {
+      const { EdValidationError } = require('../src/core/errors');
+      const error = new EdValidationError('Value is empty', 'INVALID_ARGUMENT', 400, { original: 'payload' });
+      const json = error.toJSON();
+
+      expect(json.name).toBe('EdValidationError');
+      expect(json.message).toBe('[INVALID_ARGUMENT] Value is empty (HTTP 400)');
+      expect(json.code).toBe('INVALID_ARGUMENT');
+      expect(json.statusCode).toBe(400);
+      expect(json.raw).toEqual({ original: 'payload' });
+      expect(json.stack).toBeDefined();
+    });
+
+    it('verifies friendly error code mappings (e.g., 505 / Bad Credentials)', async () => {
+      const { login } = require('../src/index');
+      const { EdAuthError } = require('../src/core/errors');
+
+      mockResponses.set('/login.awp?gtk=1', () => ({
+        status: 200,
+        headers: { 'set-cookie': 'GTK=mocked_gtk_value; Path=/' },
+        body: { code: 200, token: '', message: '', data: {} },
+      }));
+
+      mockResponses.set('/login.awp?v=', () => ({
+        status: 200,
+        body: {
+          code: 505,
+          message: 'Mot de passe invalide',
+          data: {},
+        },
+      }));
+
+      try {
+        await login('testuser', 'badpass');
+      } catch (err: any) {
+        expect(err).toBeInstanceOf(EdAuthError);
+        expect(err.message).toContain('Invalid username or password');
+      }
+    });
+  });
 });

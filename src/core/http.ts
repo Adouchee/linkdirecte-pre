@@ -1,6 +1,12 @@
 // © 2026 typeof (Scolup) | Licensed under AGPL 3.0
 import { getConfig, getToken, getTwofaToken } from './store';
-import { EdNetworkError, EdRateLimitError } from './errors';
+import {
+  EdNetworkError,
+  EdRateLimitError,
+  EdServerError,
+  EdParseError,
+  EdTimeoutError,
+} from './errors';
 import { signalWithTimeout, isFormData } from './env';
 
 export const BASE_API_URL = 'https://api.ecoledirecte.com/v3';
@@ -111,6 +117,18 @@ export async function sendRequest(options: SendRequestOptions): Promise<Response
       signal: signalWithTimeout(options.timeoutMs || DEFAULT_TIMEOUT_MS),
     });
   } catch (error: any) {
+    if (
+      error.name === 'AbortError' ||
+      error.message?.toLowerCase().includes('timeout') ||
+      error.message?.toLowerCase().includes('aborted')
+    ) {
+      throw new EdTimeoutError(
+        `Request to ${options.url} timed out after ${options.timeoutMs || DEFAULT_TIMEOUT_MS}ms`,
+        'TIMEOUT_ERROR',
+        0,
+        error,
+      );
+    }
     throw new EdNetworkError(error.message, 'NETWORK_ERROR', 0, error);
   }
 }
@@ -121,17 +139,18 @@ export async function parseJsonResponse(response: Response): Promise<any> {
   }
 
   if (response.status >= 500) {
-    throw new EdNetworkError(`Server error: ${response.status}`, 'SERVER_ERROR', response.status);
+    throw new EdServerError(`Server error: ${response.status}`, 'SERVER_ERROR', response.status);
   }
 
   try {
     return await response.json();
-  } catch {
+  } catch (error: any) {
     const text = await response.text().catch(() => '');
-    throw new EdNetworkError(
+    throw new EdParseError(
       `Failed to parse response as JSON (HTTP ${response.status}): ${text.slice(0, 200)}`,
       'PARSE_ERROR',
       response.status,
+      error,
     );
   }
 }
