@@ -50,7 +50,7 @@ async function poll(): Promise<void> {
 
     if (gradesRes.status === 'fulfilled') {
       const grades = gradesRes.value;
-      checkDiff('newGrade', (grades as any).grades, 'id');
+      checkDiff('newGrade', (grades as any).notes, 'id');
     }
     if (messagesRes.status === 'fulfilled') {
       const messages = messagesRes.value;

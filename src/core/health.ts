@@ -3,7 +3,7 @@ import { getConfig, getToken } from './store';
 import { buildApiUrl, buildHeaders, sendRequest, parseJsonResponse } from './http';
 import { safeSetInterval, safeClearInterval } from './env';
 
-const TOKEN_CHECK_ENDPOINT = '/rdt/sondages.awp?verbe=get&v=4.96.3';
+const TOKEN_CHECK_ENDPOINT = '/rdt/sondages.awp?verbe=get';
 const TOKEN_CHECK_BODY = 'data=%7B%7D';
 const KEEPALIVE_INTERVAL_MS = 45 * 60 * 1000;
 

@@ -45,10 +45,14 @@ export async function getMessages(options: GetMessagesOptions = {}): Promise<Mes
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/messages.awp?verbe=get`;
 
+  const { folderId, withContent, ...rest } = options;
   const result = await edFetch<MessagesResult>(endpoint, {
     method: 'POST',
-    body: { anneeMessages: '' },
-    ...options,
+    body: {
+      anneeMessages: '',
+      ...(folderId !== undefined ? { idClasseur: folderId } : {}),
+    },
+    ...rest,
   });
 
   if (options.withContent && result.messages?.received) {

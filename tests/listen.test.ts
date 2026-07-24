@@ -60,7 +60,7 @@ describe('Listen Module (Polling & Events)', () => {
             code: 200,
             message: '',
             data: {
-              grades: [
+              notes: [
                 {
                   id: callCount === 0 ? 10 : 11,
                   valeur: '15',
@@ -174,7 +174,7 @@ describe('Listen Module (Polling & Events)', () => {
             code: 200,
             message: '',
             data: {
-              grades: [
+              notes: [
                 {
                   id: 101,
                   valeur: '18',
