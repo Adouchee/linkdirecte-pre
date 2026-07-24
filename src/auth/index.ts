@@ -20,7 +20,7 @@ import {
   sendRequest,
   parseJsonResponse,
 } from '../core/http';
-import { EdAuthError } from '../core/errors';
+import { EdAuthError, getFriendlyErrorMessage } from '../core/errors';
 import { assertNonEmptyString } from '../core/validate';
 import { randomUUID } from '../core/env';
 import {
@@ -126,6 +126,12 @@ export async function login(
     return handleTwoFactor(identifiant, password, uuid, finalOpts, gtk, twofaToken, xToken);
   }
 
+  if (initRes.code !== 200) {
+    const rawMsg = initRes.message || 'Login failed';
+    const friendlyMsg = getFriendlyErrorMessage(String(initRes.code), rawMsg);
+    throw new EdAuthError(friendlyMsg, String(initRes.code), undefined, initRes);
+  }
+
   if (xToken) setToken(xToken);
   if (twofaToken) setTwofaToken(twofaToken);
 
@@ -189,6 +195,12 @@ async function handleTwoFactor(
     xToken: x3,
   } = await sendAuthRequest('/connexion/doubleauth.awp?verbe=get', {}, gtk, twofaToken, xToken);
 
+  if (challenge.code !== 200) {
+    const rawMsg = challenge.message || '2FA challenge request failed';
+    const friendlyMsg = getFriendlyErrorMessage(String(challenge.code), rawMsg);
+    throw new EdAuthError(friendlyMsg, String(challenge.code), undefined, challenge);
+  }
+
   const question = decodeBase64(challenge.data.question);
   const choices = challenge.data.propositions.map(decodeBase64);
 
@@ -224,6 +236,12 @@ async function handleTwoFactor(
       x3,
     );
 
+    if (validate.code !== 200) {
+      const rawMsg = validate.message || '2FA validation failed';
+      const friendlyMsg = getFriendlyErrorMessage(String(validate.code), rawMsg);
+      throw new EdAuthError(friendlyMsg, String(validate.code), undefined, validate);
+    }
+
     const { cn, cv } = validate.data;
     const {
       data: finalRes,
@@ -245,6 +263,12 @@ async function handleTwoFactor(
       t4,
       x4,
     );
+
+    if (finalRes.code !== 200) {
+      const rawMsg = finalRes.message || 'Login failed';
+      const friendlyMsg = getFriendlyErrorMessage(String(finalRes.code), rawMsg);
+      throw new EdAuthError(friendlyMsg, String(finalRes.code), undefined, finalRes);
+    }
 
     if (x5) setToken(x5);
     if (t5) setTwofaToken(t5);
@@ -313,6 +337,8 @@ export async function refreshToken(): Promise<string> {
   const accessToken = await storage?.get(`ed_access_token_${account.id}`);
   const uuid = await storage?.get(`ed_uuid_${account.id}`);
 
+  let refreshError: any = null;
+
   if (accessToken) {
     try {
       const gtk = await fetchGtkToken();
@@ -331,20 +357,36 @@ export async function refreshToken(): Promise<string> {
         getToken(),
       );
 
+      if (data.code !== 200) {
+        const rawMsg = data.message || 'Refresh failed';
+        const friendlyMsg = getFriendlyErrorMessage(String(data.code), rawMsg);
+        throw new EdAuthError(friendlyMsg, String(data.code), undefined, data);
+      }
+
       if (xToken) setToken(xToken);
       if (twofaToken) setTwofaToken(twofaToken);
 
       startTokenKeepalive();
       return xToken || data.token || '';
     } catch (error) {
+      refreshError = error;
       config.onError?.(error, async () => {});
     }
   }
 
   if (config.onCredentialsRequired) {
-    const { identifiant, motdepasse } = await config.onCredentialsRequired();
-    const res = await login(identifiant, motdepasse, { rememberMe: true });
-    if ('token' in res) return res.token;
+    try {
+      const { identifiant, motdepasse } = await config.onCredentialsRequired();
+      const res = await login(identifiant, motdepasse, { rememberMe: true });
+      if ('token' in res) return res.token;
+    } catch (err) {
+      if (refreshError) throw refreshError;
+      throw err;
+    }
+  }
+
+  if (refreshError) {
+    throw refreshError;
   }
 
   throw new EdAuthError('Refresh failed', 'REFRESH_FAILED');

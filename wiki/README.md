@@ -11,6 +11,7 @@ Welcome to the guide for **Linkdirecte**! Linkdirecte is _the best_ SDK for inte
 ### Getting Started
 - [🔑 Authentication](Authentication.md) | Learn how to log in, handle 2FA, and manage active sessions.
 - [⚙️ Configuration](Configuration.md) | Adjust network behaviors, set up persistent storage, proxy configuration, handle downloads, and configure encryption passkeys.
+- [⚠️ Errors & Exception Handling](Errors.md) | Understand the error hierarchy, caught exceptions, serialization, and friendly API code mappings.
 
 ### Academic Modules
 - [🎓 Grades](Grades.md) | Retrieve student grades, competencies, subjects and periods.
