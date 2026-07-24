@@ -45,7 +45,7 @@ function getMessages(options?: GetMessagesOptions): Promise<MessagesResult>
 #### Parameters
 
 - `options` *(optional)*:
-  - `idClasseur` *(number)*: Pass a folder ID to retrieve messages from custom archives or folders.
+  - `folderId` *(number)*: Pass a folder ID to retrieve messages from custom archives or folders.
   - `withContent` *(boolean)*: If set to `true`, automatically makes individual parallel queries to retrieve the content bodies for all returned messages. Defaults to `false`.
 
 ---

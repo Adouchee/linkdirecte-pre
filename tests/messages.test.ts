@@ -83,7 +83,7 @@ describe('Messages Module', () => {
     expect(result.messages!.received![0].subject).toBe('Welcome');
   });
 
-  it('sends idClasseur in body when idClasseur is provided', async () => {
+  it('sends idClasseur in body when folderId is provided', async () => {
     globalThis.fetch = async (input, init) => {
       const urlStr = input.toString();
       const method = init?.method || 'GET';
@@ -112,7 +112,7 @@ describe('Messages Module', () => {
       );
     };
 
-    await getMessages({ idClasseur: 42 });
+    await getMessages({ folderId: 42 });
 
     expect(requests.length).toBe(1);
     expect(requests[0].url).toContain('/eleves/9876/messages.awp');
