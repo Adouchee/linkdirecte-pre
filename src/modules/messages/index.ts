@@ -9,7 +9,7 @@ import {
 } from '../../core/validate';
 
 export interface GetMessagesOptions {
-  folderId?: number;
+  idClasseur?: number;
   withContent?: boolean;
 }
 
@@ -45,10 +45,14 @@ export async function getMessages(options: GetMessagesOptions = {}): Promise<Mes
   const account = requireCurrentAccount();
   const endpoint = `/eleves/${account.id}/messages.awp?verbe=get`;
 
+  const { idClasseur, withContent, ...rest } = options;
   const result = await edFetch<MessagesResult>(endpoint, {
     method: 'POST',
-    body: { anneeMessages: '' },
-    ...options,
+    body: {
+      anneeMessages: '',
+      ...(idClasseur !== undefined ? { idClasseur } : {}),
+    },
+    ...rest,
   });
 
   if (options.withContent && result.messages?.received) {

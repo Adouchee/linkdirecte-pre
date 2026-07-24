@@ -77,9 +77,46 @@ describe('Messages Module', () => {
 
     expect(requests.length).toBe(1);
     expect(requests[0].url).toContain('/eleves/9876/messages.awp');
+    expect(requests[0].body.idClasseur).toBeUndefined();
     expect(result.messages?.received).toBeDefined();
     expect(result.messages!.received![0].id).toBe(111);
     expect(result.messages!.received![0].subject).toBe('Welcome');
+  });
+
+  it('sends idClasseur in body when idClasseur is provided', async () => {
+    globalThis.fetch = async (input, init) => {
+      const urlStr = input.toString();
+      const method = init?.method || 'GET';
+      let parsedBody: any = undefined;
+      if (init?.body) {
+        const bodyStr = init.body.toString();
+        if (bodyStr.startsWith('data=')) {
+          parsedBody = JSON.parse(decodeURIComponent(bodyStr.substring(5)));
+        } else {
+          parsedBody = bodyStr;
+        }
+      }
+      requests.push({ url: urlStr, method, body: parsedBody });
+
+      return new Response(
+        JSON.stringify({
+          code: 200,
+          message: '',
+          data: {
+            messages: {
+              received: [],
+            },
+          },
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } },
+      );
+    };
+
+    await getMessages({ idClasseur: 42 });
+
+    expect(requests.length).toBe(1);
+    expect(requests[0].url).toContain('/eleves/9876/messages.awp');
+    expect(requests[0].body.idClasseur).toBe(42);
   });
 
   it('fetches message content when withContent is true', async () => {
