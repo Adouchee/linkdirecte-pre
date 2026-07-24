@@ -1,19 +1,20 @@
 // © 2026 typeof (Scolup) | Licensed under AGPL 3.0
-import { edFetch } from '../../core/fetch';
+import { edFetch, type FetchOptions } from '../../core/fetch';
 import { requireCurrentAccount } from '../../core/request';
 import type { CloudNode, CloudEntry } from '../../types';
 
-export interface GetCloudOptions {
+export interface GetCloudOptions extends FetchOptions {
   depth?: number;
 }
 
 export async function getCloud(options: GetCloudOptions = {}): Promise<CloudEntry[]> {
   const account = requireCurrentAccount();
   const endpoint = `/cloud/E/${account.id}.awp?verbe=get`;
+  const { depth, ...fetchOptions } = options;
   return edFetch<CloudEntry[]>(endpoint, {
     method: 'POST',
-    body: { profondeur: options.depth || 3 },
-    ...options,
+    body: { profondeur: depth || 3 },
+    ...fetchOptions,
   });
 }
 
